@@ -46,7 +46,7 @@ function run_timestep(s::ch4cycle,t::Int64)
         v.exc_excessconcCH4=p.c0_ch4concbaseyr-p.pic_preindustconcCH4
     end
 
-    #eq.11 from Hope(2006) - CH4 c_co2concentration
-    v.c_ch4concentration[t]=p.pic_preindustconcCH4+v.exc_excessconcCO2*v.re_remainCH4[t]/v.re_remainCH4[1]
+    #eq.11 from Hope(2006) - CH4 concentration
+    v.c_ch4concentration[t]=p.pic_preindustconcCH4+v.exc_excessconcCH4*v.re_remainCH4[t]/v.re_remainCH4[1]
 
 end
