@@ -45,11 +45,6 @@ function run_timestep(s::co2cycle,t::Int64)
         v.nte_naturalemissions[t] = p.stim_biospherefdbk*sum(p.rt_realizedtempbase.*
             p.area_area)/ sum(p.area_area)
     else
-        foo= 0.0
-        for r in d.region
-            foo+= v.rt_realizedtemp[t-1,r]*p.area_area[r]
-        end
-
         v.nte_naturalemissions[t]= p.stim_biospherefdbk*(sum(vec(v.rt_realizedtemp[t-1,:]).*
             p.area_area)/sum(p.area_area))
     end
