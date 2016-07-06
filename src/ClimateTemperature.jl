@@ -8,11 +8,12 @@ using Mimi
 
     sens_climatesensitivity = Parameter(unit="degreeC")
     ocean_climatehalflife = Parameter(unit="year")
-    ft_totalforcing = Parameter(index=[time], unit="W/m2")
-    fs_sulfateforcing = Parameter(index=[time], unit="W/m2")
     fslope_forcingslope = Parameter(unit="W/m2")
 
-    et_equilibriumtemperature = Variable(unit="degreeC")
+    ft_totalforcing = Parameter(index=[time], unit="W/m2")
+    fs_sulfateforcing = Parameter(index=[time], unit="W/m2")
+
+    et_equilibriumtemperature = Variable(index=[time, region], unit="degreeC")
     rt_0_realizedtemperature = Parameter(index=[region], unit="degreeC")
     rt_realizedtemperature = Variable(index=[time, region], unit="degreeC")
     grt_globaltemperature = Variable(index=[time], unit="degreeC")
