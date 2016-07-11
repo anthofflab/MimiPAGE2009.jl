@@ -7,12 +7,14 @@ using Mimi
     pic_preindustconcCO2=Parameter(unit="ppbv")
     exc_excessconcCO2=Variable(unit="ppbv")
     c0_CO2concbaseyr=Parameter(unit="ppbv")
-    re_remainCO2=Variable(index=[time],unit="ppbv")
+    renoccff_remainCO2wocarboncyclefeedback=Variable(index=[time],unit="ppbv")
     den_densityofgas=Parameter(unit="Mtonne/pbbv")
     cea_cumemissionsatm=Variable(index=[time], unit="Mtonne")
     ce_basecumemissions=Parameter(unit="Mtonne")
     res_CO2atmlifetime=Parameter(unit="year")
     stay_propemissstayatm=Parameter()
+    gain_linearfeedbackofCO2= Variable(index=[time], unit="%")
+    re_remainCO2= Variable(index=[time], unit= "Mtonne")
 #...
     et_equilibriumtemperature=Variable(index=[time], unit="degreeC")
     sens_climatesensitivity= Parameter(unit="degreeC")
@@ -46,14 +48,21 @@ function run_timestep(s::co2cycle,t::Int64)
       v.exc_excessconcCO2 = p.c0_CO2concbaseyr - p.pic_preindustconcCO2
     end
     # eq. 2- Level of emissions remaining in the atm in base year
-    v.re_remainCO2[1]=v.exc_excessconcCO2[1]*p.den_densityofgas
+    #v.re_remainCO2[1]=v.exc_excessconcCO2[1]*p.den_densityofgas
+    v.renoccff_remainCO2wocarboncyclefeedback[1]= v.re_remainCO2[1]/(1+ v.gain_linearfeedbackofCO2[t]/100)
     # eq. 3- Natural emissions stimulated by increase in global mean temp
+    #if t==1
+    #    v.nte_naturalemissions[t] = p.stim_biospherefdbk*sum(p.rt_realizedtempbase.*
+    #        p.area)/ sum(p.area)
+    #else
+    #    v.nte_naturalemissions[t]= p.stim_biospherefdbk*(sum(vec(v.rt_realizedtemp[t-1,:]).*
+    #        p.area)/sum(p.area))
+    #end
+    #PAGE09 removes eq. 3 from PAGE02
     if t==1
-        v.nte_naturalemissions[t] = p.stim_biospherefdbk*sum(p.rt_realizedtempbase.*
-            p.area)/ sum(p.area)
+        v.gain_linearfeedbackofCO2="CCF" * p.rt_realizedtemperature[t]
     else
-        v.nte_naturalemissions[t]= p.stim_biospherefdbk*(sum(vec(v.rt_realizedtemp[t-1,:]).*
-            p.area)/sum(p.area))
+        v.gain_linearfeedbackofCO2[t]= min("CCF"* p.rt_realizedtemperature[t-1], "CCFFmax")
     end
     # eq. 4- regional human emissions
     v.e_globalCO2emissions[t,r] = (v.e_humanactemissions[t,:]*v.e_humanactemissions[1, :])/100
@@ -65,7 +74,7 @@ function run_timestep(s::co2cycle,t::Int64)
     # eq. 7
     v.teay_ematmsinceprevyr[t]= (v.tea_totemissionsatm[t]+v.tea_totemissionsatm[t-1])*
         (p.y_year[t]-p.y_year[t-1])/2
-    # eq. 8-
+    # eq. 8
     if t==1
         v.cea_cumemissionsatm[t]= p.ce_basecumemissions*p.air_co2fractioninatm/100
     else
@@ -74,10 +83,12 @@ function run_timestep(s::co2cycle,t::Int64)
     end
     # eq. 11
     #same as for CH4, how is re[0] calculated?
-    v.re_remainCO2[t]=p.stay_propemissstayatm *
+    v.renoccff_remainCO2wocarboncyclefeedback[t]=p.stay_propemissstayatm *
         cea_cumuemissionsatm[t-1]* (1-exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime))+
-        v.re_remainCO2[t-1]* (1-exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime))+
+        v.renoccff_remainCO2wocarboncyclefeedback[t-1]* (1-exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime))+
         p.teay_CO2emisssinceprevyr[t]*(1-exp(-(p.y_year[t]-p.y_year[t-1])/(2*p.res_CO2atmlifetime)))
+    #Update from PAGE09
+    v.re_remainCO2[t] = v.renoccff_remainCO2wocarboncyclefeedback[t]*(1+v.gain_linearfeedbackofCO2[t]/100)
     # eq. 12 from Hope (2006)
     v.c_CO2concentration[t]= p.pic_preindustconcCO2 +
       v.exc_excessconcCO2[1] * v.re_remainCO2[t]/v.re_remainCO2[1]
