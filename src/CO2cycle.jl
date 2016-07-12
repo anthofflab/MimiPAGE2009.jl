@@ -21,19 +21,19 @@ using Mimi
     ocean_climatehalflife= Parameter(unit="year")
     grt_globaltemperature= Variable(index=[time], unit="degreeC")
 #inputs from Natural emissions
-    nte_naturalemissions=Parameter(index=[time], unit="Mtonne")
+    nte_naturalemissions=Parameter(index=[time], unit="Mtonne/year")
     stim_biospherefdbk=Parameter(unit="Mtonne/degreeC")
 #inputs from Anthropogenic emissions
-    e_globalCO2emissions=Parameter(index=[time],unit="Mtonne")
+    e_globalCO2emissions=Parameter(index=[time],unit="Mtonne/year")
     er_emissionsvbase=Parameter(index=[time], unit="%")
-    tea_totemissionsatm=Parameter(index=[time], unit="Mtonne")
+    tea_CO2emissionstoatm=Variable(index=[time], unit="Mtonne/year")
     air_CO2fractioninatm=Parameter(unit="%")
-    teay_CO2emisssinceprevyr=Parameter(index=[time], unit="Mtonne")
+    teay_CO2emisssinceprevyr=Variable(index=[time], unit="Mtonne/year")
 #part of Climate component
     rt_realizedtemperature=Parameter(index=[time, region], unit="degreeC")
     rt_0_realizedtemperature=Parameter(index=[region], unit="degreeC")
 #other
-    area =Parameter(index=[region], unit="km2")
+    area=Parameter(index=[region], unit="km2")
     y_year=Parameter(index=[time], unit="year")
 end
 
@@ -60,20 +60,24 @@ function run_timestep(s::co2cycle,t::Int64)
     #end
     #PAGE09 removes eq. 3 from PAGE02
     if t==1
-        v.gain_linearfeedbackofCO2="CCF" * p.rt_realizedtemperature[t]
+        v.gain_linearfeedbackofCO2[t]="CCF" * p.rt_realizedtemperature[t,:]
     else
-        v.gain_linearfeedbackofCO2[t]= min("CCF"* p.rt_realizedtemperature[t-1], "CCFFmax")
+        v.gain_linearfeedbackofCO2[t]= min("CCF"* p.rt_realizedtemperature[t-1,:], "CCFFmax")
     end
     # eq. 4- regional human emissions
     v.e_globalCO2emissions[t,r] = (v.e_humanactemissions[t,:]*v.e_humanactemissions[1, :])/100
     # eq. 5- sum regions for total
     v.e_globalCO2emissions[t] = sum(v.e_globalco2emissions[t,:])
     # eq. 6
-    v.tea_totemissionsatm[t]= (p.e_globalco2emissions[t] + v.nte_naturalemissions[t])*
+    v.tea_CO2emissionstoatmemissionsatm[t]= (p.e_globalco2emissions[t] + v.nte_naturalemissions[t])*
         p.air_CO2fractioninatm/100
-    # eq. 7
-    v.teay_ematmsinceprevyr[t]= (v.tea_totemissionsatm[t]+v.tea_totemissionsatm[t-1])*
-        (p.y_year[t]-p.y_year[t-1])/2
+    # eq. 7- Check with Chris Hope about first time period teay_CO2emisssinceprevyr
+    if t==1
+        v.teay_CO2emisssinceprevyr[t]=v.tea_CO2emissionstoatm[t]
+    else
+        v.teay_CO2emisssinceprevyr[t]= (v.tea_CO2emissionstoatm[t]+v.tea_CO2emissionstoatm[t-1])*
+            (p.y_year[t]-p.y_year[t-1])/2
+    end
     # eq. 8
     if t==1
         v.cea_cumemissionsatm[t]= p.ce_basecumemissions*p.air_co2fractioninatm/100
@@ -82,7 +86,7 @@ function run_timestep(s::co2cycle,t::Int64)
         v.cea_cumemissionsatm[t]= v.cea_cumemissionsatm[t-1]+ v.teay_ematmsinceprevyr[t]
     end
     # eq. 11
-    #same as for CH4, how is re[0] calculated?
+    #same as for CH4, how is re[0] calculated? equation 2
     v.renoccff_remainCO2wocarboncyclefeedback[t]=p.stay_propemissstayatm *
         cea_cumuemissionsatm[t-1]* (1-exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime))+
         v.renoccff_remainCO2wocarboncyclefeedback[t-1]* (1-exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime))+
@@ -92,6 +96,5 @@ function run_timestep(s::co2cycle,t::Int64)
     # eq. 12 from Hope (2006)
     v.c_CO2concentration[t]= p.pic_preindustconcCO2 +
       v.exc_excessconcCO2[1] * v.re_remainCO2[t]/v.re_remainCO2[1]
-
 
 end
