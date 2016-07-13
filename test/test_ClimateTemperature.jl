@@ -1,34 +1,21 @@
 using Mimi
 
 include("../src/ClimateTemperature.jl")
+
 m = Model()
 setindex(m, :time, 10)
 setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
-#Order of addcomponent is important
+
 addcomponent(m, ClimateTemperature)
-area = Parameter(index=[region], unit="km2")
-y_year = Parameter(index=[time], unit="year")
 
-sens_climatesensitivity = Parameter(unit="degreeC")
-ocean_climatehalflife = Parameter(unit="year")
-fslope_forcingslope = Parameter(unit="W/m2")
-
-ft_totalforcing = Parameter(index=[time], unit="W/m2")
-fs_sulfateforcing = Parameter(index=[time], unit="W/m2")
-
-rt_0_realizedtemperature = Parameter(index=[region], unit="degreeC")
-#setparameter(m, :emissions, :gdp, ones(10))
-setparameter(m, :emissions, :intensity0, 5.)
-setparameter(m, :emissions, :g_intensity, -0.01)
-
-#Connect components
-#connectparameter(model, target component, target parameter, source component, source parameter)
-connectparameter(m, :emissions, :gdp, :gdp, :gdp)
-#names should be differentiated
-#should create separate files. modularity.
+setparameter(m, :ClimateTemperature, :area, ones(3))
+setparameter(m, :ClimateTemperature, :y_year, collect(1.0:10.0))
+setparameter(m, :ClimateTemperature, :sens_climatesensitivity, 3.0)
+setparameter(m, :ClimateTemperature, :ocean_climatehalflife, 20.0)
+setparameter(m, :ClimateTemperature, :fslope_forcingslope, 0.8)
+setparameter(m, :ClimateTemperature, :ft_totalforcing, ones(10).*3)
+setparameter(m, :ClimateTemperature, :fs_sulfateforcing, ones(10).*0.5)
+setparameter(m, :ClimateTemperature, :rt_0_realizedtemperature, ones(3).*4)
 
 ##running Model
 run(m)
-
-#Access the variable outcomes
-m[:emissions, :emissions]
