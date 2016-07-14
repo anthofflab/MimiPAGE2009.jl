@@ -15,7 +15,7 @@ function run_timestep(s::ch4emissions,t::Int64)
     d=s.Dimensions
 
     #eq.4 in Hope (2006) - regional CH4 emissions as % change from baseline
-    for r in d.regions
+    for r in d.region
         v.e_regionalCH4emissions[t,r]=p.er_CH4emissionsgrowth[t,r]*p.e0_baselineCH4emissions[r]/100
     end
 

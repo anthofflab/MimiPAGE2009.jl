@@ -17,7 +17,7 @@ using Mimi
     den_CH4density=Parameter(unit="Mtonne/ppbv")
     stim_emissionfeedback=Parameter(unit="Mtonne/degreeC")
     rtl_g_0_realizedtemp=Parameter(unit="degreeC")
-    rtl_g_landtemperature=Parameter(inex=[time],unit="degreeC")
+    rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
 end
 
 function run_timestep(s::ch4cycle,t::Int64)
