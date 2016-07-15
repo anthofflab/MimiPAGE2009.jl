@@ -39,7 +39,7 @@ using Mimi
     y_year=Parameter(index=[time], unit="year")
 end
 
-function run_timestep(s::co2cycle,t::Int64)
+function run_timestep(s::CO2cycle,t::Int64)
     v=s.Variables
     p=s.Parameters
     d=s.Dimensions
@@ -47,7 +47,8 @@ function run_timestep(s::co2cycle,t::Int64)
     if t==1
       # adapted from eq. 1 from Hope (2006)- excess concentration caused by humans
       # as difference between base year and pre-industrial levels
-      v.exc_excessconcCO2 = p.c0_CO2concbaseyr - p.pic_preindustconcCO2
+      v.exc_excessconcCO2 = p.c0_CO2concbaseyr -
+        p.pic_preindustconcCO2
     end
     # eq. 2- Level of emissions remaining in the atm in base year
     #v.re_remainCO2[1]=v.exc_excessconcCO2[1]*p.den_densityofgas
