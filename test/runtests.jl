@@ -1,4 +1,4 @@
-tests = ["ClimateTemperature","CO2forcing"]
+tests = ["ClimateTemperature","CH4cycle","CO2emissions","CH4emissions","CO2forcing"]
 
 for t in tests
     fp = joinpath("test_$t.jl")
