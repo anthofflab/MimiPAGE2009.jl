@@ -4,7 +4,6 @@ include("../src/CH4cycle.jl")
 
 m = Model()
 setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
 
 addcomponent(m, ch4cycle)
 
