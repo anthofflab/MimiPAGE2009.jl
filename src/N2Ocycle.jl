@@ -15,7 +15,7 @@ using Mimi
     y_year_0=Parameter(unit="year")
     res_N2Oatmlifetime=Parameter(unit="year")
     den_N2Odensity=Parameter(unit="Mtonne/ppbv")
-    stim_emissionfeedback=Parameter(unit="Mtonne/degreeC")
+    stim_N2Oemissionfeedback=Parameter(unit="Mtonne/degreeC")
     rtl_g_0_realizedtemp=Parameter(unit="degreeC")
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
 end
@@ -27,7 +27,7 @@ function run_timestep(s::n2ocycle,t::Int64)
 
     if t==1
         #eq.3 from Hope (2006) - natural emissions feedback, using global temperatures calculated in ClimateTemperature component
-        v.nte_natN2Oemissions[t]=p.stim_emissionfeedback*p.rtl_g_0_realizedtemp
+        v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g_0_realizedtemp
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_N2Oemissionstoatm[t]=(p.e_globalN2Oemissions[t]+v.nte_natN2Oemissions[t])*p.air_N2Ofractioninatm/100
         #unclear how calculated in first time period - assume emissions from period 1 are used. Check with Chris Hope.
@@ -42,7 +42,7 @@ function run_timestep(s::n2ocycle,t::Int64)
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
         #Check with Chris Hope - in Hope 2006, natural emissions depend on area-weighted average regional temperatures. Hope 2009 also has ocean and global temperatures.
         #Here assume still using area-weighted average regional temperatures (i.e. land temperatures) for natural emissions feedback
-        v.nte_natN2Oemissions[t]=p.stim_emissionfeedback*p.rtl_g_landtemperature[t-1]
+        v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g_landtemperature[t-1]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_N2Oemissionstoatm[t]=(p.e_globalN2Oemissions[t]+v.nte_natN2Oemissions[t])*p.air_N2Ofractioninatm/100
         #eq.7 from Hope (2006) - average emissions to atm over time period
