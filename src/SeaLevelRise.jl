@@ -4,7 +4,7 @@ using Mimi
 
 # Parameters
 
-  rt_g_globaltemperature = Variable(index=[time], unit="degreeC")
+  rt_g_globaltemperature = Parameter(index=[time], unit="degreeC")
   sltemp_SLtemprise=Parameter(unit = "m-degreeC")
   sla_SLbaselinerise=Parameter(unit = "m")
   sltau_SLresponsetime=Parameter(unit = "years")
@@ -28,12 +28,12 @@ function run_timestep(s::SeaLevelRise,t::Int64)
     yp=p.y_year[1] - p.y_year_0
     v.es_equilibriumSL[t]=p.sltemp_SLtemprise*p.rt_g_globaltemperature[t] + p.sla_SLbaselinerise
     v.expfs_exponential[t]=exp(-yp[t]/p.sltau_SLresponsetime)
-    v.s_sealevel[t]=v.s_sealevel[t-1] + (v.es_equilibriumSL[t] - v.s_sealevel[t-1])*(1-v.expfs_exponential[t])
+    v.s_sealevel[t]=p.s0_initialSL + (v.es_equilibriumSL[t] - p.s0_initialSL)*(1-v.expfs_exponential[t])
 
   else
     yp=p.y_year[t] - p.y_year[t-1]
     v.es_equilibriumSL[t]=p.sltemp_SLtemprise*p.rt_g_globaltemperature[t] + p.sla_SLbaselinerise
-    v.expfs_exponential[t]=exp(-yp[t]/p.sltau_SLresponsetime)
+    v.expfs_exponential[t]=exp(-yp/p.sltau_SLresponsetime)
     v.s_sealevel[t]=v.s_sealevel[t-1] + (v.es_equilibriumSL[t] - v.s_sealevel[t-1])*(1-v.expfs_exponential[t])
 
   end
