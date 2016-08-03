@@ -9,7 +9,7 @@ using Mimi
     exc_excessconcCO2=Variable(unit="ppbv")
     c0_co2concbaseyr=Parameter(unit="ppbv")
     re_remainCO2=Variable(index=[time],unit="ppbv")
-    den_densityofgas=Parameter(unit="Mtonne/pbbv")
+    den_CO2density=Parameter(unit="Mtonne/pbbv")
     cea_cumuemissionsatm=Variable(index=[time], unit="Mtonne")
     ce_cumuemissions=Variable(index=[time], unit="Mtonne")
     res_halflifeatmres=Parameter(unit="year")
@@ -39,7 +39,7 @@ function run_timestep(s::co2cycle,t::Int64)
       v.exc_excessconcCO2 = p.c0_co2concbaseyr - p.pic_preindustconcCO2
     end
     # eq. 2- Level of emissions remaining in the atm in base year
-    v.re_remainCO2[1]=v.exc_excessconcCO2[1]*p.den_densityofgas
+    v.re_remainCO2[1]=v.exc_excessconcCO2[1]*p.den_CO2density
     # eq. 3- Natural emissions stimulated by increase in global mean temp
     if t==1
         v.nte_naturalemissions[t] = p.stim_biospherefdbk*sum(p.rt_realizedtempbase.*
@@ -68,6 +68,16 @@ function run_timestep(s::co2cycle,t::Int64)
     # eq. 12 from Hope (2006)
     v.c_co2concentration[t]= p.pic_preindustconcCO2 +
       v.exc_excessconcCO2 * v.re_remainCO2[t]/v.re_remainCO2[1]
+end
 
+function addCO2cycle(model::Model)
+    co2cycle = addcomponent(model, CO2cycle)
 
+    co2cycle[:pic_preindustconcCO2] = 278000.
+    co2cycle[:den_CO2density] = 2.78
+    co2cycle[:stay_propemissstayatm] = 30.
+    co2cycle[:c0_co2concbaseyr] = 395000.
+    co2cycle[:ce_cumuemissions] = 2050000.
+
+    co2cycle
 end
