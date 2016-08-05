@@ -4,7 +4,6 @@ using Mimi
     region = Index(region)
 
     # Basic parameters
-    area_g_landarea = Parameter(unit="km2")
     area = Parameter(index=[region], unit="km2")
     y_year_0 = Parameter(unit="year")
     y_year = Parameter(index=[time], unit="year")
@@ -50,7 +49,7 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
     end
 
     ## Adjustment for latitude and land
-    ocean_prop_ortion = 1. - (p.area_g_landarea / 510000000.)
+    ocean_prop_ortion = 1. - (sum(p.area) / 510000000.)
     rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs(p.lat_latitude) - p.lat_g_meanlatitude)
 
     ## Unadjusted realized temperature
