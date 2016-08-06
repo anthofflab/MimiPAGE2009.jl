@@ -9,7 +9,6 @@ setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
 addcomponent(m, ClimateTemperature)
 
 setparameter(m, :ClimateTemperature, :area, ones(3))
-setparameter(m, :ClimateTemperature, :area_g_landarea, .29)
 setparameter(m, :ClimateTemperature, :y_year_0, 0.)
 setparameter(m, :ClimateTemperature, :y_year, collect(1.0:10.0))
 
