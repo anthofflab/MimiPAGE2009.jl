@@ -1,6 +1,6 @@
 using Mimi
 
-@defcomp LGcycle begin
+@defcomp LGforcing begin
 
     c_LGconcentration=Parameter(index=[time],unit="ppbv")
     c0_LGconcbaseyr=Parameter(unit="ppbv")
