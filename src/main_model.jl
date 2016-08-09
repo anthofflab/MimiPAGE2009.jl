@@ -1,4 +1,5 @@
 using Mimi
+include("load_parameters.jl")
 include("CO2forcing.jl")
 include("ClimateTemperature.jl")
 
@@ -11,10 +12,12 @@ climatetemperature = addcomponent(m, ClimateTemperature)
 # alternative method
 climatetemperature[:ft_totalforcing] = co2forcingref[:f_CO2forcing]
 
-setparameter(m, :ClimateTemperature, :y_year_0, 2008.)
 #climatetemperature[:y_year_0] = 2008.
 climatetemperature[:fslope_CO2forcingslope] = 5.5
 
 # next: add vector and panel example
+p = load_parameters()
+p["y_year_0", 2008.]
+setleftoverparameters(m, p)
 
 run(m)
