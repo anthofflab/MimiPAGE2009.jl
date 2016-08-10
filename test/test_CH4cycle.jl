@@ -16,7 +16,7 @@ setparameter(m, :ch4cycle, :y_year_0, 2000.) #real value
 setparameter(m, :ch4cycle, :res_CH4atmlifetime, 10.5) #real value
 setparameter(m, :ch4cycle, :den_CH4density, 2.78) #real value
 setparameter(m, :ch4cycle, :stim_CH4emissionfeedback, 0.) #real value
-setparameter(m, :ch4cycle, :rtl_g_0_realizedtemp, 0.5)
+setparameter(m, :ch4cycle, :rtl_g0_baselandtemp, [0.5])
 setparameter(m, :ch4cycle, :rtl_g_landtemperature, ones(10))
 
 ##running Model
