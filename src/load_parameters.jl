@@ -20,5 +20,3 @@ function load_parameters()
     end
     return parameters
 end
-
-load_parameters()
