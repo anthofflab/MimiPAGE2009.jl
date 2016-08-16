@@ -17,7 +17,7 @@ climatetemperature[:fslope_CO2forcingslope] = 5.5
 
 # next: add vector and panel example
 p = load_parameters()
-p["y_year_0", 2008.]
+p["y_year_0"] = 2008.
 setleftoverparameters(m, p)
 
 run(m)
