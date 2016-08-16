@@ -31,7 +31,7 @@ function run_timestep(s::co2cycle,t::Int64)
 
     if t==1
         #CO2 emissions gain calculated based on PAGE 2009
-        gain=min(p.ccf_CO2feedback*p.rt_g0_baseglobaltemp[1],p.ccfmax_maxCO2feedback)
+        gain=p.ccf_CO2feedback*p.rt_g0_baseglobaltemp[1]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_CO2emissionstoatm[t]=(p.e_globalCO2emissions[t])*p.air_CO2fractioninatm/100
         #unclear how calculated in first time period - assume emissions from period 1 are used. Check with Chris Hope.
