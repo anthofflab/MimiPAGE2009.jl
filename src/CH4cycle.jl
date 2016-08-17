@@ -53,5 +53,17 @@ function run_timestep(s::ch4cycle,t::Int64)
 
     #eq.11 from Hope(2006) - CH4 concentration
     v.c_CH4concentration[t]=p.pic_preindustconcCH4+v.exc_excessconcCH4*v.re_remainCH4[t]/v.re_remainCH4[1]
+end
 
+function addCH4cycle(model::Model)
+    ch4cyclecomp = addcomponent(model, ch4cycle)
+
+    ch4cyclecomp[:pic_preindustconcCH4] = 700.
+    ch4cyclecomp[:den_CH4density] = 2.78
+    ch4cyclecomp[:stim_CH4emissionfeedback] = 0.
+    ch4cyclecomp[:air_CH4fractioninatm] = 100.
+    ch4cyclecomp[:res_CH4atmlifetime] = 10.5
+    ch4cyclecomp[:c0_CH4concbaseyr] = 1860.
+
+    ch4cyclecomp
 end

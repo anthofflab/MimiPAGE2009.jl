@@ -56,3 +56,16 @@ function run_timestep(s::n2ocycle,t::Int64)
     v.c_N2Oconcentration[t]=p.pic_preindustconcN2O+v.exc_excessconcN2O*v.re_remainN2O[t]/v.re_remainN2O[1]
 
 end
+
+function addN2Ocycle(model::Model)
+    n2ocyclecomp = addcomponent(model, n2ocycle)
+
+    n2ocyclecomp[:pic_preindustconcN2O] = 270.
+    n2ocyclecomp[:den_N2Odensity] = 7.8
+    n2ocyclecomp[:stim_N2Oemissionfeedback] = 0.
+    n2ocyclecomp[:air_N2Ofractioninatm] = 100.
+    n2ocyclecomp[:res_N2Oatmlifetime] = 114.
+    n2ocyclecomp[:c0_N2Oconcbaseyr] = 322.
+
+    n2ocyclecomp
+end

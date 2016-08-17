@@ -14,4 +14,14 @@ function run_timestep(s::co2forcing, t::Int64)
 
     #eq.13 in Hope 2006
     v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
-end    
+end
+
+function addCO2forcing(model::Model)
+    co2forcingcomp = addcomponent(model, co2forcing)
+
+    co2forcingcomp[:fslope_CO2forcingslope] = 5.5
+    co2forcingcomp[:f0_CO2baseforcing] = 1.735
+    co2forcingcomp[:c0_baseCO2conc] = 395000.
+
+    co2forcingcomp
+end
