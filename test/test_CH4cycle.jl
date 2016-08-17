@@ -10,14 +10,7 @@ addCH4cycle(m)
 setparameter(m, :ch4cycle, :e_globalCH4emissions, ones(10))
 setparameter(m, :ch4cycle, :y_year, [2001.,2002.,2010.,2020.,2040.,2060.,2080.,2100.,2150.,2200.]) #real value
 setparameter(m, :ch4cycle, :y_year_0, 2000.) #real value
-<<<<<<< HEAD
-setparameter(m, :ch4cycle, :res_CH4atmlifetime, 10.5) #real value
-setparameter(m, :ch4cycle, :den_CH4density, 2.78) #real value
-setparameter(m, :ch4cycle, :stim_CH4emissionfeedback, 0.) #real value
 setparameter(m, :ch4cycle, :rtl_g0_baselandtemp, [0.5])
-=======
-setparameter(m, :ch4cycle, :rtl_g_0_realizedtemp, 0.5)
->>>>>>> master
 setparameter(m, :ch4cycle, :rtl_g_landtemperature, ones(10))
 
 ##running Model
