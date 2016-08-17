@@ -1,8 +1,8 @@
 function load_parameters()
-    parameters = Dict{UTF8String, Any}()
+    parameters = Dict{Any, Any}()
 
     parameter_directory = joinpath(dirname(@__FILE__), "..", "data")
-    for file in readdir(parameter_directory)
+    for file in filter(q->splitext(q)[2]==".csv", readdir(parameter_directory))
         parametername = splitext(file)[1]
         full_filename = joinpath(parameter_directory, file)
         content = readlines(full_filename)
