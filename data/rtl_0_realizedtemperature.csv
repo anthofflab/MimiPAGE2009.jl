@@ -1,0 +1,11 @@
+# Index: region
+# Unit: degreeC
+Region,"RT"
+EU,1
+US,1
+OT,1.2
+EE,1.4
+CA,.6
+IA,.8
+AF,.7
+LA,.85

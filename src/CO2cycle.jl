@@ -64,7 +64,18 @@ function run_timestep(s::co2cycle,t::Int64)
         #Hope 2009 - remaining emissions with CO2 feedback
         v.re_remainCO2[t]=v.renoccf_remainCO2wocc[t]*(1+gain)/100
     end
-
     #eq.11 from Hope(2006) - CO2 concentration
     v.c_CO2concentration[t]=p.pic_preindustconcCO2+v.exc_excessconcCO2*v.re_remainCO2[t]/v.re_remainCO2base
+end
+
+function addCO2cycle(model::Model)
+    co2cycle = addcomponent(model, CO2cycle)
+
+    co2cycle[:pic_preindustconcCO2] = 278000.
+    co2cycle[:den_CO2density] = 2.78
+    co2cycle[:stay_fractionCO2emissionsinatm] = 30.
+    co2cycle[:c0_co2concbaseyr] = 395000.
+    co2cycle[:ce_0_basecumCO2emissions] = 2050000.
+
+    co2cycle
 end
