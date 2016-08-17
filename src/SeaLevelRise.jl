@@ -39,3 +39,14 @@ function run_timestep(s::SeaLevelRise,t::Int64)
   end
 
 end
+
+function addSLR(model::Model)
+    slrcomp = addcomponent(model, SeaLevelRise)
+
+    slrcomp[:sltemp_SLtemprise] = 1.73
+    slrcomp[:sla_SLbaselinerise] = 0.15
+    slrcomp[:sltau_SLresponsetime] = 1000.
+    slrcomp[:s0_initialSL] = 3000.
+
+    slrcomp
+end
