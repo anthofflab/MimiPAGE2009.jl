@@ -1,6 +1,6 @@
 using Mimi
 
-include("..\src\LGforcing.jl")
+include("../src/LGforcing.jl")
 
 m = Model()
 

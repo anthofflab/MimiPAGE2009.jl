@@ -4,13 +4,13 @@ using Mimi
 @defcomp LGemissions begin
     region=Index()
 
-# global emissions
+    # global emissions
     e_globalLGemissions=Variable(index=[time],unit="Mtonne/year")
-# baseline emissions
+    # baseline emissions
     e0_baselineLGemissions=Parameter(index=[region],unit="Mtonne/year")
-# regional emissions
+    # regional emissions
     e_regionalLGemissions=Variable(index=[time,region],unit="Mtonne/year")
-# growth rate by region
+    # growth rate by region
     er_LGemissionsgrowth=Parameter(index=[time,region],unit="%")
 
 end
