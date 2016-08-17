@@ -40,7 +40,7 @@ using Mimi
     rtl_g0_baselandtemp=Variable(index=[1],unit="degreeC") #needed for feedback in CH4 and N2O cycles
 end
 
-function init(s::ClimateTemperature, tt::Int64)
+function init(s::ClimateTemperature)
     #calculate global baseline temperature from initial regional temperatures
     v = s.Variables
     p = s.Parameters
