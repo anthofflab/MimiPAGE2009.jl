@@ -16,8 +16,7 @@ using Mimi
     res_LGatmlifetime=Parameter(unit="year")
     den_LGdensity=Parameter(unit="Mtonne/ppbv")
     stim_LGemissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g_0_realizedtemp=Parameter(unit="degreeC")
-    rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
+    rtl_g_0_realizedtemp==Variable(index=[1],unit="degreeC")
     re_remainLGbase=Variable(unit="ppbv")
 end
 
@@ -27,7 +26,7 @@ function run_timestep(s::LGcycle,t::Int64)
 
     if t==1
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
-        v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g_0_realizedtemp
+        v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g_0_realizedtemp[1]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_LGemissionstoatm[t]=(p.e_globalLGemissions[t]+v.nte_natLGemissions[t])*p.air_LGfractioninatm/100
         #Check with Chris Hope - unclear how calculated in first time period - assume emissions from period 1 are used
@@ -55,4 +54,17 @@ function run_timestep(s::LGcycle,t::Int64)
 #eq.11 from Hope(2006) - LG concentration
     v.c_LGconcentration[t]=p.pic_preindustconcLG+v.exc_excessconcLG*v.re_remainLG[t]/v.re_remainLGbase
 
+end
+
+function addLGcycle(model::Model)
+    lgcyclecomp = addcomponent(model, LGcycle)
+
+    lgcyclecomp[:pic_preindustconcLG] = 0.
+    lgcyclecomp[:den_LGdensity] = 100000.
+    lgcyclecomp[:stim_LGemissionfeedback] = 0.
+    lgcyclecomp[:air_LGfractioninatm] = 100.
+    lgcyclecomp[:res_LGatmlifetime] = 1000.
+    lgcyclecomp[:c0_LGconcbaseyr] = 0.11
+
+    lgcyclecomp
 end

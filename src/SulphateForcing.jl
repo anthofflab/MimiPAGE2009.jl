@@ -34,3 +34,12 @@ function run_timestep(s::SulphateForcing, tt::Int64)
         v.fs_sulphateforcing[tt, rr] = fsd_term + fsi_term
     end
 end
+
+function addsulphatecomp(model::Model)
+    sulphatecomp = addcomponent(model, SulphateForcing)
+
+    sulphatecomp[:d_sulphateforcingbase] = -0.47
+    sulphatecomp[:ind_slopeSEforcing_indirect] = -0.40
+
+    sulphatecomp
+end

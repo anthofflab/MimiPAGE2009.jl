@@ -13,9 +13,6 @@ sulphateforcing[:se_sulphateemissions] = ones(10, 3)
 sulphateforcing[:se0_sulphateemissionsbase] = ones(10)
 sulphateforcing[:pse_sulphatevsbase] = ones(10, 3)
 sulphateforcing[:area] = ones(10)
-
-sulphateforcing[:d_sulphateforcingbase] = 1.
-sulphateforcing[:ind_slopeSEforcing_indirect] = 1.
 sulphateforcing[:nf_naturalsfx] = ones(10)
 
 run(m)
