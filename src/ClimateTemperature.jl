@@ -36,6 +36,26 @@ using Mimi
     rtl_g_landtemperature = Variable(index=[time], unit="degreeC")
     rto_g_oceantemperature = Variable(index=[time], unit="degreeC")
     rt_g_globaltemperature = Variable(index=[time], unit="degreeC")
+    rt_g0_baseglobaltemp=Variable(index=[1],unit="degreeC") #needed for feedback in CO2 cycle component
+    rtl_g0_baselandtemp=Variable(index=[1],unit="degreeC") #needed for feedback in CH4 and N2O cycles
+end
+
+function init(s::ClimateTemperature)
+    #calculate global baseline temperature from initial regional temperatures
+    v = s.Variables
+    p = s.Parameters
+    d = s.Dimensions
+
+    ocean_prop_ortion = 1. - (sum(p.area) / 510000000.)
+    rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs(p.lat_latitude) - p.lat_g_meanlatitude)
+    rt_0_realizedtemperature = (p.rtl_0_realizedtemperature - rt_adj_temperatureadjustment) * (1. + (ocean_prop_ortion / p.rlo_ratiolandocean) - ocean_prop_ortion)
+
+    # Equation 21 from Hope (2006): initial global land temperature
+    v.rtl_g0_baselandtemp[1] = sum(rt_0_realizedtemperature' .* p.area) / sum(p.area)
+
+    # initial ocean and global temperatures
+    rto_g0_baseoceantemp = v.rtl_g0_baselandtemp[1]/ p.rlo_ratiolandocean
+    v.rt_g0_baseglobaltemp[1] = ocean_prop_ortion * rto_g0_baseoceantemp + (1. - ocean_prop_ortion) * v.rtl_g0_baselandtemp[1]
 end
 
 function run_timestep(s::ClimateTemperature, tt::Int64)

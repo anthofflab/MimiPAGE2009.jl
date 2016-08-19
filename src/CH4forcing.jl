@@ -25,3 +25,14 @@ function run_timestep(s::ch4forcing, t::Int64)
     over=-0.47*log(1+2.01e-5*(p.c_CH4concentration[t]*p.c0_baseN2Oconc)^0.75+5.31e-15*p.c_CH4concentration[t]*(p.c0_baseN2Oconc*p.c_CH4concentration[t])^1.52)
     v.f_CH4forcing[t]=p.f0_CH4baseforcing+p.fslope_CH4forcingslope*(sqrt(p.c_CH4concentration[t])-sqrt(p.c0_baseCH4conc))+over-v.over_baseoverlap
 end
+
+function addCH4forcing(model::Model)
+    ch4forcingcomp = addcomponent(model, ch4forcing)
+
+    ch4forcingcomp[:fslope_CH4forcingslope] = 0.036
+    ch4forcingcomp[:f0_CH4baseforcing] = 0.550
+    ch4forcingcomp[:c0_baseN2Oconc] = 322.
+    ch4forcingcomp[:c0_baseCH4conc] = 1860.
+
+    ch4forcingcomp
+end
