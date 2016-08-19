@@ -5,13 +5,13 @@ function checkregionorder(model::Model, regions, file)
                                                                  "OECD" => ["OT"],
                                                                  "Africa" => ["AF"],
                                                                  "China" => ["CA"],
-                                                                 "SAsia" => ["IA"],
-                                                                 "LAmerica" => ["LA"],
+                                                                 "SEAsia" => ["IA"],
+                                                                 "LatAmerica" => ["LA"],
                                                                  "USSR" => ["EE"])
 
     for ii in 1:length(regions)
         if model.indices_values[:region][ii] != regions[ii] && !in(regions[ii], regionaliases[model.indices_values[:region][ii]])
-            error("Region indices in $file do not match expectations.")
+            error("Region indices in $file do not match expectations: $(model.indices_values[:region][ii]) <> $(regions[ii]).")
         end
     end
 end
@@ -19,7 +19,7 @@ end
 function checktimeorder(model::Model, times, file)
     for ii in 1:length(times)
         if model.indices_values[:time][ii] != times[ii]
-            error("Time indices in $file do not match expectations.")
+            error("Time indices in $file do not match expectations: $(model.indices_values[:time][ii]) <> $(times[ii]).")
         end
     end
 end
