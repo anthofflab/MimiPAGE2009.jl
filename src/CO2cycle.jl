@@ -69,17 +69,17 @@ function run_timestep(s::co2cycle,t::Int64)
 end
 
 function addCO2cycle(model::Model)
-    co2cycle = addcomponent(model, CO2cycle)
+    co2cycleref = addcomponent(model, co2cycle)
 
-    co2cycle[:pic_preindustconcCO2] = 278000.
-    co2cycle[:den_CO2density] = 7.8
-    co2cycle[:stay_fractionCO2emissionsinatm] = 0.3 #Check with Chris Hope - this is described as a fraction (and is not divided by 100 in the equation) but is given as 30% in the documentation
-    co2cycle[:c0_co2concbaseyr] = 395000.
-    co2cycle[:ce_0_basecumCO2emissions] = 2050000.
-    co2cycle[:res_CO2atmlifetime] = 73.33
-    co2cycle[:ccf_CO2feedback] = 9.67
-    co2cycle[:ccfmax_maxCO2feedback] = 53.33
-    co2cycle[:air_CO2fractioninatm] = 62.00
+    co2cycleref[:pic_preindustconcCO2] = 278000.
+    co2cycleref[:den_CO2density] = 7.8
+    co2cycleref[:stay_fractionCO2emissionsinatm] = 0.3 #Check with Chris Hope - this is described as a fraction (and is not divided by 100 in the equation) but is given as 30% in the documentation
+    co2cycleref[:c0_CO2concbaseyr] = 395000.
+    co2cycleref[:ce_0_basecumCO2emissions] = 2050000.
+    co2cycleref[:res_CO2atmlifetime] = 73.33
+    co2cycleref[:ccf_CO2feedback] = 9.67
+    co2cycleref[:ccfmax_maxCO2feedback] = 53.33
+    co2cycleref[:air_CO2fractioninatm] = 62.00
 
-    co2cycle
+    co2cycleref
 end

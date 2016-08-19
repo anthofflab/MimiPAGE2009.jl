@@ -25,7 +25,7 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 #add all the components
 CO2emissions = addcomponent(m,co2emissions)
 CO2cycle = addCO2cycle(m)
-CO2forcing = addCO2forcing(m, co2forcing)
+CO2forcing = addCO2forcing(m)
 CH4emissions = addcomponent(m, ch4emissions)
 CH4cycle = addCH4cycle(m)
 CH4forcing = addCH4forcing(m)
@@ -44,7 +44,7 @@ sealevelrise = addSLR(m)
 
 CO2cycle[:e_globalCO2emissions] = CO2emissions[:e_globalCO2emissions]
 CO2cycle[:rt_g0_baseglobaltemp] = climatetemperature[:rt_g0_baseglobaltemp]
-CO2cycle[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature
+CO2cycle[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
 CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration]
 
@@ -63,7 +63,7 @@ N2Oforcing[:c_CH4concentration] = CH4cycle[:c_CH4concentration]
 N2Oforcing[:c_N2Oconcentration] = N2Ocycle[:c_N2Oconcentration]
 
 lgcycle[:e_globalLGemissions] = lgemissions[:e_globalLGemissions]
-lgcycle[:rtl_g_0_realizedtemp] = climatetemperature[:rtl_g_0_realizedtemp]
+lgcycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
 lgcycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
 
 lgforcing[:c_LGconcentration] = lgcycle[:c_LGconcentration]
@@ -79,8 +79,10 @@ climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
 # next: add vector and panel example
-p = load_parameters()
+p = load_parameters(m)
 p["y_year_0"] = 2008.
+p["y_year"] = m.indices_values[:time]
+println(keys(p))
 setleftoverparameters(m, p)
 
 run(m)

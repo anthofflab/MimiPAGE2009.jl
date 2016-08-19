@@ -20,11 +20,11 @@ function run_timestep(s::LGforcing, t::Int64)
 end
 
 function addLGforcing(model::Model)
-    lgforcingcomp = addcomponent(model, ch4forcing)
+    lgforcingcomp = addcomponent(model, LGforcing)
 
     lgforcingcomp[:f0_LGforcingbase] = 0.022
     lgforcingcomp[:fslope_LGforcingslope] = 0.2
     lgforcingcomp[:c0_LGconcbaseyr] = 0.11
 
-    ch4forcingcomp
+    lgforcingcomp
 end

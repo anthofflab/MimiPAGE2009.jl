@@ -53,7 +53,7 @@ function load_parameters(model::Model)
 
             # Check that both dimension match
             checktimeorder(model, data[1][:, 1], file)
-            checkregionorder(model, data[2], file)
+            checkregionorder(model, data[2][2:end], file)
 
             parametervalue = convert(Array{Float64}, data[1][:, 2:end])
         else
