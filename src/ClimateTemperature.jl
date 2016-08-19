@@ -85,11 +85,11 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
         # Calculate baseline realized temperature by subtracting off adjustment
         rt_0_realizedtemperature = (p.rtl_0_realizedtemperature - rt_adj_temperatureadjustment) * (1. + (ocean_prop_ortion / p.rlo_ratiolandocean) - ocean_prop_ortion)
         for rr in d.region
-            v.rt_realizedtemperature[tt, rr] = rt_0_realizedtemperature[rr] + (1 - exp((p.y_year[tt] - p.y_year_0) / p.frt_warminghalflife)) * (v.et_equilibriumtemperature[tt, rr] - rt_0_realizedtemperature[rr])
+            v.rt_realizedtemperature[tt, rr] = rt_0_realizedtemperature[rr] + (1 - exp(-(p.y_year[tt] - p.y_year_0) / p.frt_warminghalflife)) * (v.et_equilibriumtemperature[tt, rr] - rt_0_realizedtemperature[rr])
         end
     else
         for rr in d.region
-            v.rt_realizedtemperature[tt, rr] = v.rt_realizedtemperature[tt-1, rr] + (1 - exp((p.y_year[tt] - p.y_year[tt-1]) / p.frt_warminghalflife)) * (v.et_equilibriumtemperature[tt, rr] - v.rt_realizedtemperature[tt-1, rr])
+            v.rt_realizedtemperature[tt, rr] = v.rt_realizedtemperature[tt-1, rr] + (1 - exp(-(p.y_year[tt] - p.y_year[tt-1]) / p.frt_warminghalflife)) * (v.et_equilibriumtemperature[tt, rr] - v.rt_realizedtemperature[tt-1, rr])
         end
     end
 

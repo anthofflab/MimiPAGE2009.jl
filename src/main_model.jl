@@ -82,7 +82,6 @@ sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperatu
 p = load_parameters(m)
 p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
-println(keys(p))
 setleftoverparameters(m, p)
 
 run(m)
