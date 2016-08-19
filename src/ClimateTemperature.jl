@@ -107,3 +107,16 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
     v.rto_g_oceantemperature[tt] = v.rtl_g_landtemperature[tt] / p.rlo_ratiolandocean
     v.rt_g_globaltemperature[tt] = ocean_prop_ortion * v.rto_g_oceantemperature[tt] + (1. - ocean_prop_ortion) * v.rtl_g_landtemperature[tt]
 end
+
+function addclimatetemperature(model::Model)
+    climatetemperaturecomp = addcomponent(model, ClimateTemperature)
+
+    climatetemperaturecomp[:rlo_ratiolandocean] = 1.40
+    climatetemperaturecomp[:pole_polardifference] = 1.50
+    climatetemperaturecomp[:lat_g_meanlatitude] = 30.
+    climatetemperaturecomp[:fslope_CO2forcingslope] = 5.5
+    climatetemperaturecomp[:tcr_transientresponse] = 1.70
+    climatetemperaturecomp[:frt_warminghalflife] = 35.00
+
+    climatetemperaturecomp
+end
