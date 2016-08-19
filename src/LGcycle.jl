@@ -16,7 +16,8 @@ using Mimi
     res_LGatmlifetime=Parameter(unit="year")
     den_LGdensity=Parameter(unit="Mtonne/ppbv")
     stim_LGemissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g_0_realizedtemp==Variable(index=[1],unit="degreeC")
+    rtl_g_0_realizedtemp=Parameter(index=[1],unit="degreeC")
+    rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
     re_remainLGbase=Variable(unit="ppbv")
 end
 

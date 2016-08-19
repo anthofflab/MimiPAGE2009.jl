@@ -9,7 +9,6 @@ setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
 
 sulphateforcing = addcomponent(m, SulphateForcing)
 
-sulphateforcing[:se_sulphateemissions] = ones(10, 3)
 sulphateforcing[:se0_sulphateemissionsbase] = ones(10)
 sulphateforcing[:pse_sulphatevsbase] = ones(10, 3)
 sulphateforcing[:area] = ones(10)
