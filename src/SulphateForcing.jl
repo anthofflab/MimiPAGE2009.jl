@@ -34,6 +34,8 @@ function run_timestep(s::SulphateForcing, tt::Int64)
         bigSFD0 = p.d_sulphateforcingbase * bigSFX0[rr] / (sum(bigSFX0 .* p.area) / sum(p.area))
         fsd_term = bigSFD0 * v.sfx_sulphateflux[tt,rr] / bigSFX0[rr]
         fsi_term = p.ind_slopeSEforcing_indirect/log(2) * log((p.nf_naturalsfx[rr] + v.sfx_sulphateflux[tt, rr]) / p.nf_naturalsfx[rr])
+
+        # NOTE: These numbers seem 2-3 x higher than reality
         v.fs_sulphateforcing[tt, rr] = fsd_term + fsi_term
     end
 end
