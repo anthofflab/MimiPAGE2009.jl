@@ -26,5 +26,5 @@ function addLGforcing(model::Model)
     lgforcingcomp[:fslope_LGforcingslope] = 0.2
     lgforcingcomp[:c0_LGconcbaseyr] = 0.11
 
-    return(lgforcingcomp)
+    return lgforcingcomp
 end
