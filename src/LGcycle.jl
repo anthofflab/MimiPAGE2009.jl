@@ -6,7 +6,7 @@ using Mimi
     pic_preindustconcLG=Parameter(unit="ppbv")
     exc_excessconcLG=Variable(unit="ppbv")
     c0_LGconcbaseyr=Parameter(unit="ppbv")
-    re_remainLG=Variable(index=[time],unit="ppbv")
+    re_remainLG=Variable(index=[time],unit="Mtonne")
     nte_natLGemissions=Variable(index=[time],unit="Mtonne/year")
     air_LGfractioninatm=Parameter(unit="%")
     tea_LGemissionstoatm=Variable(index=[time],unit="Mtonne/year")
@@ -18,7 +18,7 @@ using Mimi
     stim_LGemissionfeedback=Parameter(unit="Mtonne/degreeC")
     rtl_g0_baselandtemp=Parameter(index=[1],unit="degreeC")
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
-    re_remainLGbase=Variable(unit="ppbv")
+    re_remainLGbase=Variable(unit="Mtonne")
 end
 
 function run_timestep(s::LGcycle,t::Int64)
@@ -67,5 +67,5 @@ function addLGcycle(model::Model)
     lgcyclecomp[:res_LGatmlifetime] = 1000.
     lgcyclecomp[:c0_LGconcbaseyr] = 0.11
 
-    lgcyclecomp
+    return(lgcyclecomp)
 end
