@@ -3,16 +3,16 @@ using Mimi
 @defcomp SulphateForcing begin
     region = Index()
 
-    se0_sulphateemissionsbase = Parameter(index=[region], unit="Mtonne/year")
+    se0_sulphateemissionsbase = Parameter(index=[region], unit="TgS/year")
     pse_sulphatevsbase = Parameter(index=[time, region], unit="%")
-    se_sulphateemissions = Variable(index=[time, region], unit="Mtonne/year")
+    se_sulphateemissions = Variable(index=[time, region], unit="TgS/year")
     area = Parameter(index=[region], unit ="km^2")
 
-    sfx_sulphateflux = Variable(index=[time, region], unit="Tg/km^2/yr")
+    sfx_sulphateflux = Variable(index=[time, region], unit="TgS/km^2/yr")
 
     d_sulphateforcingbase = Parameter(unit="W/m2")
     ind_slopeSEforcing_indirect = Parameter(unit="W/m2")
-    nf_naturalsfx = Parameter(index=[region], unit="Tg/km^2/yr")
+    nf_naturalsfx = Parameter(index=[region], unit="TgS/km^2/yr")
 
     fs_sulphateforcing = Variable(index=[time, region], unit="W/m2")
 end
