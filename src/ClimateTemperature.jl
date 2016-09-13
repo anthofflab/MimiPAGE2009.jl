@@ -113,7 +113,7 @@ function addclimatetemperature(model::Model)
 
     climatetemperaturecomp[:rlo_ratiolandocean] = 1.40
     climatetemperaturecomp[:pole_polardifference] = 1.50
-    climatetemperaturecomp[:lat_g_meanlatitude] = 30.
+    climatetemperaturecomp[:lat_g_meanlatitude] = 14.4
     climatetemperaturecomp[:fslope_CO2forcingslope] = 5.5
     climatetemperaturecomp[:tcr_transientresponse] = 1.70
     climatetemperaturecomp[:frt_warminghalflife] = 35.00
