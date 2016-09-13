@@ -47,7 +47,12 @@ function run_timestep(s::co2cycle,t::Int64)
         #eq.9 from Hope(2006) - cumulative emissions in atmosphere
         v.cea_cumCO2emissionsatm[t]=ceabase+v.teay_CO2emissionstoatm[t]
         #eq.11 from Hope (2006) - anthropogenic remaining emissions
-        v.renoccf_remainCO2wocc[t]=p.stay_fractionCO2emissionsinatm*ceabase*(1-exp(-(p.y_year[t]-p.y_year_0)/p.res_CO2atmlifetime))+renoccf0_remainCO2wocc*exp(-(p.y_year[t]-p.y_year_0)/p.res_CO2atmlifetime)+v.teay_CO2emissionstoatm[t]*exp(-(p.y_year[t]-p.y_year_0)/(2*p.res_CO2atmlifetime))
+        v.renoccf_remainCO2wocc[t]=p.stay_fractionCO2emissionsinatm*ceabase*
+            (1-exp(-(p.y_year[t]-p.y_year_0)/
+            p.res_CO2atmlifetime))+renoccf0_remainCO2wocc*
+            exp(-(p.y_year[t]-p.y_year_0)/p.res_CO2atmlifetime)+
+            v.teay_CO2emissionstoatm[t]*exp(-(p.y_year[t]-p.y_year_0)/
+            (2*p.res_CO2atmlifetime))
         #Hope 2009 - remaining emissions with CO2 feedback
         v.re_remainCO2[t]=v.renoccf_remainCO2wocc[t]*(1+gain/100)
     else
@@ -56,16 +61,22 @@ function run_timestep(s::co2cycle,t::Int64)
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_CO2emissionstoatm[t]=(p.e_globalCO2emissions[t])*p.air_CO2fractioninatm/100
         #eq.7 from Hope (2006) - total emissions over time period
-        v.teay_CO2emissionstoatm[t]=(v.tea_CO2emissionstoatm[t]+v.tea_CO2emissionstoatm[t-1])*(p.y_year[t]-p.y_year[t-1])/2
+        v.teay_CO2emissionstoatm[t]=(v.tea_CO2emissionstoatm[t]+v.tea_CO2emissionstoatm[t-1])*
+            (p.y_year[t]-p.y_year[t-1])/2
         #eq.9 from Hope(2006) - cumulative emissions in atmosphere
         v.cea_cumCO2emissionsatm[t]=v.cea_cumCO2emissionsatm[t-1]+v.teay_CO2emissionstoatm[t]
         #eq.11 from Hope (2006) - anthropogenic remaining emissions
-        v.renoccf_remainCO2wocc[t]=p.stay_fractionCO2emissionsinatm*v.cea_cumCO2emissionsatm[t-1]*(1-exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime))+v.renoccf_remainCO2wocc[t-1]*exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime)+v.teay_CO2emissionstoatm[t]*exp(-(p.y_year[t]-p.y_year[t-1])/(2*p.res_CO2atmlifetime))
+        v.renoccf_remainCO2wocc[t]=p.stay_fractionCO2emissionsinatm*v.cea_cumCO2emissionsatm[t-1]*
+            (1-exp(-(p.y_year[t]-p.y_year[t-1])/
+            p.res_CO2atmlifetime))+v.renoccf_remainCO2wocc[t-1]*
+            exp(-(p.y_year[t]-p.y_year[t-1])/p.res_CO2atmlifetime)+
+            v.teay_CO2emissionstoatm[t]*exp(-(p.y_year[t]-p.y_year[t-1])/
+            (2*p.res_CO2atmlifetime))
         #Hope 2009 - remaining emissions with CO2 feedback
         v.re_remainCO2[t]=v.renoccf_remainCO2wocc[t]*(1+gain/100)
     end
     #eq.11 from Hope(2006) - CO2 concentration
-    v.c_CO2concentration[t]=p.pic_preindustconcCO2+v.exc_excessconcCO2*v.re_remainCO2[t]/v.re_remainCO2base
+    v.c_CO2concentration[t]=p.pic_preindustconcCO2+v.exc_excessconcCO2 * v.re_remainCO2[t]/v.re_remainCO2base
 end
 
 function addCO2cycle(model::Model)
