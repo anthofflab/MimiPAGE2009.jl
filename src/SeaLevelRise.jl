@@ -48,5 +48,5 @@ function addSLR(model::Model)
     slrcomp[:sltau_SLresponsetime] = 1000.
     slrcomp[:s0_initialSL] = 0.15
 
-    slrcomp
+    return slrcomp
 end

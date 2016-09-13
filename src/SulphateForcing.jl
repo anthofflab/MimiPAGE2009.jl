@@ -26,7 +26,7 @@ function run_timestep(s::SulphateForcing, tt::Int64)
 
     for rr in d.region
         # Check with Chris Hope
-        v.se_sulphateemissions[tt, rr] = p.se0_sulphateemissionsbase[rr] * p.pse_sulphatevsbase[tt, rr] / 100.
+        v.se_sulphateemissions[tt, rr] = p.se0_sulphateemissionsbase[rr] * p.pse_sulphatevsbase[tt, rr] / 100
 
         # Eq.17 from Hope (2006) - sulfate flux
         v.sfx_sulphateflux[tt,rr] = v.se_sulphateemissions[tt,rr] * (p.pse_sulphatevsbase[tt,rr]/100) / p.area[rr]
@@ -46,5 +46,5 @@ function addsulphatecomp(model::Model)
     sulphatecomp[:d_sulphateforcingbase] = -0.47
     sulphatecomp[:ind_slopeSEforcing_indirect] = -0.40
 
-    sulphatecomp
+    return sulphatecomp
 end

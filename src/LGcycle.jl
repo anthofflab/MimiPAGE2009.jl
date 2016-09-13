@@ -67,5 +67,5 @@ function addLGcycle(model::Model)
     lgcyclecomp[:res_LGatmlifetime] = 1000.
     lgcyclecomp[:c0_LGconcbaseyr] = 0.11
 
-    return(lgcyclecomp)
+    return lgcyclecomp
 end

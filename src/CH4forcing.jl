@@ -34,5 +34,5 @@ function addCH4forcing(model::Model)
     ch4forcingcomp[:c0_baseN2Oconc] = 322.
     ch4forcingcomp[:c0_baseCH4conc] = 1860.
 
-    ch4forcingcomp
+    return ch4forcingcomp
 end

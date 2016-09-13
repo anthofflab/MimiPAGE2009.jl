@@ -46,7 +46,7 @@ function init(s::ClimateTemperature)
     p = s.Parameters
     d = s.Dimensions
 
-    ocean_prop_ortion = 1. - (sum(p.area) / 510000000.)
+    ocean_prop_ortion = 1. - sum(p.area) / 510000000.
     rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs(p.lat_latitude) - p.lat_g_meanlatitude)
     rt_0_realizedtemperature = (p.rtl_0_realizedtemperature - rt_adj_temperatureadjustment) * (1. + (ocean_prop_ortion / p.rlo_ratiolandocean) - ocean_prop_ortion)
 
@@ -118,5 +118,5 @@ function addclimatetemperature(model::Model)
     climatetemperaturecomp[:tcr_transientresponse] = 1.70
     climatetemperaturecomp[:frt_warminghalflife] = 35.00
 
-    climatetemperaturecomp
+    return climatetemperaturecomp
 end
