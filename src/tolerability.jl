@@ -9,12 +9,12 @@
 
     #component parameters
         #uncertain parameters (tolerable before discontinuity)
-    tm_regionalmultiplier = Parameter()
+    tm_regionalmultiplier = Parameter() #EU multiplier not included in Hope 2011... set at US level (pg 34)
     tr_0_tolerablerateofchange= Parameter()
     tp_0_tolerableplateau = Parameter()
     atl_0_adjustedtolerableplateau = Parameter(index=[region], unit="degreeC")
-    plat_increaseintolerableplateaufromadaptation = Parameter(index=[time, region], unit="degreeC")
-    slope_increaseintolerableratefromadaptation = Parameter(index=[time,region], unit="degreeC/year")
+    plat_increaseintolerableplateaufromadaptation = Parameter(index=[time, region], unit="degreeC") #what are these now?
+    slope_increaseintolerableratefromadaptation = Parameter(index=[time,region], unit="degreeC/year") #what are these now?
 
     #component variables
     tr_tolerablerateofchange = Variable(index=[region], unit="degreeC/year")
@@ -56,7 +56,6 @@ end
 function addtolerabilitymarket(model::Model)
     tolerabilitymarketcomp = addcomponent(model, Tolerability, :MarketTolerability)
 
-    tolerabilitymarketcomp[:tm_regionalmultiplier] = 1.
     tolerabilitymarketcomp[:tr_0_tolerablerateofchange] = 0.
     tolerabilitymarketcomp[:tp_0_tolerableplateau] = 2.
     tolerabilitymarketcomp[:atl_0_adjustedtolerableplateau] = 0.
@@ -69,7 +68,6 @@ end
 function addtolerabilitynonmarket(model::Model)
     tolerabilitynonmarketcomp = addcomponent(model, Tolerability, :NonMarketTolerability)
 
-    tolerabilitynonmarketcomp[:tm_regionalmultiplier] = 1.
     tolerabilitynonmarketcomp[:tr_0_tolerablerateofchange] = 0.
     tolerabilitynonmarketcomp[:tp_0_tolerableplateau] = 2.
     tolerabilitynonmarketcomp[:atl_0_adjustedtolerableplateau] = 0.
