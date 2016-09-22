@@ -16,7 +16,7 @@ include("SulphateForcing.jl")
 include("TotalForcing.jl")
 include("ClimateTemperature.jl")
 include("SeaLevelRise.jl")
-include("tolerability.jl")
+include("Tolerability.jl")
 
 
 m = Model()
@@ -42,6 +42,7 @@ climatetemperature = addclimatetemperature(m)
 sealevelrise = addSLR(m)
 tolerabilitymarket = addtolerabilitymarket(m)
 tolerabilitynonmarket= addtolerabilitynonmarket(m)
+tolerabilitysealevel = addtolerabilitysealevel(m)
 
 #connect parameters together
 
@@ -83,7 +84,7 @@ sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperatu
 
 tolerabilitynonmarket[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 tolerabilitymarket[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
-
+tolerabilitysealevel[:s_sealevel] = sealevelrise[:s_sealevel]
 
 # next: add vector and panel example
 p = load_parameters(m)

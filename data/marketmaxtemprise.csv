@@ -1,11 +1,11 @@
 # Index: region
 # Unit: degreeC
 Region,"degreeC"
-EU,0
-US,0
-OT,0
-EE,0
-CA,0
-IA,0
-AF,0
-LA,0
+EU,2
+US,2
+OT,2
+EE,2
+CA,2
+IA,2
+AF,2
+LA,2
