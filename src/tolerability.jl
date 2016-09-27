@@ -30,21 +30,21 @@ end
     y_year = Parameter(index=[time], unit="year")
 
     #incoming parameters from SeaLevelRise
-    s_sealevel = Parameter(index=[time, region], unit="meter")
+    s_sealevel = Parameter(index=[time, region], unit="m")
 
     #component parameters
-    plateau_increaseintolerableplateaufromadaptation = Parameter(index=[region], unit="meter")
+    plateau_increaseintolerableplateaufromadaptation = Parameter(index=[region], unit="m")
     pstart_startdateofadaptpolicy = Parameter(index=[region], unit="year")
     pyears_yearstilfulleffect = Parameter(index=[region], unit="year")
     impred_eventualpercentreduction = Parameter(index=[region], unit= "%")
-    impmax_maxsealevelriseforadaptpolicy = Parameter(index=[region], unit= "meter")
+    impmax_maxsealevelriseforadaptpolicy = Parameter(index=[region], unit= "m")
     istart_startdate = Parameter(index=[region], unit = "year")
     iyears_yearstilfulleffect = Parameter(index=[region], unit= "year")
 
     #component variables
-    atl_adjustedtolerablelevelofsealevelrise = Variable(index=[time,region], unit="meter")
+    atl_adjustedtolerablelevelofsealevelrise = Variable(index=[time,region], unit="m")
     imp_actualreduction = Variable(index=[time, region], unit= "%")
-    i_regionalimpact = Variable(index=[time, region], unit="meter")
+    i_regionalimpact = Variable(index=[time, region], unit="m")
 
 end
 
