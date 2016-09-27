@@ -135,7 +135,7 @@ function addtolerabilitynonmarket(model::Model)
 
     tolerabilitynonmarketcomp[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/nonmarket_plateau.csv")
     tolerabilitynonmarketcomp[:pstart_startdateofadaptpolicy] = readpagedata(model, "../data/nonmarketadaptstart.csv")
-    tolerabilitynonmarketcomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/nonmarketimpactyearstoeffect.csv") # XXX: This should be nonmarketadapttimetoeffect.csv, but it doesn't exist
+    tolerabilitynonmarketcomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/nonmarkettimetoadapt.csv")
     tolerabilitynonmarketcomp[:impred_eventualpercentreduction] = readpagedata(model, "../data/nonmarketimpactreduction.csv")
     tolerabilitynonmarketcomp[:impmax_maxtempriseforadaptpolicy] = readpagedata(model, "../data/nonmarketmaxtemprise.csv")
     tolerabilitynonmarketcomp[:istart_startdate] = readpagedata(model, "../data/nonmarketadaptstart.csv")
