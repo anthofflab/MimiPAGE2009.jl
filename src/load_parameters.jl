@@ -24,30 +24,30 @@ function checktimeorder(model::Model, times, file)
     end
 end
 
-function readpagedata(filepath)
+function readpagedata(model::Model, filepath::AbstractString)
     content = readlines(filepath)
 
     firstline = chomp(content[1])
     if firstline == "# Index: region"
-        data = readcsv(full_filename, header=true)
+        data = readcsv(filepath, header=true)
 
         # Check that regions are in the right order
-        checkregionorder(model, data[1][:, 1], file)
+        checkregionorder(model, data[1][:, 1], basename(filepath))
 
         return convert(Vector{Float64},vec(data[1][:, 2]))
     elseif firstline == "# Index: time"
-        data = readcsv(full_filename, header=true)
+        data = readcsv(filepath, header=true)
 
         # Check that the times are in the right order
-        checktimeorder(model, data[1][:, 1], file)
+        checktimeorder(model, data[1][:, 1], basename(filepath))
 
         return convert(Vector{Float64}, vec(data[1][:, 2]))
     elseif firstline == "# Index: time, region"
-        data = readcsv(full_filename, header=true)
+        data = readcsv(filepath, header=true)
 
         # Check that both dimension match
-        checktimeorder(model, data[1][:, 1], file)
-        checkregionorder(model, data[2][2:end], file)
+        checktimeorder(model, data[1][:, 1], basename(filepath))
+        checkregionorder(model, data[2][2:end], basename(filepath))
 
         return convert(Array{Float64}, data[1][:, 2:end])
     else
@@ -61,9 +61,9 @@ function load_parameters(model::Model)
     parameter_directory = joinpath(dirname(@__FILE__), "..", "data")
     for file in filter(q->splitext(q)[2]==".csv", readdir(parameter_directory))
         parametername = splitext(file)[1]
-        full_filename = joinpath(parameter_directory, file)
+        filepath = joinpath(parameter_directory, file)
 
-        parameters[parametername] = readpagedata(full_filename)
+        parameters[parametername] = readpagedata(model, filepath)
     end
     return parameters
 end

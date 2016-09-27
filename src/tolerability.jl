@@ -1,3 +1,4 @@
+include("load_parameters.jl")
 
 @defcomp Tolerability begin
     region = Index(region)
@@ -8,11 +9,11 @@
     rt_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
 
     #component parameters
-    plateau_increaseintolerableplateaufromadaptation = Parameter(index=[time, region], unit="degreeC")
+    plateau_increaseintolerableplateaufromadaptation = Parameter(index=[region], unit="degreeC")
     pstart_startdateofadaptpolicy = Parameter(index=[region], unit="year")
     pyears_yearstilfulleffect = Parameter(index=[region], unit="year")
     impred_eventualpercentreduction = Parameter(index=[region], unit= "%")
-    impmax_maxsealevelriseforadaptpolicy = Parameter(index=[region], unit= "degreeC")
+    impmax_maxtempriseforadaptpolicy = Parameter(index=[region], unit= "degreeC")
     istart_startdate = Parameter(index=[region], unit = "year")
     iyears_yearstilfulleffect = Parameter(index=[region], unit= "year")
 
@@ -32,7 +33,7 @@ end
     s_sealevel = Parameter(index=[time, region], unit="meter")
 
     #component parameters
-    plateau_increaseintolerableplateaufromadaptation = Parameter(index=[time, region], unit="meter")
+    plateau_increaseintolerableplateaufromadaptation = Parameter(index=[region], unit="meter")
     pstart_startdateofadaptpolicy = Parameter(index=[region], unit="year")
     pyears_yearstilfulleffect = Parameter(index=[region], unit="year")
     impred_eventualpercentreduction = Parameter(index=[region], unit= "%")
@@ -67,7 +68,7 @@ function run_timestep(s::Tolerability, t::Int64)
             v.imp_actualreduction[t,r] = 0
         elseif ((p.y_year[t]-istart_a[r])/iyears_a[r]) < 1
             v.imp_actualreduction[t,r] =
-                (p.y_year[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r])*
+                (p.y_year[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r]*
                 p.impred_eventualpercentreduction[r]
         else
             v.imp_actualreduction[t,r] = p.impred_eventualpercentreduction[r]
@@ -101,7 +102,7 @@ function run_timestep(s::SeaLevelTolerability, t::Int64)
             v.imp_actualreduction[t,r] = 0
         elseif ((Y[t]-istart_a[r])/iyears_a[r]) < 1
             v.imp_actualreduction[t,r] =
-                (Y[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r])*p.impred_eventualpercentreduction[r]
+                (Y[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r]*p.impred_eventualpercentreduction[r]
         else
             v.imp_actualreduction[t,r] = p.impred_eventualpercentreduction[r]
         end
@@ -118,13 +119,13 @@ end
 function addtolerabilitymarket(model::Model)
     tolerabilitymarketcomp = addcomponent(model, Tolerability, :MarketTolerability)
 
-    tolerabilitymarketcomp[:plateau_increaseintolerableplateaufromadaptation] = readfile("../data/market_plateau.csv")
-    tolerabilitymarketcomp[:pstart_startdateofadaptpolicy] = readfile("../data/marketadaptstart.csv")
-    tolerabilitymarketcomp[:pyears_yearstilfulleffect] = readfile("../data/marketadapttimetoeffect.csv")
-    tolerabilitymarketcomp[:impred_eventualpercentreduction] = readfile("../data/marketimpactreduction.csv")
-    tolerabilitymarketcomp[:impmax_maxtempriseforadaptpolicy] = readfile("../data/marketmaxtemprise.csv")
-    tolerabilitymarketcomp[:istart_startdate] = readfile("../data/marketadaptstart.csv")
-    tolerabilitymarketcomp[:iyears_yearstilfulleffect] = readfile("../data/marketimpactyearstoeffect.csv")
+    tolerabilitymarketcomp[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/market_plateau.csv")
+    tolerabilitymarketcomp[:pstart_startdateofadaptpolicy] = readpagedata(model, "../data/marketadaptstart.csv")
+    tolerabilitymarketcomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/marketadapttimetoeffect.csv")
+    tolerabilitymarketcomp[:impred_eventualpercentreduction] = readpagedata(model, "../data/marketimpactreduction.csv")
+    tolerabilitymarketcomp[:impmax_maxtempriseforadaptpolicy] = readpagedata(model, "../data/marketmaxtemprise.csv")
+    tolerabilitymarketcomp[:istart_startdate] = readpagedata(model, "../data/marketadaptstart.csv")
+    tolerabilitymarketcomp[:iyears_yearstilfulleffect] = readpagedata(model, "../data/marketimpactyearstoeffect.csv")
 
     return tolerabilitymarketcomp
 end
@@ -132,13 +133,13 @@ end
 function addtolerabilitynonmarket(model::Model)
     tolerabilitynonmarketcomp = addcomponent(model, Tolerability, :NonMarketTolerability)
 
-    tolerabilitynonmarketcomp[:plateau_increaseintolerableplateaufromadaptation] = readfile("../data/nonmarket_plateau.csv")
-    tolerabilitynonmarketcomp[:pstart_startdateofadaptpolicy] = readfile("../data/nonmarketadaptstart.csv")
-    tolerabilitynonmarketcomp[:pyears_yearstilfulleffect] = readfile("../data/nonmarketadapttimetoeffect.csv")
-    tolerabilitynonmarketcomp[:impred_eventualpercentreduction] = readfile("../data/nonmarketimpactreduction.csv")
-    tolerabilitynonmarketcomp[:impmax_maxtempriseforadaptpolicy] = readfile("../data/nonmarketmaxtemprise.csv")
-    tolerabilitynonmarketcomp[:istart_startdate] = readfile("../data/nonmarketadaptstart.csv")
-    tolerabilitynonmarketcomp[:iyears_yearstilfulleffect] = readfile("../data/nonmarketimpactyearstoeffect.csv")
+    tolerabilitynonmarketcomp[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/nonmarket_plateau.csv")
+    tolerabilitynonmarketcomp[:pstart_startdateofadaptpolicy] = readpagedata(model, "../data/nonmarketadaptstart.csv")
+    tolerabilitynonmarketcomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/nonmarketimpactyearstoeffect.csv") # XXX: This should be nonmarketadapttimetoeffect.csv, but it doesn't exist
+    tolerabilitynonmarketcomp[:impred_eventualpercentreduction] = readpagedata(model, "../data/nonmarketimpactreduction.csv")
+    tolerabilitynonmarketcomp[:impmax_maxtempriseforadaptpolicy] = readpagedata(model, "../data/nonmarketmaxtemprise.csv")
+    tolerabilitynonmarketcomp[:istart_startdate] = readpagedata(model, "../data/nonmarketadaptstart.csv")
+    tolerabilitynonmarketcomp[:iyears_yearstilfulleffect] = readpagedata(model, "../data/nonmarketimpactyearstoeffect.csv")
 
     return tolerabilitynonmarketcomp
 end
@@ -146,13 +147,13 @@ end
 function addtolerabilitysealevel(model::Model)
     tolerabilitysealevelcomp = addcomponent(model, SeaLevelTolerability, :SeaLevelTolerability)
 
-    tolerabilitysealevelcomp[:plateau_increaseintolerableplateaufromadaptation] = readfile("../data/sealevel_plateau.csv")
-    tolerabilitysealevelcomp[:pstart_startdateofadaptpolicy] = readfile("../data/sealeveladaptstart.csv")
-    tolerabilitysealevelcomp[:pyears_yearstilfulleffect] = readfile("../data/sealeveladapttimetoeffect.csv")
-    tolerabilitysealevelcomp[:impred_eventualpercentreduction] = readfile("../data/sealevelimpactreduction.csv")
-    tolerabilitysealevelcomp[:impmax_maxsealevelriseforadaptpolicy] = readfile("../data/sealevelmaxrise.csv")
-    tolerabilitysealevelcomp[:istart_startdate] = readfile("../data/sealeveladaptstart.csv")
-    tolerabilitysealevelcomp[:iyears_yearstilfulleffect] = readfile("../data/sealevelimpactyearstoeffect.csv")
+    tolerabilitysealevelcomp[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/sealevel_plateau.csv")
+    tolerabilitysealevelcomp[:pstart_startdateofadaptpolicy] = readpagedata(model, "../data/sealeveladaptstart.csv")
+    tolerabilitysealevelcomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/sealeveladapttimetoeffect.csv")
+    tolerabilitysealevelcomp[:impred_eventualpercentreduction] = readpagedata(model, "../data/sealevelimpactreduction.csv")
+    tolerabilitysealevelcomp[:impmax_maxsealevelriseforadaptpolicy] = readpagedata(model, "../data/sealevelmaxrise.csv")
+    tolerabilitysealevelcomp[:istart_startdate] = readpagedata(model, "../data/sealeveladaptstart.csv")
+    tolerabilitysealevelcomp[:iyears_yearstilfulleffect] = readpagedata(model, "../data/sealevelimpactyearstoeffect.csv")
 
     return tolerabilitysealevelcomp
 end

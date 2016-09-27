@@ -17,6 +17,7 @@ include("TotalForcing.jl")
 include("ClimateTemperature.jl")
 include("SeaLevelRise.jl")
 include("Tolerability.jl")
+include("AdaptationCosts.jl")
 
 
 m = Model()
@@ -40,9 +41,14 @@ sulphateforcing = addsulphatecomp(m)
 totalforcing = addcomponent(m, TotalForcing)
 climatetemperature = addclimatetemperature(m)
 sealevelrise = addSLR(m)
+# Impacts
 tolerabilitymarket = addtolerabilitymarket(m)
 tolerabilitynonmarket= addtolerabilitynonmarket(m)
 tolerabilitysealevel = addtolerabilitysealevel(m)
+
+adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
+adaptationcosts_economic = addadaptationcosts(m, :Economic)
+adaptationcosts_noneconomic = addadaptationcosts(m, :NonEconomic)
 
 #connect parameters together
 
@@ -85,6 +91,15 @@ sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperatu
 tolerabilitynonmarket[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 tolerabilitymarket[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 tolerabilitysealevel[:s_sealevel] = sealevelrise[:s_sealevel]
+
+adaptationcosts_sealevel[:atl_adjustedtolerablelevel] = tolerabilitysealevel[:atl_adjustedtolerablelevelofsealevelrise]
+adaptationcosts_sealevel[:imp_adaptedimpacts] = tolerabilitysealevel[:imp_actualreduction]
+
+adaptationcosts_economic[:atl_adjustedtolerablelevel] = tolerabilitymarket[:atl_adjustedtolerableleveloftemprise]
+adaptationcosts_economic[:imp_adaptedimpacts] = tolerabilitymarket[:imp_actualreduction]
+
+adaptationcosts_noneconomic[:atl_adjustedtolerablelevel] = tolerabilitynonmarket[:atl_adjustedtolerableleveloftemprise]
+adaptationcosts_noneconomic[:imp_adaptedimpacts] = tolerabilitynonmarket[:imp_actualreduction]
 
 # next: add vector and panel example
 p = load_parameters(m)

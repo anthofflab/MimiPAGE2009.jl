@@ -6,7 +6,7 @@ include("load_parameters.jl")
 
     y0_baselineyear = Parameter(unit="year")
     y_year = Parameter(index=[time], unit="year")
-    gdp = Parameter(index=[time, region], unit="$M")
+    gdp = Parameter(index=[time, region], unit="\$M")
     cf_costregional = Parameter(index=[region], unit="none") # first value should be 1.
 
     automult_autonomouschange = Parameter(unit="none")
@@ -18,7 +18,7 @@ include("load_parameters.jl")
     atl_adjustedtolerablelevel = Parameter(index=[time, region], unit="%")
     imp_adaptedimpacts = Parameter(index=[time, region], unit="%")
 
-    ac_adaptivecosts = Variable(index=[time, region], unit="$M")
+    ac_adaptivecosts = Variable(index=[time, region], unit="\$M")
 end
 
 function run_timestep(s::AdaptationCosts, tt::Int64)
@@ -44,20 +44,20 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
     end
 end
 
-function addadaptivecosts(model::Model, class::Symbol)
+function addadaptationcosts(model::Model, class::Symbol)
     adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCosts$class"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     if class == :SeaLevel
-        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata("../data/impmax_sealevel.csv")
+        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_sealevel.csv")
         adaptationcosts[:cp_costplateau_eu] = 0.0233
         adaptationcosts[:cp_costplateau_eu] = 0.0012
     elseif class == :Economic
-        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata("../data/impmax_economic.csv")
+        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_economic.csv")
         adaptationcosts[:cp_costplateau_eu] = 0.0117
         adaptationcosts[:cp_costplateau_eu] = 0.0040
     elseif class == :NonEconomic
-        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata("../data/impmax_noneconomic.csv")
+        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_noneconomic.csv")
         adaptationcosts[:cp_costplateau_eu] = 0.0233
         adaptationcosts[:cp_costplateau_eu] = 0.0057
     else
