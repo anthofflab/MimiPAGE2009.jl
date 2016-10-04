@@ -43,7 +43,7 @@ climatetemperature = addclimatetemperature(m)
 sealevelrise = addSLR(m)
 # Impacts
 tolerabilitymarket = addtolerabilitymarket(m)
-tolerabilitynonmarket= addtolerabilitynonmarket(m)
+nonmarketdamages= addnonmarketdamages(m)
 tolerabilitysealevel = addtolerabilitysealevel(m)
 
 adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
@@ -88,7 +88,7 @@ climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 
 sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
-tolerabilitynonmarket[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 tolerabilitymarket[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 tolerabilitysealevel[:s_sealevel] = sealevelrise[:s_sealevel]
 
