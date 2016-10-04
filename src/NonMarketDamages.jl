@@ -26,19 +26,22 @@ include("load_parameters.jl")
     rcons_per_cap_MarketRemainConsumption = Parameter(index=[time, region], unit = "")
     rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "")
     SAVE_savingsrate = Parameter(unit= "%")
-    WINCF_ =Parameter()
-    W2_ =Parameter()
-    pow2_ =Parameter()
-    scal_ = Parameter()
+    WINCF_weightsfactor =Parameter(index=[region], unit="")
+    W_NonImpactsatCalibrationTemp =Parameter()
+    ipow_NonMarketImpactFxnExponent =Parameter()
+    iben_NonMarketInitialBenefit=Parameter()
+    tcal_CalibrationTemp = Parameter()
     GDP_per_cap_focus_0_ = Parameter()
+    isat_0_InitialImpactFxnSaturation= Parameter()
 
     #impact variables
-    rcons_per_capNonMarketRemainConsumption = Parameter(index=[time, region], unit = "")
+    isatg_impactfxnsaturation = Variable()
+    rcons_per_cap_NonMarketRemainConsumption = Parameter(index=[time, region], unit = "")
     rgdp_per_cap_NonMarketRemainGDP = Parameter(index=[time, region], unit = "")
-    iref_=Variable(index=[time, region])
-    igdp_=Variable(index=[time, region])
-    isat_= Variable(index=[time,region])
-    isat_per_cap_ = Variable(index=[time,region])
+    iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
+    igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
+    isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
+    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
 end
 
 function run_timestep(s::NonMarketDamages, t::Int64)
@@ -74,28 +77,33 @@ function run_timestep(s::NonMarketDamages, t::Int64)
             v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-v.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
-        v.iref_[t,r]= p.WINCF_[r]*((p.W2_ + p.iben2_ * p.scal_)*(v.i_regionalimpact[t,r]/p.scal_)^p.pow2_ - v.i_regionalimpact[t,r] * p.iben2_)
+        v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*((p.W_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit * p.tcal_CalibrationTemp)*
+            (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.ipow_NonMarketImpactFxnExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
 
-        v.igdp_[t,r]= v.iref_[t,r]*(p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_)^p.pow2_
+        v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
+            (p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_)^p.ipow_NonMarketImpactFxnExponent
 
+        v.isatg_impactfxnsaturation=p.isat_0_InitialImpactFxnSaturation*(1‐p.SAVE_savingsrate/100)
 
-        ISATG=ISAT*(1‐p.SAVE_savingsrate/100)
-
-        if v.igdp_[t,r]<ISATG
-            v.isat_[t,r] = v._igdp[t,r]
-        elseif v.i_regionalimpact[t,r]<v.impmax_maxtempriseforadaptpolicy[r]
-            v.isat_[t,r] = ISATG+((100-p.SAVE_savingsrate)-ISATG)*((v.igdp_[t,r]-ISATG)/
-                (((100-p.SAVE_savingsrate)-ISATG)+ (v.igdp_[t,r]*ISATG)))*(1-v.imp_actualreduction/100)
+        if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
+        elseif v.i_regionalimpact[t,r] < v.impmax_maxtempriseforadaptpolicy[r]
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)*
+                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+ (v.igdp_ImpactatActualGDPperCap[t,r]*
+                v.isatg_impactfxnsaturation)))*(1-v.imp_actualreduction/100)
         else
-            v.isat_[t,r] = ISATG+((100-p.SAVE_savingsrate)-ISATG) * ((v.igdp_[t,r]-ISATG)/
-                (((100-p.SAVE_savingsrate)-ISATG)+ (v.igdp_[t,r] * ISATG))) * (1-(v.imp_actualreduction/100)*
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
+                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+ (v.igdp_ImpactatActualGDPperCap[t,r] *
+                v.isatg_impactfxnsaturation))) * (1-(v.imp_actualreduction/100)*
                 v.impmax_maxtempriseforadaptpolicy[r] / v.i_regionalimpact[t,r])
         end
 
-        v.isat_per_cap_[t,r] = (v.isat[t,r]/100)*p.rgdp_per_cap_MarketRemainGDP[t,r]
-        v.rcons_per_cap_NonMarketRemainConsumption[t,r] = p.rcons_per_cap_MarketRemainConsumption[t,r] - v.isat_per_cap_[t,r]
+        v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_MarketRemainGDP[t,r]
+        v.rcons_per_cap_NonMarketRemainConsumption[t,r] = p.rcons_per_cap_MarketRemainConsumption[t,r] - v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r]
         v.rgdp_per_cap_NonMarketRemainGDP[t,r] = v.rcons_per_cap_NonMarketRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
-
     end
 end
 
@@ -110,11 +118,11 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp[:istart_startdate] = readpagedata(model, "../data/nonmarketadaptstart.csv")
     nonmarketdamagescomp[:iyears_yearstilfulleffect] = readpagedata(model, "../data/nonmarketimpactyearstoeffect.csv")
 
-    nonmarketdamagescomp[:_scal]
-    nonmarketdamagescomp[:_WINCF]
-    nonmarketdamagescomp[:_W2]
-    nonmarketdamagescomp[:_iben2]
-    nonmarketdamagescomp[:_pow2]
+    nonmarketdamagescomp[:tcal_CalibrationTemp]= 2.5
+    nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5
+    nonmarketdamagescomp[:W_NonImpactsatCalibrationTemp] = .53
+    nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
+    nonmarketdamagescomp[:ipow_NonMarketImpactFxnExponent] = 2.17
     nonmarketdamagescomp[:SAVE_savingsrate]= 15.
 
 
