@@ -58,15 +58,15 @@ function run_timestep(s::SLRDamages, t::Int64)
 end
 
 function addslrdamages(model::Model)
-    tolerabilitysealevelcomp = addcomponent(model, SeaLevelTolerability, :SeaLevelTolerability)
+    SLRDamagescomp = addcomponent(model, SLRDamages, :SLRDamages)
 
-    tolerabilitysealevelcomp[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/sealevel_plateau.csv")
-    tolerabilitysealevelcomp[:pstart_startdateofadaptpolicy] = readpagedata(model, "../data/sealeveladaptstart.csv")
-    tolerabilitysealevelcomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/sealeveladapttimetoeffect.csv")
-    tolerabilitysealevelcomp[:impred_eventualpercentreduction] = readpagedata(model, "../data/sealevelimpactreduction.csv")
-    tolerabilitysealevelcomp[:impmax_maxsealevelriseforadaptpolicy] = readpagedata(model, "../data/sealevelmaxrise.csv")
-    tolerabilitysealevelcomp[:istart_startdate] = readpagedata(model, "../data/sealeveladaptstart.csv")
-    tolerabilitysealevelcomp[:iyears_yearstilfulleffect] = readpagedata(model, "../data/sealevelimpactyearstoeffect.csv")
+    SLRDamagescomp[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/sealevel_plateau.csv")
+    SLRDamagescomp[:pstart_startdateofadaptpolicy] = readpagedata(model, "../data/sealeveladaptstart.csv")
+    SLRDamagescomp[:pyears_yearstilfulleffect] = readpagedata(model, "../data/sealeveladapttimetoeffect.csv")
+    SLRDamagescomp[:impred_eventualpercentreduction] = readpagedata(model, "../data/sealevelimpactreduction.csv")
+    SLRDamagescomp[:impmax_maxsealevelriseforadaptpolicy] = readpagedata(model, "../data/sealevelmaxrise.csv")
+    SLRDamagescomp[:istart_startdate] = readpagedata(model, "../data/sealeveladaptstart.csv")
+    SLRDamagescomp[:iyears_yearstilfulleffect] = readpagedata(model, "../data/sealevelimpactyearstoeffect.csv")
 
-    return tolerabilitysealevelcomp
+    return SLRDamagescomp
 end
