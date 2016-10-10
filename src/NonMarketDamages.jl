@@ -64,7 +64,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
 
         if (p.y_year[t]- p.istart_startdateNM[r]) < 0
             v.imp_actualreduction[t,r] = 0
-        elseif ((p.y_year[t]-istart_startdateNM[r])/iyears_yearstilfulleffectNM[r]) < 1
+        elseif ((p.y_year[t]-p.istart_startdateNM[r])/p.iyears_yearstilfulleffectNM[r]) < 1
             v.imp_actualreduction[t,r] =
                 (p.y_year[t]-p.istart_startdateNM[r])/p.iyears_yearstilfulleffectNM[r]*
                 p.impred_eventualpercentreductionNM[r]
@@ -88,18 +88,29 @@ function run_timestep(s::NonMarketDamages, t::Int64)
 
         if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
-        elseif v.i_regionalimpact[t,r] < v.impmax_maxtempriseforadaptpolicy[r]
+        elseif v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r]
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
                 ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)*
                 ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+ (v.igdp_ImpactatActualGDPperCap[t,r]*
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCap[t,r]*
                 v.isatg_impactfxnsaturation)))*(1-v.imp_actualreduction/100)
         else
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
+            println(size(v.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
                 ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+ (v.igdp_ImpactatActualGDPperCap[t,r] *
-                v.isatg_impactfxnsaturation))) * (1-(v.imp_actualreduction/100)*
-                v.impmax_maxtempriseforadaptpolicy[r] / v.i_regionalimpact[t,r])
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCap[t,r] * v.isatg_impactfxnsaturation))) *
+                (1-(v.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyNM[r] /
+                v.i_regionalimpact[t,r])));
+
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
+                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCap[t,r] * v.isatg_impactfxnsaturation))) *
+                (1-(v.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyNM[r] /
+                v.i_regionalimpact[t,r])
         end
 
         v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_MarketRemainGDP[t,r]
@@ -118,9 +129,6 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp[:ipow_NonMarketImpactFxnExponent] = 2.17
     nonmarketdamagescomp[:SAVE_savingsrate]= 15.
     nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
-
-
-
 
     return nonmarketdamagescomp
 end

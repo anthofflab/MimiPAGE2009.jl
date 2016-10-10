@@ -10,9 +10,9 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addnonmarketdamages(m)
 
-setparameter(m, :NonMarketDamages, :rt_realizedtemperature, readtable("data/er_N2Oemissionsgrowth.csv"))
-setparameter(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readtable("data/er_N2Oemissionsgrowth.csv"))
-setparameter(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, )
+setparameter(m, :NonMarketDamages, :rt_realizedtemperature, ones(10,8))
+setparameter(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, ones(10,8))
+setparameter(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, ones(10,8))
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
