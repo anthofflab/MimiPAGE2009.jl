@@ -42,8 +42,8 @@ totalforcing = addcomponent(m, TotalForcing)
 climatetemperature = addclimatetemperature(m)
 sealevelrise = addSLR(m)
 # Impacts
-slrdamages = addtolerabilitysealevel(m)
-marketdamages = addtolerabilitymarket(m)
+slrdamages = addslrdamages(m)
+marketdamages = addnonmarketdamages(m)
 nonmarketdamages= addnonmarketdamages(m)
 
 adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
@@ -96,11 +96,11 @@ nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtempe
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
 
-adaptationcosts_sealevel[:atl_adjustedtolerablelevel] = tolerabilitysealevel[:atl_adjustedtolerablelevelofsealevelrise]
-adaptationcosts_sealevel[:imp_adaptedimpacts] = tolerabilitysealevel[:imp_actualreduction]
+adaptationcosts_sealevel[:atl_adjustedtolerablelevel] = slrdamages[:atl_adjustedtolerablelevelofsealevelrise]
+adaptationcosts_sealevel[:imp_adaptedimpacts] = slrdamages[:imp_actualreduction]
 
-adaptationcosts_economic[:atl_adjustedtolerablelevel] = tolerabilitymarket[:atl_adjustedtolerableleveloftemprise]
-adaptationcosts_economic[:imp_adaptedimpacts] = tolerabilitymarket[:imp_actualreduction]
+adaptationcosts_economic[:atl_adjustedtolerablelevel] = marketdamages[:atl_adjustedtolerableleveloftemprise]
+adaptationcosts_economic[:imp_adaptedimpacts] = marketdamages[:imp_actualreduction]
 
 adaptationcosts_noneconomic[:atl_adjustedtolerablelevel] = nonmarketdamages[:atl_adjustedtolerableleveloftemprise]
 adaptationcosts_noneconomic[:imp_adaptedimpacts] = nonmarketdamages[:imp_actualreduction]
