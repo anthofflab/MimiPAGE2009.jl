@@ -22,6 +22,8 @@ include("load_parameters.jl")
     imp_actualreduction = Variable(index=[time, region], unit= "%")
     i_regionalimpact = Variable(index=[time, region], unit="m")
 
+    iref_ImpactatReferenceGDPperCap
+
 end
 
 function run_timestep(s::SLRDamages, t::Int64)
@@ -30,20 +32,20 @@ function run_timestep(s::SLRDamages, t::Int64)
     d = s.Dimensions
 
     for r in d.region
-        if (Y[t] - p.pstart_startdateofadaptpolicy[r]) < 0
+        if (p.y_year[t] - p.pstart_startdateofadaptpolicy[r]) < 0
             v.atl_adjustedtolerablelevelofsealevelrise[t,r]= 0
-        elseif ((Y[t]-p.pstart_startdateofadaptpolicy[r])/p.pyears_yearstilfulleffect[r])<1.
+        elseif ((p.y_year[t]-p.pstart_startdateofadaptpolicy[r])/p.pyears_yearstilfulleffect[r])<1.
             v.atl_adjustedtolerablelevelofsealevelrise[t,r]=
-                ((Y[t]-p.pstart_startdateofadaptpolicy[r])/p.pyears_yearstilfulleffect[r]) * p.plateau_increaseintolerableplateaufromadaptation[r]
+                ((p.y_year[t]-p.pstart_startdateofadaptpolicy[r])/p.pyears_yearstilfulleffect[r]) * p.plateau_increaseintolerableplateaufromadaptation[r]
         else
-            p.plateau_increaseintolerableplateaufromadaptation[r]
+            p.plateau_increaseintolerableplateaufromadaptation[r] #not quite sure what this is doing
         end
 
-        if (Y[t]- p.istart_startdate[r]) < 0
+        if (p.y_year[t]- p.istart_startdate[r]) < 0
             v.imp_actualreduction[t,r] = 0
-        elseif ((Y[t]-istart_a[r])/iyears_a[r]) < 1
+        elseif ((p.y_year[t]-istart_a[r])/p.iyears_yearstilfulleffect[r]) < 1
             v.imp_actualreduction[t,r] =
-                (Y[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r]*p.impred_eventualpercentreduction[r]
+                (p.y_year[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r]*p.impred_eventualpercentreduction[r]
         else
             v.imp_actualreduction[t,r] = p.impred_eventualpercentreduction[r]
         end
@@ -53,6 +55,8 @@ function run_timestep(s::SLRDamages, t::Int64)
         else
             v.i_regionalimpact[t,r] = p.s_sealevel[t,r]-v.atl_adjustedtolerablelevelofsealevelrise[t,r]
         end
+
+
     end
 
 end
