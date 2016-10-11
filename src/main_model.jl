@@ -43,7 +43,7 @@ climatetemperature = addclimatetemperature(m)
 sealevelrise = addSLR(m)
 # Impacts
 slrdamages = addslrdamages(m)
-marketdamages = addnonmarketdamages(m)
+marketdamages = addmarketdamages(m)
 nonmarketdamages= addnonmarketdamages(m)
 
 adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
@@ -91,6 +91,8 @@ sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperatu
 slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
 
 marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
+marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
 
 nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
