@@ -16,7 +16,8 @@ include("SulphateForcing.jl")
 include("TotalForcing.jl")
 include("ClimateTemperature.jl")
 include("SeaLevelRise.jl")
-include("Tolerability.jl")
+include("MarketDamages.jl")
+include("NonMarketDamages.jl")
 include("AdaptationCosts.jl")
 
 
