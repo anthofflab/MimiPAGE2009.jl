@@ -4,7 +4,7 @@ include("load_parameters.jl")
 @defcomp AdaptationCosts begin
     region = Index()
 
-    y0_baselineyear = Parameter(unit="year")
+    y_year_0 = Parameter(unit="year")
     y_year = Parameter(index=[time], unit="year")
     gdp = Parameter(index=[time, region], unit="\$M")
     cf_costregional = Parameter(index=[region], unit="none") # first value should be 1.
@@ -27,8 +27,8 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
     d = s.Dimensions
 
     # Hope (2009), p. 21, equation -5
-    auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[length(d.time)] - p.y0_baselineyear)))*100 # % per year
-    autofac_autonomouschangefraction = (1 - auto_autonomouschange/100)^(p.y_year[tt] - p.y0_baselineyear) # Varies by year
+    auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[length(d.time)] - p.y_year_0)))*100 # % per year
+    autofac_autonomouschangefraction = (1 - auto_autonomouschange/100)^(p.y_year[tt] - p.y_year_0) # Varies by year
 
     for rr in d.region
         # Hope (2009), p. 25, equations 1-2
@@ -51,15 +51,15 @@ function addadaptationcosts(model::Model, class::Symbol)
     if class == :SeaLevel
         adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_sealevel.csv")
         adaptationcosts[:cp_costplateau_eu] = 0.0233
-        adaptationcosts[:cp_costplateau_eu] = 0.0012
+        adaptationcosts[:ci_costimpact_eu] = 0.0012
     elseif class == :Economic
         adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_economic.csv")
         adaptationcosts[:cp_costplateau_eu] = 0.0117
-        adaptationcosts[:cp_costplateau_eu] = 0.0040
+        adaptationcosts[:ci_costimpact_eu] = 0.0040
     elseif class == :NonEconomic
         adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_noneconomic.csv")
         adaptationcosts[:cp_costplateau_eu] = 0.0233
-        adaptationcosts[:cp_costplateau_eu] = 0.0057
+        adaptationcosts[:ci_costimpact_eu] = 0.0057
     else
         error("Unknown class of adaptation costs.")
     end
