@@ -34,6 +34,7 @@ using DataFrames
     tcal_CalibrationTemp = Parameter()
     GDP_per_cap_focus_0_FocusRegionEU = Parameter()
     isat_0_InitialImpactFxnSaturation= Parameter()
+    pow_NonMarketExponent=Parameter()
 
     #impact variables
     isatg_impactfxnsaturation = Variable()
@@ -79,7 +80,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
         end
 
         v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*((p.W_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit * p.tcal_CalibrationTemp)*
-            (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.ipow_NonMarketImpactFxnExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
+            (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_NonMarketExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
 
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_NonMarketImpactFxnExponent
@@ -118,9 +119,10 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5
     nonmarketdamagescomp[:W_NonImpactsatCalibrationTemp] = .53
     nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
-    nonmarketdamagescomp[:ipow_NonMarketImpactFxnExponent] = 2.17
+    nonmarketdamagescomp[:ipow_NonMarketImpactFxnExponent] = 0.00
     nonmarketdamagescomp[:SAVE_savingsrate]= 15.
     nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
+    nonmarketdamagescomp[:pow_NonMarketExponent]= 2.17
 
     return nonmarketdamagescomp
 end
