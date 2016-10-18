@@ -19,6 +19,7 @@ include("SeaLevelRise.jl")
 include("MarketDamages.jl")
 include("NonMarketDamages.jl")
 include("AdaptationCosts.jl")
+include("AbatementCosts.jl")
 
 
 m = Model()
@@ -50,6 +51,11 @@ nonmarketdamages= addnonmarketdamages(m)
 adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
 adaptationcosts_economic = addadaptationcosts(m, :Economic)
 adaptationcosts_noneconomic = addadaptationcosts(m, :NonEconomic)
+
+abatementcosts_CO2 = addabatementcosts(m, :CO2)
+abatementcosts_CH4 = addabatementcosts(m, :CH4)
+abatementcosts_N20 = addabatementcosts(m, :N20)
+abatementcosts_Lin = addabatementcosts(m, :Lin)
 
 #connect parameters together
 
