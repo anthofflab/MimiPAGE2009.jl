@@ -116,7 +116,7 @@ function addmarketdamages(model::Model)
     marketdamagescomp = addcomponent(model, MarketDamages)
 
     marketdamagescomp[:tcal_CalibrationTemp]= 3.
-    marketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5
+    marketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5 #can't find this parameter in the documentation. Check with Chris Hope.
     marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = .5
     marketdamagescomp[:iben_MarketInitialBenefit] = .13
     marketdamagescomp[:ipow_MarketImpactFxnExponent] = -.13
