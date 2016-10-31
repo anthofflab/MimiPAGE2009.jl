@@ -1,7 +1,15 @@
 using Mimi
 
 @defcomp Discontinuity begin
-  idis_discimpact=Variable(index=[time], unit ="%/degreeC")
+  irefeqdis_discimpact=Variable(index=[region], unit="%")
+  wincf_weightsfactor=Parameter(index=[region], unit="unitless")
+  wdis_gdplostdisc=Variable(index=[region], unit="%")
+  igdpeqdis_discimpactactualgdp=Variable(index=[time,region], unit="%")
+
+# end 10/24
+  rgdppercap_realgdppercapita=Parameter(index=[time,region], unit="\$") # probably wrong
+
+# old shit
   rt_g_globaltemperature = Variable(index=[time], unit="degreeC") # Global mean realized temperature
   tdis_tolerabledisc=Parameter(unit="degreeC")
   wdis_GDPlostdisc=Variable(index=[region], unit="%")
@@ -13,6 +21,16 @@ using Mimi
 
 end
 
+run_timestep(s::Discontinuity, tt::Int64)
+  v = s.Variables
+  p = s.Parameters
+  d = s.Dimensions
+
+  v.idis_discimpact[t] = max([0, (v.rt_g_globaltemperature[t] - p.tdis_tolerabledisc)])
+  v.wdis_GDPlostdisc[r] = min([1, ((p.wdis_0_GDPlostdisc[r]*p.wf_weightsfactor[r])/100)])
+  v.widis_weighteddiscimpact[t,r] = v.idis_discimpact[t] * (p.pdis_discprobability/100) * v.wdis_GDPlostdisc[r] * p.gdp[t,r]
+
+
   # for weights data:
   # using Distributions
   # x = TriangularDist(min, max, mode)    put in actual data
@@ -20,5 +38,3 @@ end
   # construct a vector of triangular distributions
   # data = [TriangularDist(46, 74, 60), Normal(4.,3.)]
   # mean.(data)
-
-end
