@@ -2,6 +2,7 @@
 @defcomp AbatementCosts begin
     region = Index(region)
     y_year = Parameter(index=[time], unit="year")
+    y_year_0 = Parameter(unit="year")
 
     #gas inputs
     emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear = Parameter(unit="%")
@@ -10,11 +11,17 @@
     qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear = Parameter(unit="% of BAU emissions")
     cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear = Parameter(unit="\$/ton")
     ies_InitialExperienceStockofCutbacks = Parameter(unit= "Million ton")
+    er_emissionsgrowth = Parameter(index=[time, region], unit= "%")
+    e0_baselineemissions = Parameter(index=[region], unit= "Mtonne/year")
 
     #regional inputs
     emitf_uncertaintyinBAUemissfactor = Parameter(index=[region])
     q0f_negativecostpercentagefactor = Parameter(index=[region])
     cmaxf_maxcostfactor = Parameter(index=[region])
+
+    #input from other component
+    BAU_businessasusualemissions = Parameter(index=[time, region], unit = "GtC")
+    YAGG = Parameter(index=[time], unit="years") # from equity weighting
 
     #inputs with single, uncertain values
     q0propmult_cutbacksatnegativecostinfinalyear = Parameter()
@@ -27,10 +34,25 @@
     automult_autonomoustechchange = Parameter()
     equity_prop_equityweightsproportion = Parameter()
 
+    #other parameters
+
     #Variables
     emit_UncertaintyinBAUEmissFactor = Variable(index=[region], unit = "%")
     q0propinit_CutbacksinNegativeCostinBaseYear = Variable(index=[region], unit= "% of BAU emissions")
     cmaxinit_MaxCutbackCostinBaseYear = Variable(index=[region], unit = "\$/ton")
+    zc_zerocostemissions = Variable(index=[time, region], unit= "%")
+    cb_reductionsfromzerocostemissions = Variable(index=[time, region], unit= "%")
+    cbe_abosoluteemissionreductions = Variable(index=[time, region], unit="Mtonne")
+    cumcbe_cumulativereductionssincebaseyear = Variable(index=[time, region], unit="Mtonne")
+    cumcbe_g_totalreductions = Variable(index=[time], unit="Mtonne")
+    learnfac_learning= Variable(index=[time, region], unit= "")
+    auto = Variable(unit="% per year")
+    c0g = Variable(unit= "% per year")
+    c0 = Variable(index=[time], unit= "\$/ton")
+    qmaxminusq0propg = Variable(unit= "% per year")
+    qmaxminusq0prop = Variable(unit = "% of BAU emissions")
+    q0propg = Variable(unit = "% per year")
+    q0prop = Variable(index=[time, region], unit="% of BAU emissions")
 
 
 end
@@ -48,8 +70,36 @@ function run_timestep(s::AbatementCosts, t::Int64)
         v.cmaxinit[r] = p.cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear *
             p.cmaxf_maxcostfactor[r]
 
-        #need to calculate zero-cost emissions like in PAGE02
+        v.zc_zerocostemissions[t,r] = (1+v.emit_UncertaintyinBAUEmissFactor[r]/100 * (p.y_year-p.y_year_0)/(p.y_year[10]-p.y_year_0)) * p.BAU[t,r]
 
+        v.cb_reductionsfromzerocostemissions[t,r] = max(v.zc_zerocostemissions[t,r] - p.er_emissionsgrowth[t,r], 0)
+
+        v.cbe_abosoluteemissionreductions[t,r] = v.cb_reductionsfromzerocostemissions[t,r]* p.e0_baselineemissions[r]/100
+
+        if t==1
+            v.cumcbe_cumulativereductionssincebaseyear[t,r] = 0.
+        else
+            v.cumcbe_cumulativereductionssincebaseyear[t,r] = v.cumcbe_cumulativereductionssincebaseyear[t-1, r] + v.cbe_abosoluteemissionreductions[t-1, r] * p.YAGG[t-1]
+        end
+
+        v.cumcbe_g_totalreductions[t] = sum(v.cumcbe_cumulativereductionssincebaseyear[t,:])
+
+        v.learnfac_learning[t,r] = ((p.cross_experiencecrossoverratio *cumcbe_g_totalreductions[t]+ (1-p.cross_experiencecrossoverratio)*cumcbe_cumulativereductionssincebaseyear[t,r] + p.ies_InitialExperienceStockofCutbacks)/ p.ies_InitialExperienceStockofCutbacks)^ -(ln(1/(1-p.learn_learningrate))/ln(2))
+
+        v.auto = (1-p.automult_autonomoustechchange^(1/(p.y_year[10]-p.y_year_0)))*100
+        v.autofac[t] = (1-v.auto/100)^(p.y_year[t] - p.y_year_0)
+
+        v.c0g = (p.c0mult_mostnegativecostinfinalyear^(1/(p.y_year[10]-p.y_year_0))-1)*100
+        v.c0[t] = p.c0init_MostNegativeCostCutbackinBaseYear* (1-v.c0g/100)^(p.y_year[t]-p.y_year_0)
+
+        v.qmaxminusq0propg = (p.qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear ^(1/(p.y_year[10]-p.y_year_0))- 1)* 100
+        v.qmaxminusq0prop[t] = p.qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear * (1+ v.qmaxminusq0propg/100)^(p.y_year[t]-p.y_year_0)
+
+        v.q0propg = p.q0propmult_cutbacksatnegativecostinfinalyear^(1/(p.y_year[10]-p.y_year_0))-1)*100
+        v.q0prop[t,r] = p.q0propinit_CutbacksinNegativeCostinBaseYear[r]* (1+v.q0propg/100)^(p.y_year[t]-p.y_year_0)
+
+        v.q0_absolutecutbacksatnegativecost[t,r]= (v.q0prop[t,r]/100)* (v.zc_zerocostemissions[t,r]/100) * p.e0_baselineemissions[r]
+        v.qmax_maxreferencereductions[t,r] = (v.qmaxminusq0prop[t]/100) * (v.zc_zerocostemissions[t,r]/100)* p.e0_baselineemissions[r] + v.q0_absolutecutbacksatnegativecost[t,r]
 
 end
 
@@ -65,6 +115,7 @@ function addabatementcosts(model::Model, class::Symbol)
     abatementcostscomp[:learn_learningrate] = .2
     abatementcostscomp[:automult_autonomoustechchange] = .22
     abatementcostscomp[:equity_prop_equityweightsproportion] = 1.
+    abatementcostscomp[:y_year_0] = 2008.
 
     if class == :CO2
         abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 8.33
@@ -73,6 +124,9 @@ function addabatementcosts(model::Model, class::Symbol)
         abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 70.
         abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 400.
         abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 150000.
+        abatementcostscomp[:er_emissionsgrowth]= readdata("../data/er_CO2emissionsgrowth.csv")
+        abatementcostscomp[:e0_baselineemissions]= readdata("../data/e0_baselineC02emissions.csv")
+        abatementcostscomp[:BAU] = readdata("../data/")
     elseif class == :CH4
         abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 25.
         abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
@@ -80,6 +134,9 @@ function addabatementcosts(model::Model, class::Symbol)
         abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.67
         abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 6333.33
         abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 2000.
+        abatementcostscomp[:er_emissionsgrowth]= readdata("../data/er_CH4emissionsgrowth.csv")
+        abatementcostscomp[:e0_baselineemissions]= readdata("../data/e0_baselineCH4emissions.csv")
+        abatementcostscomp[:BAU] = readdata("../data/")
     elseif class == :N20
         abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 0.
         abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
@@ -87,6 +144,9 @@ function addabatementcosts(model::Model, class::Symbol)
         abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.67
         abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 27333.33
         abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 53.33
+        abatementcostscomp[:er_emissionsgrowth]= readdata("../data/er_N20emissionsgrowth.csv")
+        abatementcostscomp[:e0_baselineemissions]= readdata("../data/e0_baselineN20emissions.csv")
+        abatementcostscomp[:BAU] = readdata("../data/")
     elseif class == :Lin
         abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 0.
         abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
@@ -94,6 +154,9 @@ function addabatementcosts(model::Model, class::Symbol)
         abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 70.
         abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 333.33
         abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 2000.
+        abatementcostscomp[:er_emissionsgrowth]= readdata("../data/er_LGemissionsgrowth.csv")
+        abatementcostscomp[:e0_baselineemissions]= readdata("../data/e0_baselineLGemissions.csv")
+        abatementcostscomp[:BAU] = readdata("../data/")
     else
         error("Unknown class of abatement costs.")
     end
