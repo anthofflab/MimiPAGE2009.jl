@@ -24,6 +24,7 @@ include("load_parameters.jl")
     SAVE_savingsrate = Parameter(unit= "%") #have this
     WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_NonImpactsatCalibrationTemp =Parameter()
+    W_NonImpactsatCalibrationDISQ = Parameter()
     ipow_SLRImpactFxnExponent =Parameter()
     pow_SLRImpactFxnExponent=Parameter()
     iben_SLRInitialBenefit=Parameter()
@@ -41,6 +42,7 @@ include("load_parameters.jl")
 
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
     isatg_impactfxnsaturation = Variable()
+    isat_per_cap_SLRImpactperCapinclSaturationandAdaptation = Variable(index=[time, region], unit="\$^m")
 
     rcons_per_cap_SLRRemainConsumption = Variable(index=[time, region], unit = "\$^m")
     rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$^m")
@@ -107,11 +109,9 @@ function run_timestep(s::SLRDamages, t::Int64)
                         v.i_regionalimpact[t,r])
                 end
 
-                v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_SLRRemainGDP[t,r]
-                v.rcons_per_cap_SLRemainConsumption[t,r] = p.rcons_per_cap_SLRRemainConsumption[t,r] - v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r]
-                v.rgdp_per_cap_/SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
-
-
+              v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_SLRRemainGDP[t,r]
+              v.rcons_per_cap_SLRemainConsumption[t,r] = p.rcons_per_cap_SLRRemainConsumption[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
+              v.rgdp_per_cap_/SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
 
     end
 
@@ -129,6 +129,8 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:iyears_yearstilfulleffectSLR] = readpagedata(model, "../data/sealevelimpactyearstoeffect.csv")
     SLRDAmagescomp[:pow_SLRImpactFxnExponent] = 0.73
     SLRDAmagescomp[:ipow_SLRImpactFxnExponent] = -0.30
+    SLRDAmagescomp[:iben_SLRInitialBenefit] = 0.00
+
 
     return SLRDamagescomp
 end
