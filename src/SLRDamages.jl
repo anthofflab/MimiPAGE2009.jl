@@ -1,7 +1,8 @@
+using Mimi
 include("load_parameters.jl")
 
 @defcomp SLRDamages begin
-    region = Index(region)
+    region = Index()
 
     y_year = Parameter(index=[time], unit="year")
 
@@ -46,10 +47,6 @@ include("load_parameters.jl")
 
     rcons_per_cap_SLRRemainConsumption = Variable(index=[time, region], unit = "\$^m")
     rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$^m")
-
-
-
-
 end
 
 function run_timestep(s::SLRDamages, t::Int64)
@@ -111,14 +108,14 @@ function run_timestep(s::SLRDamages, t::Int64)
 
               v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_SLRRemainGDP[t,r]
               v.rcons_per_cap_SLRemainConsumption[t,r] = p.rcons_per_cap_SLRRemainConsumption[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
-              v.rgdp_per_cap_/SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
+              v.rgdp_per_cap_SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
 
     end
 
 end
 
 function addslrdamages(model::Model)
-    SLRDamagescomp = addcomponent(model, SLRDamages, :SLRDamages)
+    SLRDamagescomp = addcomponent(model, SLRDamages)
 
     SLRDamagescomp[:plateau_increaseintolerableplateaufromadaptationSLR] = readpagedata(model, "../data/sealevel_plateau.csv")
     SLRDamagescomp[:pstart_startdateofadaptpolicySLR] = readpagedata(model, "../data/sealeveladaptstart.csv")
