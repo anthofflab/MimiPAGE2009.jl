@@ -3,13 +3,14 @@ using Mimi
 include("../src/SLRDamages.jl")
 
 m = Model()
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 setindex(m, :time, 10)
 
-addcomponent(m, SeaLevelRise)
+slrdamages = addslrdamages(m)
 
-setparameter(m, :SeaLevelRise, :rt_g_globaltemperature, ones(10))
-setparameter(m, :SeaLevelRise, :y_year, [2001.,2002.,2010.,2020.,2040.,2060.,2080.,2100.,2150.,2200.]) #real value
-setparameter(m, :SeaLevelRise, :y_year_0, 2000.) #real value
+slrdamages[:rt_g_globaltemperature] = ones(10)
+slrdamages[:y_year] = [2001.,2002.,2010.,2020.,2040.,2060.,2080.,2100.,2150.,2200.] #real value
+slrdamages[:y_year_0] = 2000.
 
 ##running Model
 run(m)
