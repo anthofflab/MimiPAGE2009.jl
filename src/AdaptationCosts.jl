@@ -27,7 +27,7 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
     d = s.Dimensions
 
     # Hope (2009), p. 21, equation -5
-    auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[length(m.indices_values[:time])] - p.y_year_0)))*100 # % per year
+    auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[end] - p.y_year_0)))*100 # % per year
     autofac_autonomouschangefraction = (1 - auto_autonomouschangepercent/100)^(p.y_year[tt] - p.y_year_0) # Varies by year
 
     for rr in d.region
@@ -44,25 +44,38 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
     end
 end
 
-function addadaptationcosts(model::Model, class::Symbol)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCosts$class"))
+function addadaptationcosts_sealevel(model::Model)
+    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsSeaLevel"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
-    if class == :SeaLevel
-        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_sealevel.csv")
-        adaptationcosts[:cp_costplateau_eu] = 0.0233
-        adaptationcosts[:ci_costimpact_eu] = 0.0012
-    elseif class == :Economic
-        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_economic.csv")
-        adaptationcosts[:cp_costplateau_eu] = 0.0117
-        adaptationcosts[:ci_costimpact_eu] = 0.0040
-    elseif class == :NonEconomic
-        adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_noneconomic.csv")
-        adaptationcosts[:cp_costplateau_eu] = 0.0233
-        adaptationcosts[:ci_costimpact_eu] = 0.0057
-    else
-        error("Unknown class of adaptation costs.")
-    end
+    # Sea Level-specific parameters
+    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_sealevel.csv")
+    adaptationcosts[:cp_costplateau_eu] = 0.0233
+    adaptationcosts[:ci_costimpact_eu] = 0.0012
+
+    return adaptationcosts
+end
+
+function addadaptationcosts_economic(model::Model)
+    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsEconomic"))
+    adaptationcosts[:automult_autonomouschange] = 0.22
+
+    # Economic-specific parameters
+    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_economic.csv")
+    adaptationcosts[:cp_costplateau_eu] = 0.0117
+    adaptationcosts[:ci_costimpact_eu] = 0.0040
+
+    return adaptationcosts
+end
+
+function addadaptationcosts_noneconomic(model::Model)
+    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsEconomic"))
+    adaptationcosts[:automult_autonomouschange] = 0.22
+
+    # Non-economic-specific parameters
+    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_noneconomic.csv")
+    adaptationcosts[:cp_costplateau_eu] = 0.0233
+    adaptationcosts[:ci_costimpact_eu] = 0.0057
 
     return adaptationcosts
 end

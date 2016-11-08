@@ -46,9 +46,9 @@ slrdamages = addslrdamages(m)
 marketdamages = addnonmarketdamages(m)
 nonmarketdamages= addnonmarketdamages(m)
 
-adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
-adaptationcosts_economic = addadaptationcosts(m, :Economic)
-adaptationcosts_noneconomic = addadaptationcosts(m, :NonEconomic)
+adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
+adaptationcosts_economic = addadaptationcosts_economic(m)
+adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
 
 #connect parameters together
 
