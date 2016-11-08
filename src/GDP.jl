@@ -3,14 +3,16 @@ using Mimi
 @defcomp GDP begin
 # GDP: Gross domestic product $M
 # GRW: GDP growth rate %/year
-    region=Index()
+    region            = Index()
 
     # Variables
-    gdp = Variable(index=[time, region], unit="\$M")
+    gdp               = Variable(index=[time, region], unit="\$M")
 
     # Parameters
-    y0_baselineyear = Parameter(unit="year")
-    y_year = Parameter(index=[time], unit="year")
+    y_year_0          = Parameter(unit="year")
+    y_year            = Parameter(index=[time], unit="year")
+    grw_gdpgrowthrate = Parameter(index=[time, region], unit="%") #From p.32 of Hope 2009
+    gdp_0             = Parameter(index=[region], unit="\$M") #GDP in y_year_0
 
 end
 
@@ -19,14 +21,12 @@ function run_timestep(s::GDP, t::Int64)
   p = s.Parameters
   d = s.Dimensions
 
-  #Hope 2002:Growth rate is assumed to apply from the previous analysis year
-  if t==1
-      v.grw[tt,rr] = 0.0
-    else
-      v.grw[tt,rr] = (v.gdp[tt, rr] - v.gdp[tt-1, rr])/v.gdp[tt-1, rr]
+  for r in d.region
+    #eq.28 in Hope 2002
+    if t == 1
+      v.gdp[t, r] = p.gdp_0[r]
+      else
+        v.gdp[t, r] = v.gdp[t-1, r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_year_0)
+    end
   end
-
-  #eq.28 in Hope 2002
-  v.gdp[tt, rr] = v.gdp[tt-1, rr] * (1 + (p.grw[tt,rr]/100))^(p.y_year[tt] - p.y0_baselineyear)
-
 end
