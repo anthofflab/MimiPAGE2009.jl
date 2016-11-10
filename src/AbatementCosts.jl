@@ -135,9 +135,8 @@ function run_timestep(s::AbatementCosts, t::Int64)
             v.tc_[t,r] = (v.ahi_[t,r]/v.bhi_[t,r])* (exp(v.bhi_[t,r]*(v.cbe_absoluteemissionreductions[t,r]-v.q0_absolutecutbacksatnegativecost[t,r]))-1) - v.ahi_[t,r]*(v.cbe_absoluteemissionreductions[t,r] - v.q0_absolutecutbacksatnegativecost[t,r]) + v.tcq0_[t,r]
         end
 
-        #sum the gases in another component
-        v.tct_[t,r] =
-        v.tct_per_cap[t,r] = v.tct_[t,r]/
+        #sum the gases in another component (TotalAbatementCosts)
+
 
 
 end
