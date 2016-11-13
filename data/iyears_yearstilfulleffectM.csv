@@ -1,6 +1,7 @@
 # Index: region
 # Unit: year
-Region,"year"
+
+Region,"Years until full impact effect in market"
 EU,20
 US,20
 OT,20

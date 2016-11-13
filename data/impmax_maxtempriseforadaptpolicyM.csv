@@ -1,6 +1,6 @@
 # Index: region
 # Unit: degreeC
-Region,"degreeC"
+Region,"Max temp rise for adaptive policy in market sector"
 EU,2
 US,2
 OT,2
