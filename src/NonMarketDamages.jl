@@ -23,26 +23,26 @@ using DataFrames
     i_regionalimpact = Variable(index=[time, region], unit="degreeC")
 
     #impact Parameters
-    rcons_per_cap_MarketRemainConsumption = Parameter(index=[time, region], unit = "")
-    rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "")
+    rcons_per_cap_MarketRemainConsumption = Parameter(index=[time, region], unit = "\$/person")
+    rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
     save_savingsrate = Parameter(unit= "%")
-    wincf_weightsfactor =Parameter(index=[region], unit="")
-    w_NonImpactsatCalibrationTemp =Parameter()
-    ipow_NonMarketImpactFxnExponent =Parameter()
-    iben_NonMarketInitialBenefit=Parameter()
-    tcal_CalibrationTemp = Parameter()
-    GDP_per_cap_focus_0_FocusRegionEU = Parameter()
-    isat_0_InitialImpactFxnSaturation= Parameter()
+    wincf_weightsfactor =Parameter(index=[region], unit="weight")
+    w_NonImpactsatCalibrationTemp =Parameter(unit="%GDP")
+    ipow_NonMarketImpactFxnExponent =Parameter(unit="unitless")
+    iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC")
+    tcal_CalibrationTemp = Parameter(unit="degreeC")
+    GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person")
+    isat_0_InitialImpactFxnSaturation= Parameter(unit="unitless")
 
     #impact variables
-    isatg_impactfxnsaturation = Variable()
-    rcons_per_cap_NonMarketRemainConsumption = Variable(index=[time, region], unit = "")
-    rgdp_per_cap_NonMarketRemainGDP = Variable(index=[time, region], unit = "")
-    iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
-    igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
-    isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
-    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
+    isatg_impactfxnsaturation = Variable(unit="unitless")
+    rcons_per_cap_NonMarketRemainConsumption = Variable(index=[time, region], unit = "\$/person")
+    rgdp_per_cap_NonMarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
+    iref_ImpactatReferenceGDPperCap=Variable(index=[time, region], unit="%")
+    igdp_ImpactatActualGDPperCap=Variable(index=[time, region], unit="%")
+    isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region], unit="\$")
+    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region], unit="\$/person")
 end
 
 function run_timestep(s::NonMarketDamages, t::Int64)
@@ -59,7 +59,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
                 ((p.y_year[t]-p.pstart_startdateofadaptpolicyNM[r])/p.pyears_yearstilfulleffectNM[r]) *
                 p.plateau_increaseintolerableplateaufromadaptationNM[r]
         else
-            p.plateau_increaseintolerableplateaufromadaptationNM[r]
+            v.atl_adjustedtolerableleveloftemprise[t,r]=p.plateau_increaseintolerableplateaufromadaptationNM[r]
         end
 
         if p.y_year[t]- p.istart_startdateNM[r] < 0
@@ -78,8 +78,9 @@ function run_timestep(s::NonMarketDamages, t::Int64)
             v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-v.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
-        v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*((p.w_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit * p.tcal_CalibrationTemp)*
-            (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.ipow_NonMarketImpactFxnExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
+        v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*
+            ((p.w_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit *p.tcal_CalibrationTemp)*
+                (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.ipow_NonMarketImpactFxnExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
 
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_NonMarketImpactFxnExponent
@@ -88,21 +89,19 @@ function run_timestep(s::NonMarketDamages, t::Int64)
 
         if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
-        elseif v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r]
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
-                ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)*
-                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                (((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCap[t,r]*
-                v.isatg_impactfxnsaturation)))*(1-v.imp_actualreduction[t,r]/100)
         else
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
-                ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation) *
-                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                (((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCap[t,r] * v.isatg_impactfxnsaturation))) *
-                (1-(v.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyNM[r] /
-                v.i_regionalimpact[t,r])
+                ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)*
+                    ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
+                    (((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)+
+                        (v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)))*
+                            (1-v.imp_actualreduction[t,r]/100) *
+                                if v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r]
+                                    1
+                                else
+                                    p.impmax_maxtempriseforadaptpolicyNM[r] /
+                                        v.i_regionalimpact[t,r])
+                                end
         end
 
         v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_MarketRemainGDP[t,r]
