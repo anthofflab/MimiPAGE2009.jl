@@ -1,6 +1,7 @@
 # Index: region
 # Unit: year
-Region,"year"
+
+Region,""
 EU,2000
 US,2000
 OT,2000
