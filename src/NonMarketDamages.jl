@@ -27,7 +27,7 @@ using DataFrames
     rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
     save_savingsrate = Parameter(unit= "%")
-    wincf_weightsfactor =Parameter(index=[region], unit="weight")
+    wincf_weightsfactor =Parameter(index=[region], unit="unitless")
     w_NonImpactsatCalibrationTemp =Parameter(unit="%GDP")
     ipow_NonMarketImpactFxnExponent =Parameter(unit="unitless")
     iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC")
