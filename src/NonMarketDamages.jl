@@ -94,14 +94,10 @@ function run_timestep(s::NonMarketDamages, t::Int64)
                 ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)*
                     ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
                     (((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)+
-                        (v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)))*
-                            (1-v.imp_actualreduction[t,r]/100) *
-                                if v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r]
-                                    1
-                                else
+                        (v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)))* (1-v.imp_actualreduction[t,r]/100) *
+                            (v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r] ? 1 :
                                     p.impmax_maxtempriseforadaptpolicyNM[r] /
                                         v.i_regionalimpact[t,r])
-                                end
         end
 
         v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_MarketRemainGDP[t,r]
