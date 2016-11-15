@@ -90,6 +90,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
         if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
         else
+
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
                 ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)*
                     ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
@@ -109,9 +110,9 @@ end
 function addnonmarketdamages(model::Model)
     nonmarketdamagescomp = addcomponent(model, NonMarketDamages)
 
-    nonmarketdamagescomp[:tcal_CalibrationTemp]= 2.5
-    nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5
-    nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = .53
+    nonmarketdamagescomp[:tcal_CalibrationTemp]= 3.
+    nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5 #can't find this parameter in the documentation. Check with Chris Hope.
+    nonmarketdamagescomp[:W_NonImpactsatCalibrationTemp] = .53
     nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
     nonmarketdamagescomp[:ipow_NonMarketImpactFxnExponent] = 2.17
     nonmarketdamagescomp[:save_savingsrate]= 15.
