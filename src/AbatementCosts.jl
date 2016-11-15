@@ -3,7 +3,7 @@
     region = Index(region)
     y_year = Parameter(index=[time], unit="year")
     y_year_0 = Parameter(unit="year")
-    population = Parameter(index=)
+    population = Parameter(index=[region], unit="million")
 
     #gas inputs
     emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear = Parameter(unit="%")
@@ -16,24 +16,24 @@
     e0_baselineemissions = Parameter(index=[region], unit= "Mtonne/year")
 
     #regional inputs
-    emitf_uncertaintyinBAUemissfactor = Parameter(index=[region])
-    q0f_negativecostpercentagefactor = Parameter(index=[region])
-    cmaxf_maxcostfactor = Parameter(index=[region])
+    emitf_uncertaintyinBAUemissfactor = Parameter(index=[region], unit= "none")
+    q0f_negativecostpercentagefactor = Parameter(index=[region], unit="none")
+    cmaxf_maxcostfactor = Parameter(index=[region], unit="none")
 
     #input from other component
     bau_businessasusualemissions = Parameter(index=[time, region], unit = "%")
     yagg = Parameter(index=[time], unit="years") # from equity weighting
 
     #inputs with single, uncertain values
-    q0propmult_cutbacksatnegativecostinfinalyear = Parameter()
-    qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = Parameter()
-    c0mult_mostnegativecostinfinalyear = Parameter()
-    curve_below_curvatureofMACcurvebelowzerocost = Parameter()
-    curve_above_curvatureofMACcurveabovezerocost = Parameter()
-    cross_experiencecrossoverratio = Parameter()
-    learn_learningrate = Parameter()
-    automult_autonomoustechchange = Parameter()
-    equity_prop_equityweightsproportion = Parameter()
+    q0propmult_cutbacksatnegativecostinfinalyear = Parameter(unit="")
+    qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = Parameter(unit="")
+    c0mult_mostnegativecostinfinalyear = Parameter(unit="")
+    curve_below_curvatureofMACcurvebelowzerocost = Parameter(unit="")
+    curve_above_curvatureofMACcurveabovezerocost = Parameter(unit="")
+    cross_experiencecrossoverratio = Parameter(unit="")
+    learn_learningrate = Parameter(unit="")
+    automult_autonomoustechchange = Parameter(unit="")
+    equity_prop_equityweightsproportion = Parameter(unit="")
 
     #other parameters
 
@@ -56,12 +56,12 @@
     q0prop = Variable(index=[time, region], unit="% of BAU emissions")
     q0_absolutecutbacksatnegativecost = Variable(index=[time, region], unit= "Mtonne")
     qmax_maxreferencereductions = Variable(index=[time, region], unit="Mtonne")
-    cmax_ = Variable(index=[time,region], unit = "\$/tonne")
-    blo_ = Variable(index=[time, region], unit = "per Mtonne")
-    alo_ = Variable(index=[time, region], unit = "\$/tonne")
-    bhi_ = Variable(index=[time, region], unit = "per Mtonne")
-    ahi_ = Variable(index=[time, region], unit = "\$/tonne")
-    mc_ = Variable(index=[time, region], unit = "\$/tonne")
+    cmax = Variable(index=[time,region], unit = "\$/tonne")
+    blo = Variable(index=[time, region], unit = "per Mtonne")
+    alo = Variable(index=[time, region], unit = "\$/tonne")
+    bhi = Variable(index=[time, region], unit = "per Mtonne")
+    ahi = Variable(index=[time, region], unit = "\$/tonne")
+    mc_marginalcost = Variable(index=[time, region], unit = "\$/tonne")
     tcq0_ = Variable(index=[time, region], unit = "\$million")
 
 end
