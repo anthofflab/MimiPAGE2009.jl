@@ -17,7 +17,7 @@ using Mimi
   y_year=Parameter(index=[time], unit="year")
   distau_discontinuityexponent=Parameter(unit="unitless")
 
-  idis_lossfromdisc=Parameter(index=[time], unit="%") #could be wrong
+  idis_lossfromdisc=Parameter(index=[time], unit="%") # could be wrong
   pdis_probability=Parameter(unit="%/degreeC")
 
   isat_satdiscimpact=Variable(index=[time,region], unit="%")
@@ -34,11 +34,32 @@ run_timestep(s::Discontinuity, tt::Int64)
 
   for rr in d.region
 
+  v.expfdis_discdecay[t]=exp(‐(p.y_year[t] – p.y_year[t-1])/p.distau_discontinuityexponent) # may have problem with negative exponent
+
+  if t == 1
+
+  v.igdp_realizeddiscimpact[t,r]=v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*v.igdpeqdis_eqdiscimpact[t,r]
+
+  else
+
+  v.igdp_realizeddiscimpact[t,r]=v.igdp_realizeddiscimpact[t-1,r]+v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*(v.igdpeqdis_eqdiscimpact[t,r]-v.igdp_realizeddiscimpact[t-1,r])
+
   v.irefeqdis_discimpact[r] = p.wincf_weightsfactor[r]*p.wdis_gdplostdisc
 
-  v.igdpeqdis_eqdiscimpact[i,r] = v.irefeqdis_discimpact[r] * (p.rgdp_per_cap_NonMarketRemainGDP[i,r]/p.rgdp_per_cap_NonMarketRemainGDP[i,1])^p.ipow_incomeexponent
+  v.igdpeqdis_eqdiscimpact[t,r] = v.irefeqdis_discimpact[r] * (p.rgdp_per_cap_NonMarketRemainGDP[t,r]/p.rgdp_per_cap_NonMarketRemainGDP[t,1])^p.ipow_incomeexponent
 
-  # stopping here 10/31
+## ending here 11/14 - figure out if else thingy
+
+  if   p.idis_lossfromdisc[i]*(p.pdis_probability/100) > rand(0:1)
+
+  elseif
+
+  else
+
+  end
+
+
+
 
 end
 
@@ -58,3 +79,5 @@ function addDiscontinuity(model::Model)
     disccomp[:wincf_weightsfactor]=[0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6]
     disccomp[:wdis_gdplostdisc]=0.15
     disccomp[:ipow_incomeexponent]=-0.5
+
+    # data for distau???
