@@ -1,6 +1,7 @@
 # Index: region
 # Unit: degreeC
-Region,"degreeC"
+
+Region,"Plateau in Market Sector"
 EU,1.0
 US,1.0
 OT,1.0
