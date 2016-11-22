@@ -26,7 +26,7 @@ function run_timestep(s::GDP, t::Int64)
     if t == 1
       v.gdp[t, r] = p.gdp_0[r]
       else
-        v.gdp[t, r] = v.gdp[t-1, r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_y_year[t-1])
+        v.gdp[t, r] = v.gdp[t-1, r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_year[t-1])
     end
   end
 end
