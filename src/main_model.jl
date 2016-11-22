@@ -16,10 +16,10 @@ include("SulphateForcing.jl")
 include("TotalForcing.jl")
 include("ClimateTemperature.jl")
 include("SeaLevelRise.jl")
+include("GDP.jl")
 include("MarketDamages.jl")
 include("NonMarketDamages.jl")
 include("AdaptationCosts.jl")
-
 
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -108,6 +108,8 @@ adaptationcosts_economic[:imp_adaptedimpacts] = marketdamages[:imp_actualreducti
 adaptationcosts_noneconomic[:atl_adjustedtolerablelevel] = nonmarketdamages[:atl_adjustedtolerableleveloftemprise]
 adaptationcosts_noneconomic[:imp_adaptedimpacts] = nonmarketdamages[:imp_actualreduction]
 
+
+adaptationcosts[:gdp] = GDP[:gdp]
 
 # next: add vector and panel example
 p = load_parameters(m)
