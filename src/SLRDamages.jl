@@ -5,6 +5,7 @@ include("load_parameters.jl")
     region = Index()
 
     y_year = Parameter(index=[time], unit="year")
+    y_year_0 = Parameter(unit="year")
 
     #incoming parameters from SeaLevelRise
     s_sealevel = Parameter(index=[time, region], unit="m")
@@ -15,12 +16,13 @@ include("load_parameters.jl")
     pyears_yearstilfulleffectSLR = Parameter(index=[region], unit="year")
     impred_eventualpercentreductionSLR = Parameter(index=[region], unit= "%")
     impmax_maxsealevelriseforadaptpolicySLR = Parameter(index=[region], unit= "m")
+    impmax_maxtempriseforadaptpolicySLR = Parameter(index=[region], unit= "degreeC")
     istart_startdateSLR = Parameter(index=[region], unit = "year")
     iyears_yearstilfulleffectSLR = Parameter(index=[region], unit= "year")
 
     #pulled from non-SLR damages
 
-    rcons_per_cap_SLRRemainConsumption = Parameter(index=[time, region], unit = "\$^m") #have this
+    rcons_per_cap_AfterCosts = Parameter(index=[time, region], unit = "\$^m") #have this
     rgdp_per_cap_SLRRemainGDP = Parameter(index=[time, region], unit = "\$^m") #have this
     SAVE_savingsrate = Parameter(unit= "%") #have this
     WINCF_weightsfactor =Parameter(index=[region], unit="")
@@ -35,8 +37,8 @@ include("load_parameters.jl")
 
     #component variables
     atl_adjustedtolerablelevelofsealevelrise = Variable(index=[time,region], unit="m")
-    imp_actualreduction = Variable(index=[time, region], unit= "%")
-    i_regionalimpact = Variable(index=[time, region], unit="m")
+    imp_actualreduction = Variable(index=[time, region], unit="%")
+    i_regionalimpactSLR = Variable(index=[time, region], unit="m")
 
     iref_ImpactatReferenceGDPperCap = Variable(index=[time, region]) #variable or parameter?
     igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
@@ -54,6 +56,7 @@ function run_timestep(s::SLRDamages, t::Int64)
     p = s.Parameters
     d = s.Dimensions
 
+    println("Timestep ")
     for r in d.region
         if (p.y_year[t] - p.pstart_startdateofadaptpolicySLR[r]) < 0
             v.atl_adjustedtolerablelevelofsealevelrise[t,r]= 0
@@ -65,37 +68,44 @@ function run_timestep(s::SLRDamages, t::Int64)
         end
 
         if (p.y_year[t]- p.istart_startdateSLR[r]) < 0
-            v.imp_actualreduction[t,r] = 0
-        elseif ((p.y_year[t]-istart_a[r])/p.iyears_yearstilfulleffectSLR[r]) < 1
+            v.imp_actualreduction[t,r] = 0.
+        elseif ((p.y_year[t]-p.istart_startdateSLR[r])/p.iyears_yearstilfulleffectSLR[r]) < 1 #changed istart_a to istart_startdateSLR
             v.imp_actualreduction[t,r] =
                 (p.y_year[t]-p.istart_startdateSLR[r])/p.iyears_yearstilfulleffectSLR[r]*p.impred_eventualpercentreductionSLR[r]
+                println("I tripped the first else if")
+                println(v.imp_actualreduction[t,r])
         else
             v.imp_actualreduction[t,r] = p.impred_eventualpercentreductionSLR[r]
+            println("I tripped the second else if")
+            println(v.imp_actualreduction[t,r])
         end
 
+        #println("Hello world")
         if (p.s_sealevel[t,r]-v.atl_adjustedtolerablelevelofsealevelrise[t,r]) < 0
-            v.i_regionalimpact[t,r] = 0
+            v.i_regionalimpactSLR[t,r] = 0
         else
-            v.i_regionalimpact[t,r] = p.s_sealevel[t,r]-v.atl_adjustedtolerablelevelofsealevelrise[t,r]
+            v.i_regionalimpactSLR[t,r] = p.s_sealevel[t,r]-v.atl_adjustedtolerablelevelofsealevelrise[t,r]
         end
 
         v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*((p.W_NonImpactsatCalibrationTemp + p.iben_SLRInitialBenefit * p.tcal_CalibrationTemp)*
-            (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_SLRImpactFxnExponent - v.i_regionalimpact[t,r] * p.iben_SLRInitialBenefit)
+            (v.i_regionalimpactSLR[t,r]/p.tcal_CalibrationTemp)^p.pow_SLRImpactFxnExponent - v.i_regionalimpactSLR[t,r] * p.iben_SLRInitialBenefit)
 
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
                 (p.rgdp_per_cap_SLRRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_SLRImpactFxnExponent
 
         v.isatg_impactfxnsaturation= p.isat_0_InitialImpactFxnSaturation * (1 - p.SAVE_savingsrate/100)
-
+                println(v.imp_actualreduction[t,r])
                 if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
                     v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
-                elseif v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r]
+                elseif v.i_regionalimpactSLR[t,r] < p.impmax_maxtempriseforadaptpolicySLR[r]
                     v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
                         ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)*
                         ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
                         (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
                         (v.igdp_ImpactatActualGDPperCap[t,r]*
-                        v.isatg_impactfxnsaturation)))*(1-v.imp_actualreduction/100)
+                        v.isatg_impactfxnsaturation)))*
+                        (1-v.imp_actualreduction[t,r]/100)
+
                 else
                     v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
                         ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
@@ -103,11 +113,11 @@ function run_timestep(s::SLRDamages, t::Int64)
                         (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
                         (v.igdp_ImpactatActualGDPperCap[t,r] * v.isatg_impactfxnsaturation))) *
                         (1-(v.imp_actualreduction[t,r]/100)* p.impmax_maxsealevelriseforadaptpolicySLR[r] /
-                        v.i_regionalimpact[t,r])
+                        v.i_regionalimpactSLR[t,r])
                 end
 
               v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_SLRRemainGDP[t,r]
-              v.rcons_per_cap_SLRemainConsumption[t,r] = p.rcons_per_cap_SLRRemainConsumption[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
+              v.rcons_per_cap_SLRRemainConsumption[t,r] = p.rcons_per_cap_AfterCosts[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
               v.rgdp_per_cap_SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
 
     end
@@ -124,9 +134,9 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:impmax_maxsealevelriseforadaptpolicySLR] = readpagedata(model, "../data/sealevelmaxrise.csv")
     SLRDamagescomp[:istart_startdateSLR] = readpagedata(model, "../data/sealeveladaptstart.csv")
     SLRDamagescomp[:iyears_yearstilfulleffectSLR] = readpagedata(model, "../data/sealevelimpactyearstoeffect.csv")
-    SLRDAmagescomp[:pow_SLRImpactFxnExponent] = 0.73
-    SLRDAmagescomp[:ipow_SLRImpactFxnExponent] = -0.30
-    SLRDAmagescomp[:iben_SLRInitialBenefit] = 0.00
+    SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.73
+    SLRDamagescomp[:ipow_SLRImpactFxnExponent] = -0.30
+    SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
 
 
     return SLRDamagescomp
