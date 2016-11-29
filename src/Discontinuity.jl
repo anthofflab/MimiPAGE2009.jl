@@ -7,7 +7,7 @@ using Mimi
   wdis_gdplostdisc=Parameter(unit="%")
 
   igdpeqdis_eqdiscimpact=Variable(index=[time,region], unit="%")
-  rgdp_per_cap_NonMarketRemainGDP=Parameter(index=[time,region], unit="unitless")
+  rgdp_per_cap_DiscRemainGDP=Parameter(index=[time,region], unit="unitless")
   ipow_incomeexponent=Parameter(unit="unitless")
 
   igdp_realizeddiscimpact=Variable(index=[time,region], unit="%")
@@ -23,7 +23,9 @@ using Mimi
   isat_satdiscimpact=Variable(index=[time,region], unit="%")
   isatg_saturationmodification=Variable(unit="unitless")
 
-  # documentation includes per capita saturation impacts, but we did not include it here
+  isat_per_cap_DiscImpactperCapinclSaturation=Variable(index=[time,region], unit="%/person")
+  rcons_per_cap_DiscRemainConsumption=Parameter(index=[time, region], unit = "%/person")
+  rcons_per_cap_DiscRemainConsumptionv=Variable(index=[time, region], unit = "%/person")
 
 end
 
@@ -48,21 +50,31 @@ run_timestep(s::Discontinuity, tt::Int64)
 
   v.igdpeqdis_eqdiscimpact[t,r] = v.irefeqdis_discimpact[r] * (p.rgdp_per_cap_NonMarketRemainGDP[t,r]/p.rgdp_per_cap_NonMarketRemainGDP[t,1])^p.ipow_incomeexponent
 
-## ending here 11/14 - figure out if else thingy
+  v.isat_per_cap_DiscImpactperCapinclSaturation[t,r] = v.isat_satdiscimpact[t,r]*p.rgdp_per_cap_DiscRemainGDP[t,r]
+  v.rcons_per_cap_DiscRemainConsumptionv[t,r] = p.rcons_per_cap_DiscRemainConsumption[t,r] - v.isat_per_cap_DiscImpactperCapinclSaturation[t,r]
 
-  if   p.idis_lossfromdisc[i]*(p.pdis_probability/100) > rand(0:1)
+    if igdp_realizeddiscimpact[t,r] < v.isatg_saturationmodification
+      v.isat_satdiscimpact[t,r] = igdp_realizeddiscimpact[t,r]
 
-  elseif
+    else v.isat_satdiscimpact[t,r] = v.isatg_saturationmodification + (100-v.isatg_saturationmodification)*((v.igdp_realizeddiscimpact[t,r]-v.isatg_saturationmodification)/((100-v.isatg_saturationmodification)+(v.igdp_realizeddiscimpact[t,r] - v.isatg_saturationmodification))
 
-  else
+    end
+
+    if   p.idis_lossfromdisc[t]*(p.pdis_probability/100) > rand(0:1)
+      p.occurdis_occurrencedummy[t] = 1
+
+    elseif p.occurdis_occurrencedummy[t-1] = 1
+      p.occurdis_occurrencedummy[t] = 1
+
+    else  occurdis_occurrencedummy[t] = 0
+
+    end
 
   end
 
-
-
-
 end
 
+# next: add parameter data, debug
 
   # for weights data, if using the provided distributions:
   # using Distributions
