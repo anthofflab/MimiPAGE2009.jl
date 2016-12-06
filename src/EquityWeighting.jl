@@ -190,7 +190,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
     v.te_totaleffect = min(v.td_totaldiscountedimpacts + v.tpc_totalaggregatedcosts + v.tac_totaladaptationcosts, civvalue_impactcap)
 end
 
-function addadaptationcosts(model::Model)
+function addequityweighting(model::Model)
     equityweighting = addcomponent(model, EquityWeighting)
 
     equityweighting[:ptp_timepreference] = 1.033333 # <0.1,1, 2>
