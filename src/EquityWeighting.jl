@@ -14,18 +14,25 @@ include("load_parameters.jl")
     tct_totalcosts_total = Variable(index=[time, region], unit="\$million")
     tct_percap_totalcosts_total = Variable(index=[time, region], unit="\$/person")
 
+    # Consumption calculations
+    gdp = Parameter(index=[time, region], unit="\$million")
+    save_savingsrate = Parmater(unit="%")
+    cons_consumption = Variable(index=[time, region], unit="\$million")
+
+    cons_per_cap_consumption_0 = Parameter(unit="\$") # Called "CONS_PER_CAP_FOCUS_0"
+    cons_per_cap_consumption = Parameter(unit="\$") # Called "CONS_PER_CAP"
+
+    cons_per_cap_aftercosts = Parameter(index=[time, region], unit="none")
+
     # Calculation of weighted costs
     emuc_utilityconvexity = Parameter(unit="none")
-    cons_per_cap_0 = Parameter(unit="none") # Called "CONS_PER_CAP_FOCUS_0"
-    cons_per_cap = Parameter(unit="none") # Called "CONS_PER_CAP"
-    tct_per_cap_totalcosts = Parameter(unit="none")
 
     wtct_per_cap_weightedcosts = Variable(index=[time, region], unit="\$")
 
     # Calculation of adaptation costs
     ac_adaptationcosts_economic = Parameter(index=[time, region], unit="\$million")
     ac_adaptationcosts_noneconomic = Parameter(index=[time, region], unit="\$million")
-    ac_adaptationcosts_discontinuity = Parameter(index=[time, region], unit="\$million")
+    ac_adaptationcosts_sealevelrise = Parameter(index=[time, region], unit="\$million")
 
     act_adaptationcosts_total = Variable(index=[time, region], unit="\$million")
     act_per_cap_adaptationcosts = Variable(index=[time, region], unit="\$")
@@ -62,7 +69,6 @@ include("load_parameters.jl")
     wacdt_partiallyweighted_discounted = Variable(index=[time, region], unit="\$million")
 
     # Equity weighted impact totals
-    cons_per_cap_aftercosts = Parameter(index=[time, region], unit="none")
     rcons_per_cap_dis = Variable(index=[time, region], unit="\$")
 
     wit_equityweightedimpact = Variable(index=[time, region], unit="\$")
@@ -99,6 +105,10 @@ function run_timestep(s::EquityWeighting, tt::Int64)
     v.df_utilitydiscountrate[tt] = (1 + p.ptp_timepreference / 100)^(-(y_year[tt] - y_year_0))
 
     for rr in d.region
+        ## Consumption calculations
+        v.cons_consumption[tt, rr] = p.gdp[tt, rr] * (1 - p.save_savingsrate / 100)
+        v.cons_per_cap_consumption[tt, rr] = v.cons_consumption[tt, rr] / p.pop_ulation[tt, rr]
+
         ## Gas Costs Accounting
 
         # Sum over all gases (Page 23 of Hope 2009)
@@ -109,7 +119,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.wtct_per_cap_weightedcosts[tt, rr] = ((p.cons_per_cap_0^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_per_cap^(1 - p.emuc_utilityconvexity) - (p.cons_per_cap - tct_per_cap_totalcosts)^(1 - p.emuc_utilityconvexity))
 
         ## Adaptation Costs Accounting
-        v.act_adaptationcosts_total[tt, rr] = p.ac_adaptationcosts_economic[tt, rr] + p.ac_adaptationcosts_noneconomic[tt, rr] + p.ac_adaptationcosts_discontinuity[tt, rr]
+        v.act_adaptationcosts_total[tt, rr] = p.ac_adaptationcosts_economic[tt, rr] + p.ac_adaptationcosts_noneconomic[tt, rr] + p.ac_adaptationcosts_sealevelrise[tt, rr]
         v.act_per_cap_adaptationcosts[tt, rr] = v.act_adaptationcosts_total[tt, rr] / p.pop_ulation[tt, rr]
 
         v.eact_per_cap_weightedadaptationcosts[tt, rr] = ((p.cons_per_cap_0^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_per_cap^(1 - p.emuc_utilityconvexity) - (p.cons_per_cap - v.act_per_cap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
