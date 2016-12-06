@@ -20,6 +20,7 @@ include("MarketDamages.jl")
 include("NonMarketDamages.jl")
 include("AdaptationCosts.jl")
 include("AbatementCosts.jl")
+include("TotalAbatementCosts.jl")
 
 
 m = Model()
@@ -128,10 +129,10 @@ abatementcosts_CH4[:yagg] = equityweights[:e_globalCH4emissions]
 abatementcosts_Lin[:yagg] = equityweights[:e_globalLGemissions]
 =#
 
-totalabatementcosts[:tc_CO2] = abatementcosts_CO2[:tc_totalcost]
-totalabatementcosts[:tc_N2O] = abatementcosts_N2O[:tc_totalcost]
-totalabatementcosts[:tc_CH4] = abatementcosts_CH4[:tc_totalcost]
-totalabatementcosts[:tc_Lin] = abatementcosts_Lin[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_co2] = abatementcosts_CO2[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_n2o] = abatementcosts_N2O[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_ch4] = abatementcosts_CH4[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_linear] = abatementcosts_Lin[:tc_totalcost]
 
 # next: add vector and panel example
 p = load_parameters(m)

@@ -110,7 +110,8 @@ function run_timestep(s::AbatementCosts, t::Int64)
         v.q0prop[t,r] = v.q0propinit_CutbacksinNegativeCostinBaseYear[r]* (1+v.q0propg/100)^(p.y_year[t]-p.y_year_0)
 
         v.q0_absolutecutbacksatnegativecost[t,r]= (v.q0prop[t,r]/100)* (v.zc_zerocostemissions[t,r]/100) * p.e0_baselineemissions[r]
-        v.qmax_maxreferencereductions[t,r] = (v.qmaxminusq0prop[t]/100) * (v.zc_zerocostemissions[t,r]/100)* p.e0_baselineemissions[r] + v.q0_absolutecutbacksatnegativecost[t,r]
+        
+        v.qmax_maxreferencereductions[t,r] = (v.qmaxminusq0prop/100) * (v.zc_zerocostemissions[t,r]/100)* p.e0_baselineemissions[r] + v.q0_absolutecutbacksatnegativecost[t,r]
 
         v.cmax[t,r] = v.cmaxinit_MaxCutbackCostinBaseYear[r] * v.learnfac_learning[t,r]* v.autofac[t]
 
