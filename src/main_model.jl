@@ -18,6 +18,7 @@ include("ClimateTemperature.jl")
 include("SeaLevelRise.jl")
 include("MarketDamages.jl")
 include("NonMarketDamages.jl")
+include("Discontinuity.jl")
 include("AdaptationCosts.jl")
 
 
@@ -46,6 +47,7 @@ sealevelrise = addSLR(m)
 slrdamages = addslrdamages(m)
 marketdamages = addmarketdamages(m)
 nonmarketdamages= addnonmarketdamages(m)
+discontinuity= adddiscontinuity(m)
 
 adaptationcosts_sealevel = addadaptationcosts(m, :SeaLevel)
 adaptationcosts_economic = addadaptationcosts(m, :Economic)
@@ -98,6 +100,9 @@ marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_S
 nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
+
+discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
+discontinuity[:rcons_per_cap_DiscRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
 
 adaptationcosts_sealevel[:atl_adjustedtolerablelevel] = slrdamages[:atl_adjustedtolerablelevelofsealevelrise]
 adaptationcosts_sealevel[:imp_adaptedimpacts] = slrdamages[:imp_actualreduction]
