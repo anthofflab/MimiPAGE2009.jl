@@ -25,17 +25,15 @@
     yagg = Parameter(index=[time], unit="years") # from equity weighting
 
     #inputs with single, uncertain values
-    q0propmult_cutbacksatnegativecostinfinalyear = Parameter(unit="")
-    qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = Parameter(unit="")
-    c0mult_mostnegativecostinfinalyear = Parameter(unit="")
-    curve_below_curvatureofMACcurvebelowzerocost = Parameter(unit="")
-    curve_above_curvatureofMACcurveabovezerocost = Parameter(unit="")
-    cross_experiencecrossoverratio = Parameter(unit="")
-    learn_learningrate = Parameter(unit="")
-    automult_autonomoustechchange = Parameter(unit="")
-    equity_prop_equityweightsproportion = Parameter(unit="")
-
-    #other parameters
+    q0propmult_cutbacksatnegativecostinfinalyear = Parameter(unit="none")
+    qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = Parameter(unit="none")
+    c0mult_mostnegativecostinfinalyear = Parameter(unit="none")
+    curve_below_curvatureofMACcurvebelowzerocost = Parameter(unit="none")
+    curve_above_curvatureofMACcurveabovezerocost = Parameter(unit="none")
+    cross_experiencecrossoverratio = Parameter(unit="none")
+    learn_learningrate = Parameter(unit="none")
+    automult_autonomoustechchange = Parameter(unit="none")
+    equity_prop_equityweightsproportion = Parameter(unit="none")
 
     #Variables
     emit_UncertaintyinBAUEmissFactor = Variable(index=[region], unit = "%")
@@ -46,7 +44,7 @@
     cbe_absoluteemissionreductions = Variable(index=[time, region], unit="Mtonne")
     cumcbe_cumulativereductionssincebaseyear = Variable(index=[time, region], unit="Mtonne")
     cumcbe_g_totalreductions = Variable(index=[time], unit="Mtonne")
-    learnfac_learning= Variable(index=[time, region], unit= "")
+    learnfac_learning= Variable(index=[time, region], unit= "none")
     auto = Variable(unit="% per year")
     autofac = Variable(index=[time], unit= "% per year")
     c0g = Variable(unit= "% per year")
@@ -110,7 +108,7 @@ function run_timestep(s::AbatementCosts, t::Int64)
         v.q0prop[t,r] = v.q0propinit_CutbacksinNegativeCostinBaseYear[r]* (1+v.q0propg/100)^(p.y_year[t]-p.y_year_0)
 
         v.q0_absolutecutbacksatnegativecost[t,r]= (v.q0prop[t,r]/100)* (v.zc_zerocostemissions[t,r]/100) * p.e0_baselineemissions[r]
-        
+
         v.qmax_maxreferencereductions[t,r] = (v.qmaxminusq0prop/100) * (v.zc_zerocostemissions[t,r]/100)* p.e0_baselineemissions[r] + v.q0_absolutecutbacksatnegativecost[t,r]
 
         v.cmax[t,r] = v.cmaxinit_MaxCutbackCostinBaseYear[r] * v.learnfac_learning[t,r]* v.autofac[t]
