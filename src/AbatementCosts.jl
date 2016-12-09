@@ -90,21 +90,23 @@ function run_timestep(s::AbatementCosts, t::Int64)
         else
             v.cumcbe_cumulativereductionssincebaseyear[t,r] = v.cumcbe_cumulativereductionssincebaseyear[t-1, r] + v.cbe_absoluteemissionreductions[t-1, r] * p.yagg[t-1]
         end
-
+    end
         v.cumcbe_g_totalreductions[t] = sum(v.cumcbe_cumulativereductionssincebaseyear[t,:])
 
-        v.learnfac_learning[t,r] = ((p.cross_experiencecrossoverratio *v.cumcbe_g_totalreductions[t]+ (1-p.cross_experiencecrossoverratio)*v.cumcbe_cumulativereductionssincebaseyear[t,r] + p.ies_InitialExperienceStockofCutbacks)/ p.ies_InitialExperienceStockofCutbacks)^ -(log(1/(1-p.learn_learningrate))/log(2))
-
-        v.auto = (1-p.automult_autonomoustechchange^(1/(p.y_year[10]-p.y_year_0)))*100
+        v.auto = (1-p.automult_autonomoustechchange^(1/(p.y_year[end]-p.y_year_0)))*100
         v.autofac[t] = (1-v.auto/100)^(p.y_year[t] - p.y_year_0)
 
-        v.c0g = (p.c0mult_mostnegativecostinfinalyear^(1/(p.y_year[10]-p.y_year_0))-1)*100
+        v.c0g = (p.c0mult_mostnegativecostinfinalyear^(1/(p.y_year[end]-p.y_year_0))-1)*100
         v.c0[t] = p.c0init_MostNegativeCostCutbackinBaseYear* (1-v.c0g/100)^(p.y_year[t]-p.y_year_0)
 
-        v.qmaxminusq0propg = (p.qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear ^(1/(p.y_year[10]-p.y_year_0))- 1)* 100
+        v.qmaxminusq0propg = (p.qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear ^(1/(p.y_year[end]-p.y_year_0))- 1)* 100
         v.qmaxminusq0prop = p.qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear * (1+ v.qmaxminusq0propg/100)^(p.y_year[t]-p.y_year_0)
 
-        v.q0propg = (p.q0propmult_cutbacksatnegativecostinfinalyear^(1/(p.y_year[10]-p.y_year_0))-1)*100
+        v.q0propg = (p.q0propmult_cutbacksatnegativecostinfinalyear^(1/(p.y_year[end]-p.y_year_0))-1)*100
+        
+    for r in d.region
+        v.learnfac_learning[t,r] = ((p.cross_experiencecrossoverratio *v.cumcbe_g_totalreductions[t]+ (1-p.cross_experiencecrossoverratio)*v.cumcbe_cumulativereductionssincebaseyear[t,r] + p.ies_InitialExperienceStockofCutbacks)/ p.ies_InitialExperienceStockofCutbacks)^ -(log(1/(1-p.learn_learningrate))/log(2))
+
         v.q0prop[t,r] = v.q0propinit_CutbacksinNegativeCostinBaseYear[r]* (1+v.q0propg/100)^(p.y_year[t]-p.y_year_0)
 
         v.q0_absolutecutbacksatnegativecost[t,r]= (v.q0prop[t,r]/100)* (v.zc_zerocostemissions[t,r]/100) * p.e0_baselineemissions[r]
@@ -117,6 +119,7 @@ function run_timestep(s::AbatementCosts, t::Int64)
         v.alo[t,r] = v.c0[t]/(exp(-v.blo[t,r]*v.q0_absolutecutbacksatnegativecost[t,r])-1)
         v.bhi[t,r] = 2*log((1+p.curve_above_curvatureofMACcurveabovezerocost)/(1-p.curve_above_curvatureofMACcurveabovezerocost))/ (v.qmax_maxreferencereductions[t,r] - v.q0_absolutecutbacksatnegativecost[t,r])
         v.ahi[t,r] = v.cmax[t,r]/ (exp(v.bhi[t,r]*(v.qmax_maxreferencereductions[t,r]-v.q0_absolutecutbacksatnegativecost[t,r]))-1)
+        #check with Chris Hope about missing parentheses
 
         if v.cbe_absoluteemissionreductions[t,r]< v.q0_absolutecutbacksatnegativecost[t,r]
             v.mc_marginalcost[t,r] = v.alo[t,r]* (exp(v.blo[t,r]*(v.cbe_absoluteemissionreductions[t,r]- v.q0_absolutecutbacksatnegativecost[t,r]))-1)
@@ -135,10 +138,6 @@ function run_timestep(s::AbatementCosts, t::Int64)
         else
             v.tc_totalcost[t,r] = (v.ahi[t,r]/v.bhi[t,r])* (exp(v.bhi_[t,r]*(v.cbe_absoluteemissionreductions[t,r]-v.q0_absolutecutbacksatnegativecost[t,r]))-1) - v.ahi[t,r]*(v.cbe_absoluteemissionreductions[t,r] - v.q0_absolutecutbacksatnegativecost[t,r]) + v.tcq0[t,r]
         end
-
-        #sum the gases in another component (TotalAbatementCosts)
-
-
     end
 end
 

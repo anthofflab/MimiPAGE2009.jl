@@ -10,8 +10,8 @@
     pop_grw_populationgrowth = Parameter(index=[time, region], unit="%/year")
 
     pop_ulation = Variable(index=[time, region], unit="million person")
-    tct_totalcosts = Variable(index=[time,region])
-    tct_per_cap_totalcostspercap = Variable(index=[time,region])
+    tct_totalcosts = Variable(index=[time,region], unit= "\$million")
+    tct_per_cap_totalcostspercap = Variable(index=[time,region], unit= "\$million")
 
 end
 
