@@ -1,0 +1,12 @@
+# Index: region
+# Unit: none
+
+Region,"Negative cost percentage factor"
+EU,1.0
+US,1.08
+OT,1.0
+EE,0.7
+CA,0.7
+IA,0.7
+AF,0.7
+LA,0.7

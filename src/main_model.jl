@@ -21,6 +21,8 @@ include("MarketDamages.jl")
 include("NonMarketDamages.jl")
 include("Discontinuity.jl")
 include("AdaptationCosts.jl")
+include("AbatementCosts.jl")
+include("TotalAbatementCosts.jl")
 
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -52,6 +54,13 @@ discontinuity= adddiscontinuity(m)
 adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
 adaptationcosts_economic = addadaptationcosts_economic(m)
 adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
+
+abatementcosts_CO2 = addabatementcosts(m, :CO2)
+abatementcosts_CH4 = addabatementcosts(m, :CH4)
+abatementcosts_N2O = addabatementcosts(m, :N2O)
+abatementcosts_Lin = addabatementcosts(m, :Lin)
+
+totalabatementcosts = addtotalabatementcosts(m)
 
 #connect parameters together
 
@@ -113,6 +122,22 @@ adaptationcosts_economic[:imp_adaptedimpacts] = marketdamages[:imp_actualreducti
 adaptationcosts_noneconomic[:atl_adjustedtolerablelevel] = nonmarketdamages[:atl_adjustedtolerableleveloftemprise]
 adaptationcosts_noneconomic[:imp_adaptedimpacts] = nonmarketdamages[:imp_actualreduction]
 
+abatementcosts_CO2[:bau_businessasusualemissions] = CO2emissions[:e_globalCO2emissions]
+abatementcosts_N2O[:bau_businessasusualemissions] = N2Oemissions[:e_globalN2Oemissions]
+abatementcosts_CH4[:bau_businessasusualemissions] = CH4emissions[:e_globalCH4emissions]
+abatementcosts_Lin[:bau_businessasusualemissions] = LGemissions[:e_globalLGemissions]
+
+#=
+abatementcosts_CO2[:yagg] = equityweights[:e_globalCO2emissions]
+abatementcosts_N2O[:yagg] = equityweights[:e_globalN2Oemissions]
+abatementcosts_CH4[:yagg] = equityweights[:e_globalCH4emissions]
+abatementcosts_Lin[:yagg] = equityweights[:e_globalLGemissions]
+=#
+
+totalabatementcosts[:tc_totalcosts_co2] = abatementcosts_CO2[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_n2o] = abatementcosts_N2O[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_ch4] = abatementcosts_CH4[:tc_totalcost]
+totalabatementcosts[:tc_totalcosts_linear] = abatementcosts_Lin[:tc_totalcost]
 
 adaptationcosts[:gdp] = GDP[:gdp]
 
