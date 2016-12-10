@@ -1,6 +1,7 @@
 # Index: region
-# Unit: weight
-Region,"Weights factor"
+# Unit: unitless
+
+Region,"Weights Factor"
 EU,1.0
 US,0.8
 OT,0.8
