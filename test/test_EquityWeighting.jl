@@ -17,6 +17,9 @@ equityweighting[:ac_adaptationcosts_economic] = zeros(10, 8)
 equityweighting[:ac_adaptationcosts_noneconomic] = zeros(10, 8)
 equityweighting[:ac_adaptationcosts_sealevelrise] = zeros(10, 8)
 
+equityweighting[:gdp] = zeros(10, 8)
+equityweighting[:isat_percap_dis] = zeros(10, 8)
+
 p = load_parameters(m)
 p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
