@@ -47,6 +47,14 @@ include("load_parameters.jl")
     rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$") #include?
 end
 
+function init(s::SLRDamages)
+    v = s.Variables
+    p = s.Parameters
+    d = s.Dimensions
+
+    v.isatg_impactfxnsaturation= p.isat_0_InitialImpactFxnSaturation * (1 - p.SAVE_savingsrate/100)
+end
+
 function run_timestep(s::SLRDamages, t::Int64)
     v = s.Variables
     p = s.Parameters
@@ -83,26 +91,25 @@ function run_timestep(s::SLRDamages, t::Int64)
         v.igdp_ImpactatActualGDPperCapSLR[t,r]= v.iref_ImpactatReferenceGDPperCapSLR[t,r]*
                 (p.gdp_per_cap_after_costs[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_SLRImpactFxnExponent
 
-        v.isatg_impactfxnsaturation= p.isat_0_InitialImpactFxnSaturation * (1 - p.SAVE_savingsrate/100)
-                if v.igdp_ImpactatActualGDPperCapSLR[t,r] < v.isatg_impactfxnsaturation
-                    v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.igdp_ImpactatActualGDPperCapSLR[t,r]
-                elseif v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
-                    v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.isatg_impactfxnsaturation+
-                        ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)*
-                        ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-v.isatg_impactfxnsaturation)/
-                        (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
-                        (v.igdp_ImpactatActualGDPperCapSLR[t,r]- v.isatg_impactfxnsaturation)))*
-                        (1-v.imp_actualreductionSLR[t,r]/100)
+        if v.igdp_ImpactatActualGDPperCapSLR[t,r] < v.isatg_impactfxnsaturation
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.igdp_ImpactatActualGDPperCapSLR[t,r]
+        elseif v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)*
+                ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-v.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCapSLR[t,r]- v.isatg_impactfxnsaturation)))*
+                (1-v.imp_actualreductionSLR[t,r]/100)
 
-                else
-                    v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.isatg_impactfxnsaturation+
-                        ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
-                        ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-v.isatg_impactfxnsaturation)/
-                        (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
-                        (v.igdp_ImpactatActualGDPperCapSLR[t,r] * v.isatg_impactfxnsaturation))) *
-                        (1-(v.imp_actualreductionSLR[t,r]/100)* p.impmax_maxSLRforadaptpolicySLR[r] /
-                        v.i_regionalimpactSLR[t,r])
-                end
+        else
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
+                ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-v.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCapSLR[t,r] * v.isatg_impactfxnsaturation))) *
+                (1-(v.imp_actualreductionSLR[t,r]/100)* p.impmax_maxSLRforadaptpolicySLR[r] /
+                v.i_regionalimpactSLR[t,r])
+        end
 
               v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptationSLR[t,r]/100)*p.gdp_per_cap_after_costs[t,r]
               v.rcons_per_cap_SLRRemainConsumption[t,r] = p.cons_per_cap_AfterCosts[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
