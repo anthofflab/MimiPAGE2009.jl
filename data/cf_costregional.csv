@@ -1,5 +1,6 @@
 # Index: region
 # Unit: none
+
 Region,"Adaptive costs factor"
 EU,1.0
 US,0.8
