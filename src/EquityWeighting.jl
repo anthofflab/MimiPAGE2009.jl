@@ -13,7 +13,7 @@ include("load_parameters.jl")
     tc_totalcosts_ch4 = Parameter(index=[time, region], unit="\$million")
     tc_totalcosts_n2o = Parameter(index=[time, region], unit="\$million")
     tc_totalcosts_linear = Parameter(index=[time, region], unit="\$million")
-    pop_ulation = Parameter(index=[time, region], unit="million person")
+    pop_population = Parameter(index=[time, region], unit="million person")
 
     tct_totalcosts_total = Variable(index=[time, region], unit="\$million")
     tct_percap_totalcosts_total = Variable(index=[time, region], unit="\$/person")
@@ -113,20 +113,20 @@ function run_timestep(s::EquityWeighting, tt::Int64)
     for rr in d.region
         ## Consumption calculations
         v.cons_consumption[tt, rr] = p.gdp[tt, rr] * (1 - p.save_savingsrate / 100)
-        v.cons_percap_consumption[tt, rr] = v.cons_consumption[tt, rr] / p.pop_ulation[tt, rr]
+        v.cons_percap_consumption[tt, rr] = v.cons_consumption[tt, rr] / p.pop_population[tt, rr]
 
         ## Gas Costs Accounting
 
         # Sum over all gases (Page 23 of Hope 2009)
         v.tct_totalcosts_total[tt, rr] = p.tc_totalcosts_co2[tt, rr] + p.tc_totalcosts_co2[tt, rr] + p.tc_totalcosts_ch4[tt, rr] + p.tc_totalcosts_n2o[tt, rr] + p.tc_totalcosts_linear[tt, rr]
-        v.tct_percap_totalcosts_total[tt, rr] = v.tct_totalcosts_total[tt, rr] / p.pop_ulation[tt, rr]
+        v.tct_percap_totalcosts_total[tt, rr] = v.tct_totalcosts_total[tt, rr] / p.pop_population[tt, rr]
 
         # Weighted costs (Page 23 of Hope 2009)
         v.wtct_percap_weightedcosts[tt, rr] = ((v.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (v.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (v.cons_percap_consumption[tt, rr] - v.tct_percap_totalcosts_total[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         ## Adaptation Costs Accounting
         v.act_adaptationcosts_total[tt, rr] = p.ac_adaptationcosts_economic[tt, rr] + p.ac_adaptationcosts_noneconomic[tt, rr] + p.ac_adaptationcosts_sealevelrise[tt, rr]
-        v.act_percap_adaptationcosts[tt, rr] = v.act_adaptationcosts_total[tt, rr] / p.pop_ulation[tt, rr]
+        v.act_percap_adaptationcosts[tt, rr] = v.act_adaptationcosts_total[tt, rr] / p.pop_population[tt, rr]
 
         # Add these into consumption
         v.cons_percap_aftercosts[tt, rr] = v.cons_percap_consumption[tt, rr] - (v.tct_percap_totalcosts_total[tt, rr] - v.act_percap_adaptationcosts[tt, rr])
@@ -143,11 +143,11 @@ function run_timestep(s::EquityWeighting, tt::Int64)
             v.wact_percap_partiallyweighted[tt, rr] = (1 - p.equity_proportion) * v.act_percap_adaptationcosts[tt, rr] + p.equity_proportion * v.eact_percap_weightedadaptationcosts[tt, rr]
         end
 
-        v.pct_partiallyweighted[tt, rr] = v.pct_percap_partiallyweighted[tt, rr] * p.pop_ulation[tt, rr]
-        v.wact_partiallyweighted[tt, rr] = v.wact_percap_partiallyweighted[tt, rr] * p.pop_ulation[tt, rr]
+        v.pct_partiallyweighted[tt, rr] = v.pct_percap_partiallyweighted[tt, rr] * p.pop_population[tt, rr]
+        v.wact_partiallyweighted[tt, rr] = v.wact_percap_partiallyweighted[tt, rr] * p.pop_population[tt, rr]
 
         # Discount rate calculations
-        v.dr_discountrate[tt, rr] = p.ptp_timepreference + (p.emuc_utilityconvexity * p.grw_gdpgrowth[tt, rr] - p.pop_grw_populationgrowth[tt, rr])
+        v.dr_discountrate[tt, rr] = p.ptp_timepreference + (p.emuc_utilityconvexity * p.grw_gdpgrowth[tt, rr] - p.popgrw_populationgrowth[tt, rr])
         if tt == 1
             v.yp_yearsperiod[1] = p.y_year[1] - p.y_year_0
         else
@@ -189,7 +189,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.pcdat_partiallyweighted_discountedaggregated[tt, rr] = v.pcdt_partiallyweighted_discounted[tt, rr] * v.yagg_periodspan[rr]
 
         ## Equity weighted impacts (end of page 28, Hope 2009)
-        v.wit_equityweightedimpact[tt, rr] = ((v.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * ((v.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - v.rcons_percap_dis[tt, rr])^(1 - p.emuc_utilityconvexity)) * p.pop_ulation[tt, rr]
+        v.wit_equityweightedimpact[tt, rr] = ((v.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * ((v.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - v.rcons_percap_dis[tt, rr])^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
 
         v.widt_equityweightedimpact_discounted[tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.df_utilitydiscountrate[tt]
 
