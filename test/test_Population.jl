@@ -16,8 +16,6 @@ p["y_year"] = m.indices_values[:time]
 
 setleftoverparameters(m, p)
 
-
-
 run(m)
 
 uspop2100 = m[:Population, :pop_population][8, 2]
