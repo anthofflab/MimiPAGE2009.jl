@@ -134,6 +134,5 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
     SLRDamagescomp[:scal_calibrationSLR] = 0.5
 
-
     return SLRDamagescomp
 end
