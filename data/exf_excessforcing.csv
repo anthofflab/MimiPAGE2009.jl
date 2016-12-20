@@ -1,6 +1,7 @@
 # Index: time
 # Units: W/m2
-year, "W/m2"
+
+year, "Excess forcing"
 2009,0.70
 2010,0.71
 2020,0.80

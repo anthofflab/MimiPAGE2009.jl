@@ -1,0 +1,12 @@
+# Index: region
+# Unit: none
+
+Region,"Max costs factor"
+EU,1.0
+US,1.0
+OT,1.23
+EE,0.7
+CA,1.0
+IA,1.23
+AF,1.23
+LA,0.7

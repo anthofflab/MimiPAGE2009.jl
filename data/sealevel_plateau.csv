@@ -1,6 +1,7 @@
 # Index: region
 # Unit: meter
-Region,"meter"
+
+Region,"Plateau"
 EU,.25
 US,.25
 OT,.25

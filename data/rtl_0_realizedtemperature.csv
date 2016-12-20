@@ -1,6 +1,7 @@
 # Index: region
 # Unit: degreeC
-Region,"RT"
+
+Region,"Realized Temperature"
 EU,1
 US,1
 OT,1.2
