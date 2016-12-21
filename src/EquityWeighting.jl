@@ -145,7 +145,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.act_percap_adaptationcosts[tt, rr] = v.act_adaptationcosts_total[tt, rr] / p.pop_population[tt, rr]
 
         # Add these into consumption
-        v.cons_percap_aftercosts[tt, rr] = v.cons_percap_consumption[tt, rr] - (v.tct_percap_totalcosts_total[tt, rr] - v.act_percap_adaptationcosts[tt, rr]) # Check with Chris Hope: add or subtract adaptationcosts?
+        v.cons_percap_aftercosts[tt, rr] = v.cons_percap_consumption[tt, rr] - v.tct_percap_totalcosts_total[tt, rr] - v.act_percap_adaptationcosts[tt, rr] # Check with Chris Hope: add or subtract adaptationcosts?
         v.rcons_percap_dis[tt, rr] = v.cons_percap_consumption[tt, rr] - p.isat_percap_dis[tt, rr]
 
         v.eact_percap_weightedadaptationcosts[tt, rr] = ((v.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (v.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (v.cons_percap_consumption[tt, rr] - v.act_percap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
