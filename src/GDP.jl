@@ -24,7 +24,7 @@ function run_timestep(s::GDP, t::Int64)
   for r in d.region
     #eq.28 in Hope 2002
     if t == 1
-      v.gdp[t, r] = p.gdp_0[r]
+      v.gdp[t, r] = p.gdp_0[r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_year_0)
       else
         v.gdp[t, r] = v.gdp[t-1, r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_year[t-1])
     end

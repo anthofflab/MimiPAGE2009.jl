@@ -1,18 +1,19 @@
 using Mimi
 
+include("../src/load_parameters.jl")
 include("../src/GDP.jl")
 
 m = Model()
 
-setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
+setindex(m, :time,  [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addcomponent(m, GDP)
 
-setparameter(m, :GDP, :y_year_0, 2000.)
-setparameter(m, :GDP, :y_year, [2001.,2002.,2010.,2020.,2040.,2060.,2080.,2100.,2150.,2200.])
-setparameter(m, :GDP, :grw_gdpgrowthrate, reshape(randn(30),10,3))
-setparameter(m, :GDP, :gdp_0, [300.,20.,800.])
+p=load_parameters(m)
+p["y_year_0"]=2008.
+p["y_year"]=m.indices_values[:time]
+setleftoverparameters(m,p)
 
 # run model
 run(m)
