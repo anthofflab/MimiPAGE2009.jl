@@ -18,6 +18,8 @@ function run_timestep(s::Population, tt::Int64)
     p = s.Parameters
     d = s.Dimensions
 
+    # Check with Chris Hope
+
     for rr in d.region
         # Eq.28 in Hope 2002 (defined for GDP, but also applies to population)
         if tt == 1
