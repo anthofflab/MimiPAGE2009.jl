@@ -18,7 +18,6 @@ function run_timestep(s::co2emissions,t::Int64)
     for r in d.region
         v.e_regionalCO2emissions[t,r]=p.er_CO2emissionsgrowth[t,r]*p.e0_baselineCO2emissions[r]/100
     end
-
     #eq. 5 in Hope (2006) - global CH4 emissions are sum of regional emissions
     v.e_globalCO2emissions[t]=sum(v.e_regionalCO2emissions[t,:])
 end

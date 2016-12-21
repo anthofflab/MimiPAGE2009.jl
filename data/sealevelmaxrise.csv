@@ -1,6 +1,7 @@
 # Index: region
 # Unit: meter
-Region,"meter"
+
+Region,"Sea level max rise"
 EU,1
 US,1
 OT,1
