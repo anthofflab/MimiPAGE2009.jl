@@ -24,7 +24,7 @@ p = load_parameters(m)
 p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
 
-p["pop_ulation"] = repeat(p["population"]', outer=[10, 1]) # should be computed by a Population component, using pop_grw
+equityweighting[:pop_population] = repeat(p["pop0_initpopulation"]', outer=[10, 1])
 
 setleftoverparameters(m, p)
 
