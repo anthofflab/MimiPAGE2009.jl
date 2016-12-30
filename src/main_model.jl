@@ -148,10 +148,15 @@ monmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_actual
 
 discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 discontinuity[:rcons_per_cap_DiscRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
+discontinuity[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
-
-
-
+equityweighting[:pop_population] = population[:pop_population]
+equityweighting[:tct_percap_totalcosts_total] = totalabatementcosts[:tct_per_cap_totalcostspercap]
+equityweighting[:act_adaptationcosts_total] = totaladaptationcosts[:act_adaptationcosts_total]
+equityweighting[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
+equityweighting[:cons_percap_consumption] = gdp[:cons_percap_consumption]
+equityweighting[:cons_percap_aftercosts] = slrdamages[:cons_percap_aftercosts]
+equityweighting[:yagg_periodspan] = gdp[:yagg_periodspan]
 
 # next: add vector and panel example
 p = load_parameters(m)
