@@ -21,6 +21,7 @@ include("MarketDamages.jl")
 include("NonMarketDamages.jl")
 include("Discontinuity.jl")
 include("AdaptationCosts.jl")
+include("SLRDamages.jl")
 include("AbatementCosts.jl")
 include("TotalAbatementCosts.jl")
 
