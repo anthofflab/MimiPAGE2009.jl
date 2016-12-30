@@ -20,7 +20,7 @@ include("load_parameters.jl")
     SAVE_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_SatCalibrationSLR =Parameter()
-    ipow_SLRImpactFxnExponent =Parameter()
+    ipow_SLRIncomeFxnExponent =Parameter()
     pow_SLRImpactFxnExponent=Parameter()
     iben_SLRInitialBenefit=Parameter()
     scal_calibrationSLR = Parameter()
@@ -73,7 +73,7 @@ function run_timestep(s::SLRDamages, t::Int64)
             (v.i_regionalimpactSLR[t,r]/p.scal_calibrationSLR)^p.pow_SLRImpactFxnExponent - v.i_regionalimpactSLR[t,r] * p.iben_SLRInitialBenefit)
 
         v.igdp_ImpactatActualGDPperCapSLR[t,r]= v.iref_ImpactatReferenceGDPperCapSLR[t,r]*
-                (v.gdp_percap_aftercosts[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_SLRImpactFxnExponent
+                (v.gdp_percap_aftercosts[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_SLRIncomeFxnExponent
 
         if v.igdp_ImpactatActualGDPperCapSLR[t,r] < v.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.igdp_ImpactatActualGDPperCapSLR[t,r]
@@ -109,7 +109,7 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/sealevelmaxrise.csv")
     SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "../data/wincf_weightsfactor.csv")
     SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.73
-    SLRDamagescomp[:ipow_SLRImpactFxnExponent] = -0.30
+    SLRDamagescomp[:ipow_SLRIncomeFxnExponent] = -0.30
     SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
     SLRDamagescomp[:scal_calibrationSLR] = 0.5
 

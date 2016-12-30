@@ -18,7 +18,7 @@
     SAVE_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_MarketImpactsatCalibrationTemp =Parameter()
-    ipow_MarketImpactFxnExponent =Parameter()
+    ipow_MarketIncomeFxnExponent =Parameter()
     iben_MarketInitialBenefit=Parameter()
     tcal_CalibrationTemp = Parameter()
     GDP_per_cap_focus_0_FocusRegionEU = Parameter()
@@ -53,7 +53,7 @@ function run_timestep(s::MarketDamages, t::Int64)
             (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_MarketImpactExponent - v.i_regionalimpact[t,r] * p.iben_MarketInitialBenefit)
 
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
-            (p.rgdp_per_cap_SLRRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_MarketImpactFxnExponent
+            (p.rgdp_per_cap_SLRRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_MarketIncomeFxnExponent
 
         v.isatg_impactfxnsaturation= p.isat_0_InitialImpactFxnSaturation * (1 - p.SAVE_savingsrate/100)
 
@@ -90,7 +90,7 @@ function addmarketdamages(model::Model)
     marketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5 #can't find this parameter in the documentation. Check with Chris Hope.
     marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = .5
     marketdamagescomp[:iben_MarketInitialBenefit] = .13
-    marketdamagescomp[:ipow_MarketImpactFxnExponent] = -.13
+    marketdamagescomp[:ipow_MarketIncomeFxnExponent] = -.13
     marketdamagescomp[:SAVE_savingsrate]= 15.
     marketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
     marketdamagescomp[:pow_MarketImpactExponent]=2.17
