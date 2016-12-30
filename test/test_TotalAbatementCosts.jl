@@ -10,15 +10,13 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addtotalabatementcosts(m)
 
-setparameter(m, :TotalAbatementCosts, :pop_grw_populationgrowth, ones(10,8))
+setparameter(m, :TotalAbatementCosts, :pop_population, ones(10,8))
 setparameter(m, :TotalAbatementCosts, :tc_totalcosts_co2, ones(10,8))
 setparameter(m, :TotalAbatementCosts, :tc_totalcosts_ch4, ones(10,8))
 setparameter(m, :TotalAbatementCosts, :tc_totalcosts_n2o, ones(10,8))
 setparameter(m, :TotalAbatementCosts, :tc_totalcosts_linear, ones(10,8))
 
 p = load_parameters(m)
-p["y_year_0"] = 2008.
-p["y_year"] = m.indices_values[:time]
 setleftoverparameters(m, p)
 
 run(m)

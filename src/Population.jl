@@ -31,5 +31,10 @@ function run_timestep(s::Population, tt::Int64)
 end
 
 function addpopulation(model::Model)
-    return addcomponent(model, Population)
+    populationcomp = addcomponent(model, Population)
+
+    populationcomp[:popgrw_populationgrowth]=readpagedata(model,"../data/popgrw_populationgrowthcsv")
+    populationcomp[:pop0_initpopulation]=readpagedata(model,"../data/pop0_initpopulation.csv")
+
+    return populationcomp
 end

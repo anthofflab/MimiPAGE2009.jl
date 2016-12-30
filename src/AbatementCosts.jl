@@ -3,7 +3,6 @@
     region = Index(region)
     y_year = Parameter(index=[time], unit="year")
     y_year_0 = Parameter(unit="year")
-    population = Parameter(index=[region], unit="million")
 
     #gas inputs
     emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear = Parameter(unit="%")
@@ -20,7 +19,6 @@
     q0f_negativecostpercentagefactor = Parameter(index=[region], unit="none")
     cmaxf_maxcostfactor = Parameter(index=[region], unit="none")
 
-    #input from other component
     bau_businessasusualemissions = Parameter(index=[time, region], unit = "%")
     yagg = Parameter(index=[time], unit="years") # from equity weighting
 
@@ -103,7 +101,7 @@ function run_timestep(s::AbatementCosts, t::Int64)
         v.qmaxminusq0prop = p.qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear * (1+ v.qmaxminusq0propg/100)^(p.y_year[t]-p.y_year_0)
 
         v.q0propg = (p.q0propmult_cutbacksatnegativecostinfinalyear^(1/(p.y_year[end]-p.y_year_0))-1)*100
-        
+
     for r in d.region
         v.learnfac_learning[t,r] = ((p.cross_experiencecrossoverratio *v.cumcbe_g_totalreductions[t]+ (1-p.cross_experiencecrossoverratio)*v.cumcbe_cumulativereductionssincebaseyear[t,r] + p.ies_InitialExperienceStockofCutbacks)/ p.ies_InitialExperienceStockofCutbacks)^ -(log(1/(1-p.learn_learningrate))/log(2))
 

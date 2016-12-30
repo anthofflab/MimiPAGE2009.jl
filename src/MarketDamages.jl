@@ -6,18 +6,9 @@
     #incoming parameters from Climate
     rt_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
 
-    #tolerability parameters
-    plateau_increaseintolerableplateaufromadaptationM = Parameter(index=[region], unit="degreeC")
-    pstart_startdateofadaptpolicyM = Parameter(index=[region], unit="year")
-    pyears_yearstilfulleffectM = Parameter(index=[region], unit="year")
-    impred_eventualpercentreductionM = Parameter(index=[region], unit= "%")
-    impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC")
-    istart_startdateM = Parameter(index=[region], unit = "year")
-    iyears_yearstilfulleffectM = Parameter(index=[region], unit= "year")
-
     #tolerability variables
-    atl_adjustedtolerableleveloftemprise = Variable(index=[time,region], unit="degreeC")
-    imp_actualreduction = Variable(index=[time, region], unit= "%")
+    atl_adjustedtolerableleveloftemprise = Parameter(index=[time,region], unit="degreeC")
+    imp_actualreduction = Parameter(index=[time, region], unit= "%")
     i_regionalimpact = Variable(index=[time, region], unit="degreeC")
 
     #impact Parameters
@@ -41,7 +32,7 @@
     igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
     isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
-    pow_MarketImpactExponent=Variable()
+    pow_MarketImpactExponent=Parameter(unit="")
 
 end
 
@@ -52,30 +43,10 @@ function run_timestep(s::MarketDamages, t::Int64)
 
     for r in d.region
         #calculate tolerability
-        if (p.y_year[t] - p.pstart_startdateofadaptpolicyM[r]) < 0
-            v.atl_adjustedtolerableleveloftemprise[t,r]= 0
-        elseif ((p.y_year[t]-p.pstart_startdateofadaptpolicyM[r])/p.pyears_yearstilfulleffectM[r])<1.
-            v.atl_adjustedtolerableleveloftemprise[t,r]=
-                ((p.y_year[t]-p.pstart_startdateofadaptpolicyM[r])/p.pyears_yearstilfulleffectM[r]) *
-                p.plateau_increaseintolerableplateaufromadaptationM[r]
-        else
-            p.plateau_increaseintolerableplateaufromadaptationM[r]
-        end
-
-        if (p.y_year[t]- p.istart_startdateM[r]) < 0
-            v.imp_actualreduction[t,r] = 0
-        elseif ((p.y_year[t]-p.istart_startdateM[r])/p.iyears_yearstilfulleffectM[r]) < 1
-            v.imp_actualreduction[t,r] =
-                (p.y_year[t]-p.istart_startdateM[r])/p.iyears_yearstilfulleffectM[r]*
-                p.impred_eventualpercentreductionM[r]
-        else
-            v.imp_actualreduction[t,r] = p.impred_eventualpercentreductionM[r]
-        end
-
-        if (p.rt_realizedtemperature[t,r]-v.atl_adjustedtolerableleveloftemprise[t,r]) < 0
+        if (p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]) < 0
             v.i_regionalimpact[t,r] = 0
         else
-            v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-v.atl_adjustedtolerableleveloftemprise[t,r]
+            v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
         v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*((p.W_MarketImpactsatCalibrationTemp + p.iben_MarketInitialBenefit * p.tcal_CalibrationTemp)*
@@ -94,14 +65,14 @@ function run_timestep(s::MarketDamages, t::Int64)
                 ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
                 (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
                 (v.igdp_ImpactatActualGDPperCap[t,r]-
-                v.isatg_impactfxnsaturation)))*(1-v.imp_actualreduction[t,r]/100)
+                v.isatg_impactfxnsaturation)))*(1-p.imp_actualreduction[t,r]/100)
         else
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
                 ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
                 ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
                 (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
                 (v.igdp_ImpactatActualGDPperCap[t,r] * v.isatg_impactfxnsaturation))) *
-                (1-(v.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyM[r] /
+                (1-(p.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyM[r] /
                 v.i_regionalimpact[t,r])
         end
 
