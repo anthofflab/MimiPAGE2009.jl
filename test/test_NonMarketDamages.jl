@@ -13,6 +13,10 @@ addnonmarketdamages(m)
 setparameter(m, :NonMarketDamages, :rt_realizedtemperature, ones(10,8))
 setparameter(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, ones(10,8))
 setparameter(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, ones(10,8))
+setparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, ones(10,8))
+setparameter(m, :NonMarketDamages, :imp_actualreduction, ones(10,8)*0.5)
+
+
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.

@@ -9,17 +9,11 @@ using DataFrames
     rt_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
 
     #tolerability parameters
-    plateau_increaseintolerableplateaufromadaptationNM = Parameter(index=[region], unit="degreeC")
-    pstart_startdateofadaptpolicyNM = Parameter(index=[region], unit="year")
-    pyears_yearstilfulleffectNM = Parameter(index=[region], unit="year")
-    impred_eventualpercentreductionNM = Parameter(index=[region], unit= "%")
     impmax_maxtempriseforadaptpolicyNM = Parameter(index=[region], unit= "degreeC")
-    istart_startdateNM = Parameter(index=[region], unit = "year")
-    iyears_yearstilfulleffectNM = Parameter(index=[region], unit= "year")
+    atl_adjustedtolerableleveloftemprise = Parameter(index=[time,region], unit="degreeC")
+    imp_actualreduction = Parameter(index=[time, region], unit= "%")
 
     #tolerability variables
-    atl_adjustedtolerableleveloftemprise = Variable(index=[time,region], unit="degreeC")
-    imp_actualreduction = Variable(index=[time, region], unit= "%")
     i_regionalimpact = Variable(index=[time, region], unit="degreeC")
 
     #impact Parameters
@@ -51,31 +45,11 @@ function run_timestep(s::NonMarketDamages, t::Int64)
     d = s.Dimensions
 
     for r in d.region
-        #calculate tolerability
-        if p.y_year[t] - p.pstart_startdateofadaptpolicyNM[r] < 0
-            v.atl_adjustedtolerableleveloftemprise[t,r]= 0
-        elseif (p.y_year[t]-p.pstart_startdateofadaptpolicyNM[r])/p.pyears_yearstilfulleffectNM[r]<1.
-            v.atl_adjustedtolerableleveloftemprise[t,r]=
-                ((p.y_year[t]-p.pstart_startdateofadaptpolicyNM[r])/p.pyears_yearstilfulleffectNM[r]) *
-                p.plateau_increaseintolerableplateaufromadaptationNM[r]
-        else
-            v.atl_adjustedtolerableleveloftemprise[t,r]=p.plateau_increaseintolerableplateaufromadaptationNM[r]
-        end
 
-        if p.y_year[t]- p.istart_startdateNM[r] < 0
-            v.imp_actualreduction[t,r] = 0
-        elseif (p.y_year[t]-p.istart_startdateNM[r])/p.iyears_yearstilfulleffectNM[r] < 1
-            v.imp_actualreduction[t,r] =
-                (p.y_year[t]-p.istart_startdateNM[r])/p.iyears_yearstilfulleffectNM[r]*
-                p.impred_eventualpercentreductionNM[r]
-        else
-            v.imp_actualreduction[t,r] = p.impred_eventualpercentreductionNM[r]
-        end
-
-        if p.rt_realizedtemperature[t,r]-v.atl_adjustedtolerableleveloftemprise[t,r] < 0
+        if p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r] < 0
             v.i_regionalimpact[t,r] = 0
         else
-            v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-v.atl_adjustedtolerableleveloftemprise[t,r]
+            v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
         v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*
@@ -95,7 +69,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
                 ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)*
                     ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
                     (((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)+
-                        (v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)))* (1-v.imp_actualreduction[t,r]/100) *
+                        (v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)))* (1-p.imp_actualreduction[t,r]/100) *
                             (v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r] ? 1 :
                                     p.impmax_maxtempriseforadaptpolicyNM[r] /
                                         v.i_regionalimpact[t,r])
@@ -112,7 +86,7 @@ function addnonmarketdamages(model::Model)
 
     nonmarketdamagescomp[:tcal_CalibrationTemp]= 3.
     nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5 #can't find this parameter in the documentation. Check with Chris Hope.
-    nonmarketdamagescomp[:W_NonImpactsatCalibrationTemp] = .53
+    nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = .53
     nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
     nonmarketdamagescomp[:ipow_NonMarketImpactFxnExponent] = 2.17
     nonmarketdamagescomp[:save_savingsrate]= 15.

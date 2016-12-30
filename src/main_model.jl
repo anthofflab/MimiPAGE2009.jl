@@ -24,6 +24,7 @@ include("AdaptationCosts.jl")
 include("SLRDamages.jl")
 include("AbatementCosts.jl")
 include("TotalAbatementCosts.jl")
+include("Population.jl")
 
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -46,25 +47,29 @@ sulphateforcing = addsulphatecomp(m)
 totalforcing = addcomponent(m, TotalForcing)
 climatetemperature = addclimatetemperature(m)
 sealevelrise = addSLR(m)
+#Socio-Economics
+population = addpopulation(m)
+gdp = addgdp(m)
+#Abatement Costs
+abatementcosts_CO2 = addabatementcosts(m, :CO2)
+abatementcosts_CH4 = addabatementcosts(m, :CH4)
+abatementcosts_N2O = addabatementcosts(m, :N2O)
+abatementcosts_Lin = addabatementcosts(m, :Lin)
+totalabatementcosts = addtotalabatementcosts(m)
+#Adaptation Costs
+adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
+adaptationcosts_economic = addadaptationcosts_economic(m)
+adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
+totaladaptationcosts = addtotaladaptationcosts(m)
 # Impacts
 slrdamages = addslrdamages(m)
 marketdamages = addmarketdamages(m)
 nonmarketdamages= addnonmarketdamages(m)
 discontinuity= adddiscontinuity(m)
-
-adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
-adaptationcosts_economic = addadaptationcosts_economic(m)
-adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
-
-abatementcosts_CO2 = addabatementcosts(m, :CO2)
-abatementcosts_CH4 = addabatementcosts(m, :CH4)
-abatementcosts_N2O = addabatementcosts(m, :N2O)
-abatementcosts_Lin = addabatementcosts(m, :Lin)
-
-totalabatementcosts = addtotalabatementcosts(m)
+#Equity weighting and Total Costs
+equityweighting=addequityweighting(m)
 
 #connect parameters together
-
 CO2cycle[:e_globalCO2emissions] = CO2emissions[:e_globalCO2emissions]
 CO2cycle[:rt_g0_baseglobaltemp] = climatetemperature[:rt_g0_baseglobaltemp]
 CO2cycle[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
@@ -101,46 +106,52 @@ climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 
 sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
-slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
+gdp[:pop_population] = population[:pop_population]
 
-marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
-marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
-marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
-
-nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
-nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
-nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
-
-discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
-discontinuity[:rcons_per_cap_DiscRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
-
-adaptationcosts_sealevel[:atl_adjustedtolerablelevel] = slrdamages[:atl_adjustedtolerablelevelofsealevelrise]
-adaptationcosts_sealevel[:imp_adaptedimpacts] = slrdamages[:imp_actualreduction]
-
-adaptationcosts_economic[:atl_adjustedtolerablelevel] = marketdamages[:atl_adjustedtolerableleveloftemprise]
-adaptationcosts_economic[:imp_adaptedimpacts] = marketdamages[:imp_actualreduction]
-
-adaptationcosts_noneconomic[:atl_adjustedtolerablelevel] = nonmarketdamages[:atl_adjustedtolerableleveloftemprise]
-adaptationcosts_noneconomic[:imp_adaptedimpacts] = nonmarketdamages[:imp_actualreduction]
-
-abatementcosts_CO2[:bau_businessasusualemissions] = CO2emissions[:e_globalCO2emissions]
-abatementcosts_N2O[:bau_businessasusualemissions] = N2Oemissions[:e_globalN2Oemissions]
-abatementcosts_CH4[:bau_businessasusualemissions] = CH4emissions[:e_globalCH4emissions]
-abatementcosts_Lin[:bau_businessasusualemissions] = LGemissions[:e_globalLGemissions]
-
-#=
-abatementcosts_CO2[:yagg] = equityweights[:e_globalCO2emissions]
-abatementcosts_N2O[:yagg] = equityweights[:e_globalN2Oemissions]
-abatementcosts_CH4[:yagg] = equityweights[:e_globalCH4emissions]
-abatementcosts_Lin[:yagg] = equityweights[:e_globalLGemissions]
-=#
+abatementcosts_CO2[:yagg] = gdp[:yagg_periodspan]
+abatementcosts_CH4[:yagg] = gdp[:yagg_periodspan]
+abatementcosts_N2O[:yagg] = gdp[:yagg_periodspan]
+abatementcosts_Lin[:yagg] = gdp[:yagg_periodspan]
 
 totalabatementcosts[:tc_totalcosts_co2] = abatementcosts_CO2[:tc_totalcost]
 totalabatementcosts[:tc_totalcosts_n2o] = abatementcosts_N2O[:tc_totalcost]
 totalabatementcosts[:tc_totalcosts_ch4] = abatementcosts_CH4[:tc_totalcost]
 totalabatementcosts[:tc_totalcosts_linear] = abatementcosts_Lin[:tc_totalcost]
+totalabatementcosts[:pop_population] = population[:pop_population]
 
-adaptationcosts[:gdp] = GDP[:gdp]
+adaptationcosts_economic[:gdp] = GDP[:gdp]
+adaptationcosts_noneconomic[:gdp] = GDP[:gdp]
+adaptationcosts_sealevel[:gdp] = GDP[:gdp]
+
+totaladaptationcosts[:ac_adaptationcosts_economic] = adaptationcosts_economic[:ac_adaptivecosts]
+totaladaptationcosts[:ac_adaptationcosts_noneconomic] = adaptationcosts_noneconomic[:ac_adaptivecosts]
+totaladaptationcosts[:ac_adaptationcosts_sealevelrise] = adaptationcosts_sealevel[:ac_adaptivecosts]
+
+slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
+slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
+slrdamages[:tct_per_cap_totalcostspercap] = totalabatementcosts[:tct_per_cap_totalcostspercap]
+slrdamages[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
+slrdamages[:atl_adjustedtolerablelevelofsealevelrise] = adaptationcosts_sealevel[:atl_adjustedtolerablelevel]
+slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_actualreduction]
+
+marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
+marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
+marketdamages[:atl_adjustedtolerableleveloftemprise] = adaptationcosts_economic[:atl_adjustedtolerablelevel]
+marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_actualreduction]
+
+nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
+nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
+nonmarketdamages[:atl_adjustedtolerableleveloftemprise] = adaptationcosts_noneconomic[:atl_adjustedtolerablelevel]
+monmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_actualreduction]
+
+discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
+discontinuity[:rcons_per_cap_DiscRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
+
+
+
+
 
 # next: add vector and panel example
 p = load_parameters(m)
