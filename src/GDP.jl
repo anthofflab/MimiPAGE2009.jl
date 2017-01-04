@@ -8,7 +8,7 @@ using Mimi
     # Variables
     gdp               = Variable(index=[time, region], unit="\$M")
     cons_consumption  = Variable(index=[time, region], unit="\$million")
-    cons_percap_consumption = Variable(index=[time, region], unit="\$")
+    cons_percap_consumption = Variable(index=[time, region], unit="\$/person")
     yagg_periodspan = Variable(index=[time], unit="year")
 
     # Parameters

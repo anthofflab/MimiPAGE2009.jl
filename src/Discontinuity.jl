@@ -11,7 +11,7 @@ using Mimi
   wdis_gdplostdisc=Parameter(unit="%")
 
   igdpeqdis_eqdiscimpact=Variable(index=[time,region], unit="%")
-  rgdp_per_cap_DiscRemainGDP=Parameter(index=[time,region], unit="unitless")
+  rgdp_per_cap_DiscRemainGDP=Parameter(index=[time,region], unit="\$/person")
   GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="unitless")
   ipow_incomeexponent=Parameter(unit="unitless")
 
@@ -87,7 +87,7 @@ function run_timestep(s::Discontinuity, t::Int64)
 end
 
 
-function addDiscontinuity(model::Model)
+function adddiscontinuity(model::Model)
 
     discontinuitycomp = addcomponent(model, Discontinuity)
 
@@ -101,5 +101,7 @@ function addDiscontinuity(model::Model)
 
     discontinuitycomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
 
-  # disccomp[:idis_lossfromdisc] = ?        still don't know what this is
+    # disccomp[:idis_lossfromdisc] = ?        still don't know what this is
+
+    return discontinuitycomp
 end

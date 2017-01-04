@@ -10,9 +10,9 @@ include("load_parameters.jl")
     #incoming parameters from SeaLevelRise
     s_sealevel = Parameter(index=[time], unit="m")
     #incoming parameters to calculate consumption per capita after Costs
-    cons_percap_consumption = Parameter(index=[time, region], unit="\$")
-    tct_per_cap_totalcostspercap = Parameter(index=[time,region], unit= "\$")
-    act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$")
+    cons_percap_consumption = Parameter(index=[time, region], unit="\$/person")
+    tct_per_cap_totalcostspercap = Parameter(index=[time,region], unit= "\$/person")
+    act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
 
     #component parameters
     impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m")
@@ -28,10 +28,10 @@ include("load_parameters.jl")
     isat_0_InitialImpactFxnSaturation= Parameter()
 
     #component variables
-    cons_percap_aftercosts = Variable(index=[time, region], unit = "\$")
-    gdp_percap_aftercosts = Variable(index=[time, region], unit = "\$")
+    cons_percap_aftercosts = Variable(index=[time, region], unit = "\$/person")
+    gdp_percap_aftercosts = Variable(index=[time, region], unit = "\$/person")
 
-    atl_adjustedtolerablelevelofsealevelrise = Parameter(index=[time,region], unit="m")
+    atl_adjustedtolerablelevelofsealevelrise = Parameter(index=[time,region], unit="m") # meter
     imp_actualreductionSLR = Parameter(index=[time, region], unit="%")
     i_regionalimpactSLR = Variable(index=[time, region], unit="m")
 
@@ -40,10 +40,10 @@ include("load_parameters.jl")
 
     isat_ImpactinclSaturationandAdaptationSLR= Variable(index=[time,region])
     isatg_impactfxnsaturation = Variable()
-    isat_per_cap_SLRImpactperCapinclSaturationandAdaptation = Variable(index=[time, region], unit="\$")
+    isat_per_cap_SLRImpactperCapinclSaturationandAdaptation = Variable(index=[time, region], unit="\$/person")
 
-    rcons_per_cap_SLRRemainConsumption = Variable(index=[time, region], unit = "\$") #include?
-    rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$") #include?
+    rcons_per_cap_SLRRemainConsumption = Variable(index=[time, region], unit = "\$/person") #include?
+    rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$/person") #include?
 end
 
 function init(s::SLRDamages)

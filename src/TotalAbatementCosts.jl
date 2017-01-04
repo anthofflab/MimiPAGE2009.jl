@@ -10,7 +10,7 @@ using Mimi
     pop_population = Parameter(index=[time, region], unit= "million person")
 
     tct_totalcosts = Variable(index=[time,region], unit= "\$million")
-    tct_per_cap_totalcostspercap = Variable(index=[time,region], unit= "\$")
+    tct_per_cap_totalcostspercap = Variable(index=[time,region], unit= "\$/person")
 
 end
 

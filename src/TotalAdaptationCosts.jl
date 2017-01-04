@@ -9,7 +9,7 @@ using Mimi
     ac_adaptationcosts_sealevelrise = Parameter(index=[time, region], unit="\$million")
 
     act_adaptationcosts_total = Variable(index=[time, region], unit="\$million")
-    act_percap_adaptationcosts = Variable(index=[time, region], unit="\$")
+    act_percap_adaptationcosts = Variable(index=[time, region], unit="\$/person")
 end
 
 function run_timestep(s::TotalAdaptationCosts, t::Int64)
