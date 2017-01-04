@@ -121,9 +121,9 @@ totalabatementcosts[:tc_totalcosts_ch4] = abatementcosts_CH4[:tc_totalcost]
 totalabatementcosts[:tc_totalcosts_linear] = abatementcosts_Lin[:tc_totalcost]
 totalabatementcosts[:pop_population] = population[:pop_population]
 
-adaptationcosts_economic[:gdp] = GDP[:gdp]
-adaptationcosts_noneconomic[:gdp] = GDP[:gdp]
-adaptationcosts_sealevel[:gdp] = GDP[:gdp]
+adaptationcosts_economic[:gdp] = gdp[:gdp]
+adaptationcosts_noneconomic[:gdp] = gdp[:gdp]
+adaptationcosts_sealevel[:gdp] = gdp[:gdp]
 
 totaladaptationcosts[:ac_adaptationcosts_economic] = adaptationcosts_economic[:ac_adaptivecosts]
 totaladaptationcosts[:ac_adaptationcosts_noneconomic] = adaptationcosts_noneconomic[:ac_adaptivecosts]
@@ -133,23 +133,22 @@ slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
 slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
 slrdamages[:tct_per_cap_totalcostspercap] = totalabatementcosts[:tct_per_cap_totalcostspercap]
 slrdamages[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
-slrdamages[:atl_adjustedtolerablelevelofsealevelrise] = adaptationcosts_sealevel[:atl_adjustedtolerablelevel]
-slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_actualreduction]
+connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptationCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true)
+slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
 
 marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
 marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
-marketdamages[:atl_adjustedtolerableleveloftemprise] = adaptationcosts_economic[:atl_adjustedtolerablelevel]
-marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_actualreduction]
+connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptationCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
+marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
 
 nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
-nonmarketdamages[:atl_adjustedtolerableleveloftemprise] = adaptationcosts_noneconomic[:atl_adjustedtolerablelevel]
-monmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_actualreduction]
+connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptationCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
+nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adaptedimpacts]
 
 discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
-discontinuity[:rcons_per_cap_DiscRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
 discontinuity[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
 equityweighting[:pop_population] = population[:pop_population]

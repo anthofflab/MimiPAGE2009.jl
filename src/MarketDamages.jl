@@ -12,8 +12,8 @@
     i_regionalimpact = Variable(index=[time, region], unit="degreeC")
 
     #impact Parameters
-    rcons_per_cap_SLRRemainConsumption = Parameter(index=[time, region], unit = "")
-    rgdp_per_cap_SLRRemainGDP = Parameter(index=[time, region], unit = "")
+    rcons_per_cap_SLRRemainConsumption = Parameter(index=[time, region], unit = "\$/person")
+    rgdp_per_cap_SLRRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
     SAVE_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
@@ -26,8 +26,8 @@
 
     #impact variables
     isatg_impactfxnsaturation = Variable()
-    rcons_per_cap_MarketRemainConsumption = Variable(index=[time, region], unit = "")
-    rgdp_per_cap_MarketRemainGDP = Variable(index=[time, region], unit = "")
+    rcons_per_cap_MarketRemainConsumption = Variable(index=[time, region], unit = "\$/person")
+    rgdp_per_cap_MarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
     iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
     igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])

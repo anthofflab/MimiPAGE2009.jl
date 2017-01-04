@@ -20,7 +20,7 @@
     cmaxf_maxcostfactor = Parameter(index=[region], unit="none")
 
     bau_businessasusualemissions = Parameter(index=[time, region], unit = "%")
-    yagg = Parameter(index=[time], unit="years") # from equity weighting
+    yagg = Parameter(index=[time], unit="year") # from equity weighting
 
     #inputs with single, uncertain values
     q0propmult_cutbacksatnegativecostinfinalyear = Parameter(unit="none")

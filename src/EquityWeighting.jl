@@ -14,19 +14,19 @@ include("load_parameters.jl")
     #Total and Per-Capita Abatemet and Adaptation Costs
     tct_percap_totalcosts_total = Parameter(index=[time, region], unit="\$/person")
     act_adaptationcosts_total = Parameter(index=[time, region], unit="\$million")
-    act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$")
+    act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
 
     # Consumption
-    cons_percap_consumption = Parameter(index=[time, region], unit="\$") # Called "CONS_PER_CAP"
+    cons_percap_consumption = Parameter(index=[time, region], unit="\$/person") # Called "CONS_PER_CAP"
     # NOTE: Assumes that CONS_PER_CAP_FOCUS_0 = CONS_PER_CAP[1, 1]
-    cons_percap_aftercosts = Parameter(index=[time, region], unit="\$")
+    cons_percap_aftercosts = Parameter(index=[time, region], unit="\$/person")
 
     # Calculation of weighted costs
     emuc_utilityconvexity = Parameter(unit="none")
 
-    wtct_percap_weightedcosts = Variable(index=[time, region], unit="\$")
-    eact_percap_weightedadaptationcosts = Variable(index=[time, region], unit="\$")
-    wact_percap_partiallyweighted = Variable(index=[time, region], unit="\$")
+    wtct_percap_weightedcosts = Variable(index=[time, region], unit="\$/person")
+    eact_percap_weightedadaptationcosts = Variable(index=[time, region], unit="\$/person")
+    wact_percap_partiallyweighted = Variable(index=[time, region], unit="\$/person")
     wact_partiallyweighted = Variable(index=[time, region], unit="\$million")
 
     # Amount of equity weighting variable (0, (0, 1), or 1)
@@ -57,10 +57,10 @@ include("load_parameters.jl")
     wacdt_partiallyweighted_discounted = Variable(index=[time, region], unit="\$million")
 
     # Equity weighted impact totals
-    isat_percap_dis = Parameter(index=[time, region], unit="\$")
-    rcons_percap_dis = Variable(index=[time, region], unit="\$")
+    isat_percap_dis = Parameter(index=[time, region], unit="\$/person")
+    rcons_percap_dis = Variable(index=[time, region], unit="\$/person")
 
-    wit_equityweightedimpact = Variable(index=[time, region], unit="\$")
+    wit_equityweightedimpact = Variable(index=[time, region], unit="\$million")
     widt_equityweightedimpact_discounted = Variable(index=[time, region], unit="\$million")
 
     yagg_periodspan = Parameter(index=[time], unit="year")

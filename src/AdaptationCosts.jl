@@ -22,10 +22,10 @@ include("load_parameters.jl")
     cp_costplateau_eu = Parameter(unit="%GDP/driver")
     ci_costimpact_eu = Parameter(unit="%GDP/%driver")
 
-    atl_adjustedtolerablelevel = Variable(index=[time, region], unit="%")
+    atl_adjustedtolerablelevel = Variable(index=[time, region]) # Unit depends on instance (degreeC or m)
     imp_adaptedimpacts = Variable(index=[time, region], unit="%")
 
-    ac_adaptivecosts = Variable(index=[time, region], unit="\$M")
+    ac_adaptivecosts = Variable(index=[time, region], unit="\$million")
 end
 
 function run_timestep(s::AdaptationCosts, tt::Int64)
