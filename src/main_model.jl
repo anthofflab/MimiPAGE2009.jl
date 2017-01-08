@@ -128,6 +128,7 @@ adaptationcosts_sealevel[:gdp] = gdp[:gdp]
 totaladaptationcosts[:ac_adaptationcosts_economic] = adaptationcosts_economic[:ac_adaptivecosts]
 totaladaptationcosts[:ac_adaptationcosts_noneconomic] = adaptationcosts_noneconomic[:ac_adaptivecosts]
 totaladaptationcosts[:ac_adaptationcosts_sealevelrise] = adaptationcosts_sealevel[:ac_adaptivecosts]
+totaladaptationcosts[:pop_population] = population[:pop_population]
 
 slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
 slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
