@@ -150,7 +150,7 @@ nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adapte
 
 discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 discontinuity[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
-# discontinuity[:rcons_per_cap_NonMarketRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
+discontinuity[:rgdp_per_cap_NonMarketRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 
 equityweighting[:pop_population] = population[:pop_population]
 equityweighting[:tct_percap_totalcosts_total] = totalabatementcosts[:tct_per_cap_totalcostspercap]
