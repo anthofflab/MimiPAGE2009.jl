@@ -113,5 +113,10 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
     SLRDamagescomp[:scal_calibrationSLR] = 0.5
 
+    SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise," as %GDP Not sure this is right.
+    SLRDamagescomp[:isat_0_InitialImpactFxnSaturation] = 0.33 #pp34 PAGE09 documentation, "impacts saturate beyond." Note that Nic used 0.5 in NonMarketDamages and said he couldn't find this unitless parameter, so this may be wrong
+    SLRDamagescomp[:SAVE_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
+    SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU] = (1.3 * 10^7/ 496) #pp31 PAGE 09 documentation, EU GDP divided by population
+
     return SLRDamagescomp
 end
