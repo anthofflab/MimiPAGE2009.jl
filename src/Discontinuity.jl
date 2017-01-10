@@ -43,7 +43,7 @@ function run_timestep(s::Discontinuity, t::Int64)
 
   for r in d.region
 
-    v.idis_lossfromdisc[t] = maximum([0, (p.rt_g_globaltemperature[t] - p.tdis_tolerabilitydisc)])
+    v.idis_lossfromdisc[t] = max(0, p.rt_g_globaltemperature[t] - p.tdis_tolerabilitydisc)
 
     v.irefeqdis_eqdiscimpact[r] = p.WINCF_weightsfactor[r]*p.wdis_gdplostdisc
 
@@ -51,7 +51,6 @@ function run_timestep(s::Discontinuity, t::Int64)
 
     if t == 1
 
-      srand(1234) # set seed
       if v.idis_lossfromdisc[t]*(p.pdis_probability/100) > rand()
         v.occurdis_occurrencedummy[t] = 1
 
@@ -66,7 +65,6 @@ function run_timestep(s::Discontinuity, t::Int64)
 
     else
 
-      srand(1234) # set seed
       if v.idis_lossfromdisc[t]*(p.pdis_probability/100) > rand()
         v.occurdis_occurrencedummy[t] = 1
 
