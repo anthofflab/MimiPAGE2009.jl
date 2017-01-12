@@ -25,7 +25,6 @@ function run_timestep(s::SulphateForcing, tt::Int64)
     bigSFX0 = p.se0_sulphateemissionsbase ./ p.area
 
     for rr in d.region
-        # Check with Chris Hope
         v.se_sulphateemissions[tt, rr] = p.se0_sulphateemissionsbase[rr] * p.pse_sulphatevsbase[tt, rr] / 100
 
         # Eq.17 from Hope (2006) - sulfate flux
