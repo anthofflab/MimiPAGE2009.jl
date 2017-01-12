@@ -30,7 +30,7 @@ function run_timestep(s::SulphateForcing, tt::Int64)
         # Eq.17 from Hope (2006) - sulfate flux
         v.sfx_sulphateflux[tt,rr] = v.se_sulphateemissions[tt,rr] / p.area[rr]
         # Update for Eq. 18 from Hope (2009) - sulfate radiative forcing effect
-        bigSFD0 = p.d_sulphateforcingbase * bigSFX0[rr] / (sum(bigSFX0 .* p.area) / sum(p.area))
+        bigSFD0 = p.d_sulphateforcingbase * bigSFX0[rr] / sum(bigSFX0) #check with Chris Hope - this contradicts documentation for PAGE2009
         fsd_term = bigSFD0 * v.sfx_sulphateflux[tt,rr] / bigSFX0[rr]
         fsi_term = p.ind_slopeSEforcing_indirect/log(2) * log((p.nf_naturalsfx[rr] + v.sfx_sulphateflux[tt, rr]) / p.nf_naturalsfx[rr])
 
