@@ -5,13 +5,14 @@ using Mimi
 
   region = Index(region)
   y_year=Parameter(index=[time], unit="year")
+  y_year_0 = Parameter(unit="year")
 
   irefeqdis_eqdiscimpact=Variable(index=[region], unit="%")
-  wincf_weightsfactor=Parameter(index=[region], unit="unitless")
+  WINCF_weightsfactor=Parameter(index=[region], unit="unitless")
   wdis_gdplostdisc=Parameter(unit="%")
 
   igdpeqdis_eqdiscimpact=Variable(index=[time,region], unit="%")
-  rgdp_per_cap_DiscRemainGDP=Parameter(index=[time,region], unit="\$/person")
+  rgdp_per_cap_NonMarketRemainGDP=Parameter(index=[time,region], unit="\$/person")
   GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="unitless")
   ipow_incomeexponent=Parameter(unit="unitless")
 
@@ -42,43 +43,53 @@ function run_timestep(s::Discontinuity, t::Int64)
 
   for r in d.region
 
-    v.idis_lossfromdisc[t] = p.rt_g_globaltemperature[t] - p.tdis_tolerabilitydisc
-    v.expfdis_discdecay[t]=exp(-(p.y_year[t] - p.y_year[t-1])/p.distau_discontinuityexponent) # may have problem with negative exponent
+    v.idis_lossfromdisc[t] = max(0, p.rt_g_globaltemperature[t] - p.tdis_tolerabilitydisc)
 
-    srand(1234) # set seed
-    if v.idis_lossfromdisc[t]*(p.pdis_probability/100) > rand()
-      v.occurdis_occurrencedummy[t] = 1
+    v.irefeqdis_eqdiscimpact[r] = p.WINCF_weightsfactor[r]*p.wdis_gdplostdisc
 
-    elseif v.occurdis_occurrencedummy[t-1] == 1
-      v.occurdis_occurrencedummy[t] = 1
-
-    else
-      v.occurdis_occurrencedummy[t] = 0
-
-    end
-
-    v.irefeqdis_discimpact[r] = p.wincf_weightsfactor[r]*p.wdis_gdplostdisc
-
-    v.igdpeqdis_eqdiscimpact[t,r] = v.irefeqdis_discimpact[r] * (p.rgdp_per_cap_DiscRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_incomeexponent
-
-    v.igdp_realizeddiscimpact[t,r]=v.igdp_realizeddiscimpact[t-1,r]+v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*(v.igdpeqdis_eqdiscimpact[t,r]-v.igdp_realizeddiscimpact[t-1,r])
+    v.igdpeqdis_eqdiscimpact[t,r] = v.irefeqdis_eqdiscimpact[r] * (p.rgdp_per_cap_NonMarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_incomeexponent
 
     if t == 1
+
+      if v.idis_lossfromdisc[t]*(p.pdis_probability/100) > rand()
+        v.occurdis_occurrencedummy[t] = 1
+
+      else
+        v.occurdis_occurrencedummy[t] = 0
+
+      end
+
+      v.expfdis_discdecay[t]=exp(-(p.y_year[t] - p.y_year_0)/p.distau_discontinuityexponent) # may have problem with negative exponent
 
       v.igdp_realizeddiscimpact[t,r]=v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*v.igdpeqdis_eqdiscimpact[t,r]
 
     else
 
-        if v.igdp_realizeddiscimpact[t,r] < v.isatg_saturationmodification
-          v.isat_satdiscimpact[t,r] = v.igdp_realizeddiscimpact[t,r]
+      if v.idis_lossfromdisc[t]*(p.pdis_probability/100) > rand()
+        v.occurdis_occurrencedummy[t] = 1
 
-        else
-          v.isat_satdiscimpact[t,r] = v.isatg_saturationmodification + (100-v.isatg_saturationmodification)*((v.igdp_realizeddiscimpact[t,r]-v.isatg_saturationmodification)/((100-v.isatg_saturationmodification)+(v.igdp_realizeddiscimpact[t,r] - v.isatg_saturationmodification)))
+      elseif v.occurdis_occurrencedummy[t-1] == 1
+        v.occurdis_occurrencedummy[t] = 1
 
-        end
+      else
+        v.occurdis_occurrencedummy[t] = 0
 
-        v.isat_per_cap_DiscImpactperCapinclSaturation[t,r] = v.isat_satdiscimpact[t,r]*p.rgdp_per_cap_DiscRemainGDP[t,r]
-        v.rcons_per_cap_DiscRemainConsumption[t,r] = p.rcons_per_cap_NonMarketRemainConsumption - v.isat_per_cap_DiscImpactperCapinclSaturation[t,r]
+      end
+
+    v.expfdis_discdecay[t]=exp(-(p.y_year[t] - p.y_year[t-1])/p.distau_discontinuityexponent)
+
+    v.igdp_realizeddiscimpact[t,r]=v.igdp_realizeddiscimpact[t-1,r]+v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*(v.igdpeqdis_eqdiscimpact[t,r]-v.igdp_realizeddiscimpact[t-1,r])
+
+    if v.igdp_realizeddiscimpact[t,r] < v.isatg_saturationmodification
+      v.isat_satdiscimpact[t,r] = v.igdp_realizeddiscimpact[t,r]
+
+    else
+      v.isat_satdiscimpact[t,r] = v.isatg_saturationmodification + (100-v.isatg_saturationmodification)*((v.igdp_realizeddiscimpact[t,r]-v.isatg_saturationmodification)/((100-v.isatg_saturationmodification)+(v.igdp_realizeddiscimpact[t,r] - v.isatg_saturationmodification)))
+
+    end
+
+    v.isat_per_cap_DiscImpactperCapinclSaturation[t,r] = (v.isat_satdiscimpact[t,r]/100)*p.rgdp_per_cap_NonMarketRemainGDP[t,r]
+    v.rcons_per_cap_DiscRemainConsumption[t,r] = p.rcons_per_cap_NonMarketRemainConsumption[t,r] - v.isat_per_cap_DiscImpactperCapinclSaturation[t,r]
 
     end
 
@@ -91,17 +102,15 @@ function adddiscontinuity(model::Model)
 
     discontinuitycomp = addcomponent(model, Discontinuity)
 
-    discontinuitycomp[:wincf_weightsfactor]=[0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6]
+    discontinuitycomp[:WINCF_weightsfactor]=[1, 0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6]
     discontinuitycomp[:wdis_gdplostdisc]=0.15
-    discontinuitycomp[:ipow_incomeexponent]=-0.5
+    discontinuitycomp[:ipow_incomeexponent]=-0.5 # As reported for Hope (2009) Figure 1; -0.13 included in the appendix; Check with Chris Hope?
 
-    discontinuitycomp[:distau_discontinuityexponent]=-0.13    # unclear if this is right - PAGE 2009, pg. 24 "discontinuity exponent with income"
-    discontinuitycomp[:tdis_tolerabilitydisc]=3
-    discontinuitycomp[:pdis_probability]=20
+    discontinuitycomp[:distau_discontinuityexponent]=90.
+    discontinuitycomp[:tdis_tolerabilitydisc]=3.
+    discontinuitycomp[:pdis_probability]=20.
 
     discontinuitycomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
-
-    # disccomp[:idis_lossfromdisc] = ?        still don't know what this is
 
     return discontinuitycomp
 end
