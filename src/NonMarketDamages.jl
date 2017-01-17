@@ -87,7 +87,7 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp = addcomponent(model, NonMarketDamages)
 
     nonmarketdamagescomp[:tcal_CalibrationTemp]= 3.
-    nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .5 #can't find this parameter in the documentation. Check with Chris Hope.
+    nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .33 #check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
     nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = .53
     nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
     nonmarketdamagescomp[:ipow_NonMarketIncomeFxnExponent] = 0.
