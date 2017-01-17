@@ -110,7 +110,7 @@ function addadaptationcosts_economic(model::Model)
 end
 
 function addadaptationcosts_noneconomic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsEconomic"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsNonEconomic"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Non-economic-specific parameters

@@ -134,19 +134,19 @@ slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
 slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
 slrdamages[:tct_per_cap_totalcostspercap] = totalabatementcosts[:tct_per_cap_totalcostspercap]
 slrdamages[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
-connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptationCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true)
+connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true)
 slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
 
 marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
 marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
-connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptationCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
+connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
 marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
 
 nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
-connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptationCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
+connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
 nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adaptedimpacts]
 
 discontinuity[:rgdp_per_cap_NonMarketRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
