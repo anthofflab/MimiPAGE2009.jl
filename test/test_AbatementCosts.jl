@@ -28,3 +28,8 @@ p["y_year"] = m.indices_values[:time]
 setleftoverparameters(m, p)
 
 run(m)
+
+@test !isna(m[:AbatementCostsCO2, :tc_totalcost][10, 5])
+@test !isna(m[:AbatementCostsCH4, :tc_totalcost][10, 5])
+@test !isna(m[:AbatementCostsN2O, :tc_totalcost][10, 5])
+@test !isna(m[:AbatementCostsLin, :tc_totalcost][10, 5])

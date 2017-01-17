@@ -13,3 +13,5 @@ setparameter(m, :ch4emissions, :er_CH4emissionsgrowth, reshape(randn(30),10,3))
 
 ##running Model
 run(m)
+
+@test !isna(m[:ch4emissions, :e_globalCH4emissions][10])

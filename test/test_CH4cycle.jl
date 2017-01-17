@@ -16,3 +16,5 @@ setparameter(m, :ch4cycle, :rtl_g_landtemperature, ones(10))
 
 ##running Model
 run(m)
+
+@test !isna(m[:ch4cycle, :c_CH4concentration][10])

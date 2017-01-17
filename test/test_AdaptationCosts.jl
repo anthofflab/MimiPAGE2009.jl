@@ -19,3 +19,5 @@ p["gdp"] = transpose(repmat(readpagedata(m, "../data/gdp_0.csv"), 1, 10))
 setleftoverparameters(m, p)
 
 run(m)
+
+@test !isna(m[:AdaptationCosts, :ac_adaptivecosts][10, 5])
