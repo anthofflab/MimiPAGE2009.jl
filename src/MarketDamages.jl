@@ -17,7 +17,7 @@
 
     SAVE_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
-    W_MarketImpactsatCalibrationTemp =Parameter()
+    W_MarketImpactsatCalibrationTemp =Parameter(unit="%GDP")
     ipow_MarketIncomeFxnExponent =Parameter()
     iben_MarketInitialBenefit=Parameter()
     tcal_CalibrationTemp = Parameter()
@@ -93,6 +93,7 @@ function addmarketdamages(model::Model)
     marketdamagescomp[:SAVE_savingsrate]= 15.
     marketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
     marketdamagescomp[:pow_MarketImpactExponent]=2.17
+    marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = 0.5
 
     return marketdamagescomp
 end
