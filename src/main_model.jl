@@ -128,6 +128,7 @@ adaptationcosts_sealevel[:gdp] = gdp[:gdp]
 totaladaptationcosts[:ac_adaptationcosts_economic] = adaptationcosts_economic[:ac_adaptivecosts]
 totaladaptationcosts[:ac_adaptationcosts_noneconomic] = adaptationcosts_noneconomic[:ac_adaptivecosts]
 totaladaptationcosts[:ac_adaptationcosts_sealevelrise] = adaptationcosts_sealevel[:ac_adaptivecosts]
+totaladaptationcosts[:pop_population] = population[:pop_population]
 
 slrdamages[:s_sealevel] = sealevelrise[:s_sealevel]
 slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
@@ -150,6 +151,7 @@ nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adapte
 
 discontinuity[:rgdp_per_cap_DiscRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 discontinuity[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
+discontinuity[:rgdp_per_cap_NonMarketRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 
 equityweighting[:pop_population] = population[:pop_population]
 equityweighting[:tct_percap_totalcosts_total] = totalabatementcosts[:tct_per_cap_totalcostspercap]

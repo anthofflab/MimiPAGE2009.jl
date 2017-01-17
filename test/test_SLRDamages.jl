@@ -15,10 +15,10 @@ slrdamages[:imp_actualreductionSLR] = ones(10,8) *0.5
 setparameter(m, :SLRDamages, :y_year_0, 2000.) #real value
 # TODO Replace with real numbers
 setparameter(m, :SLRDamages, :s_sealevel, zeros(10))
-setparameter(m, :SLRDamages, :gdp_percap_aftercosts, zeros(10, 8))
 setparameter(m, :SLRDamages, :GDP_per_cap_focus_0_FocusRegionEU, float(30000))
-setparameter(m, :SLRDamages, :cons_percap_aftercosts, zeroes(10, 8))
-
+slrdamages[:cons_percap_consumption]= fill(20000,10,8)
+slrdamages[:tct_per_cap_totalcostspercap]= fill(5000,10,8)
+slrdamages[:act_percap_adaptationcosts]= fill(2000,10,8)
 
 ##running Model
 run(m)
