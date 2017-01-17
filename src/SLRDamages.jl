@@ -117,6 +117,8 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:isat_0_InitialImpactFxnSaturation] = 0.33 #pp34 PAGE09 documentation, "impacts saturate beyond." check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
     SLRDamagescomp[:SAVE_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
     SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU] = (1.3 * 10^7/ 496) #pp31 PAGE 09 documentation, EU GDP divided by population
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/impmax_sealevel.csv")
+
 
     return SLRDamagescomp
 end

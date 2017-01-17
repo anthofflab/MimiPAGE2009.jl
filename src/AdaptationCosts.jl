@@ -50,13 +50,13 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
         end
 
         if (p.y_year[tt]- p.istart_startdate[rr]) < 0
-            v.imp_actualreduction[tt,rr] = 0
+            v.imp_adaptedimpacts[tt,rr] = 0
         elseif ((p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]) < 1
-            v.imp_actualreduction[tt,rr] =
+            v.imp_adaptedimpacts[tt,rr] =
                 (p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]*
                 p.impred_eventualpercentreduction[rr]
         else
-            v.imp_actualreduction[tt,rr] = p.impred_eventualpercentreduction[rr]
+            v.imp_adaptedimpacts[tt,rr] = p.impred_eventualpercentreduction[rr]
         end
 
         # Hope (2009), p. 25, equations 1-2
