@@ -1,5 +1,6 @@
 using Mimi
 using DataFrames
+using Base.Test
 
 include("../src/load_parameters.jl")
 include("../src/AdaptationCosts.jl")
