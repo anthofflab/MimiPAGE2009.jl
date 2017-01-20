@@ -17,7 +17,7 @@
 
     SAVE_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
-    W_MarketImpactsatCalibrationTemp =Parameter()
+    W_MarketImpactsatCalibrationTemp =Parameter(unit="%GDP")
     ipow_MarketIncomeFxnExponent =Parameter()
     iben_MarketInitialBenefit=Parameter()
     tcal_CalibrationTemp = Parameter()
@@ -30,6 +30,8 @@
     rgdp_per_cap_MarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
     iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
     igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
+    impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC")
+
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
     isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
     pow_MarketImpactExponent=Parameter(unit="")
@@ -93,6 +95,8 @@ function addmarketdamages(model::Model)
     marketdamagescomp[:SAVE_savingsrate]= 15.
     marketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
     marketdamagescomp[:pow_MarketImpactExponent]=2.17
+    marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = 0.5
+    marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "../data/impmax_economic.csv")
 
     return marketdamagescomp
 end
