@@ -136,23 +136,27 @@ slrdamages[:tct_per_cap_totalcostspercap] = totalabatementcosts[:tct_per_cap_tot
 slrdamages[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
 connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true)
 slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
+slrdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
 marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
 marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
 connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
 marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
+marketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
 nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
 connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
 nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adaptedimpacts]
+nonmarketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
 discontinuity[:rgdp_per_cap_NonMarketRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 discontinuity[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 discontinuity[:rgdp_per_cap_NonMarketRemainGDP] = nonmarketdamages[:rgdp_per_cap_NonMarketRemainGDP]
 discontinuity[:rcons_per_cap_NonMarketRemainConsumption] = nonmarketdamages[:rcons_per_cap_NonMarketRemainConsumption]
+discontinuity[:isatg_saturationmodification] = gdp[:isatg_impactfxnsaturation]
 
 equityweighting[:pop_population] = population[:pop_population]
 equityweighting[:tct_percap_totalcosts_total] = totalabatementcosts[:tct_per_cap_totalcostspercap]

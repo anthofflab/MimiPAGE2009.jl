@@ -27,11 +27,10 @@ using DataFrames
     iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC")
     tcal_CalibrationTemp = Parameter(unit="degreeC")
     GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person")
-    isat_0_InitialImpactFxnSaturation= Parameter(unit="unitless")
     pow_NonMarketExponent = Parameter(unit="")
 
     #impact variables
-    isatg_impactfxnsaturation = Variable(unit="unitless")
+    isatg_impactfxnsaturation = Parameter(unit="unitless")
     rcons_per_cap_NonMarketRemainConsumption = Variable(index=[time, region], unit = "\$/person")
     rgdp_per_cap_NonMarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
     iref_ImpactatReferenceGDPperCap=Variable(index=[time, region], unit="%")
@@ -61,17 +60,15 @@ function run_timestep(s::NonMarketDamages, t::Int64)
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_NonMarketIncomeFxnExponent
 
-        v.isatg_impactfxnsaturation= p.isat_0_InitialImpactFxnSaturation * (1 - p.save_savingsrate/100)
-
-        if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
+        if v.igdp_ImpactatActualGDPperCap[t,r] < p.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
         else
 
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
-                ((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)*
-                    ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                    (((100-p.save_savingsrate)-v.isatg_impactfxnsaturation)+
-                        (v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)))* (1-p.imp_actualreduction[t,r]/100) *
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
+                ((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)*
+                    ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
+                    (((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)+
+                        (v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)))* (1-p.imp_actualreduction[t,r]/100) *
                             (v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r] ? 1 :
                                     p.impmax_maxtempriseforadaptpolicyNM[r] /
                                         v.i_regionalimpact[t,r])
@@ -87,7 +84,6 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp = addcomponent(model, NonMarketDamages)
 
     nonmarketdamagescomp[:tcal_CalibrationTemp]= 3.
-    nonmarketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .33 #check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
     nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = .53
     nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
     nonmarketdamagescomp[:ipow_NonMarketIncomeFxnExponent] = 0.

@@ -19,6 +19,17 @@ using Mimi
     save_savingsrate  = Parameter(unit="%")
     pop_population    = Parameter(index=[time,region],unit="million person")
 
+    # Saturation, used in impacts
+    isat0_initialimpactfxnsaturation = Parameter(unit="unitless")
+    isatg_impactfxnsaturation = Variable(unit="unitless")
+end
+
+function init(s::GDP)
+    v = s.Variables
+    p = s.Parameters
+    d = s.Dimensions
+
+    v.isatg_impactfxnsaturation= p.isat0_initialimpactfxnsaturation * (1 - p.save_savingsrate/100)
 end
 
 function run_timestep(s::GDP, t::Int64)
@@ -57,7 +68,8 @@ end
 function addgdp(model::Model)
     gdpcomp = addcomponent(model, GDP)
 
-    gdpcomp[:save_savingsrate] = 15.00
+    gdpcomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
+    gdpcomp[:isat0_initialimpactfxnsaturation] = 0.3333 #pp34 PAGE09 documentation, "impacts saturate beyond." check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
 
     return gdpcomp
 end
