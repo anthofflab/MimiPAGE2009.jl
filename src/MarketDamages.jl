@@ -22,10 +22,9 @@
     iben_MarketInitialBenefit=Parameter()
     tcal_CalibrationTemp = Parameter()
     GDP_per_cap_focus_0_FocusRegionEU = Parameter()
-    isat_0_InitialImpactFxnSaturation= Parameter()
 
     #impact variables
-    isatg_impactfxnsaturation = Variable()
+    isatg_impactfxnsaturation = Parameter(unit="unitless")
     rcons_per_cap_MarketRemainConsumption = Variable(index=[time, region], unit = "\$/person")
     rgdp_per_cap_MarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
     iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
@@ -57,23 +56,21 @@ function run_timestep(s::MarketDamages, t::Int64)
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_SLRRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_MarketIncomeFxnExponent
 
-        v.isatg_impactfxnsaturation= p.isat_0_InitialImpactFxnSaturation * (1 - p.SAVE_savingsrate/100)
-
-        if v.igdp_ImpactatActualGDPperCap[t,r] < v.isatg_impactfxnsaturation
+        if v.igdp_ImpactatActualGDPperCap[t,r] < p.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
         elseif v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyM[r]
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)*
-                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
+                ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
                 (v.igdp_ImpactatActualGDPperCap[t,r]-
-                v.isatg_impactfxnsaturation)))*(1-p.imp_actualreduction[t,r]/100)
+                p.isatg_impactfxnsaturation)))*(1-p.imp_actualreduction[t,r]/100)
         else
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation) *
-                ((v.igdp_ImpactatActualGDPperCap[t,r]-v.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-v.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCap[t,r] * v.isatg_impactfxnsaturation))) *
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
+                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation) *
+                ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
+                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCap[t,r] * p.isatg_impactfxnsaturation))) *
                 (1-(p.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyM[r] /
                 v.i_regionalimpact[t,r])
         end
@@ -89,7 +86,6 @@ function addmarketdamages(model::Model)
     marketdamagescomp = addcomponent(model, MarketDamages)
 
     marketdamagescomp[:tcal_CalibrationTemp]= 3.
-    marketdamagescomp[:isat_0_InitialImpactFxnSaturation]= .33
     marketdamagescomp[:iben_MarketInitialBenefit] = .13
     marketdamagescomp[:ipow_MarketIncomeFxnExponent] = -.13
     marketdamagescomp[:SAVE_savingsrate]= 15.
