@@ -17,4 +17,5 @@ setparameter(m, :Discontinuity, :rcons_per_cap_NonMarketRemainConsumption, ones(
 ##running Model
 run(m)
 
-#  m[:Discontinuity, :idis_lossfromdisc]
+m[:Discontinuity, :idis_lossfromdisc]
+# check
