@@ -73,7 +73,7 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
 end
 
 function addadaptationcosts_sealevel(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsSeaLevel"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, Symbol("AdaptiveCostsSeaLevel"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Sea Level-specific parameters
@@ -92,7 +92,7 @@ function addadaptationcosts_sealevel(model::Model)
 end
 
 function addadaptationcosts_economic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsEconomic"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, Symbol("AdaptiveCostsEconomic"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Economic-specific parameters
@@ -110,7 +110,7 @@ function addadaptationcosts_economic(model::Model)
 end
 
 function addadaptationcosts_noneconomic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsNonEconomic"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, Symbol("AdaptiveCostsNonEconomic"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Non-economic-specific parameters
