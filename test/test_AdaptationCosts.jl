@@ -11,8 +11,7 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
 adaptationcosts_economic = addadaptationcosts_economic(m)
-adaptationcosts_sealevel= addadaptationcosts_sealevel(m)
-
+adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
