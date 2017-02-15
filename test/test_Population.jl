@@ -12,7 +12,7 @@ population = addpopulation(m)
 #population[:y_year_0] = 2008.
 p = load_parameters(m)
 p[:y_year] = m.indices_values[:time]
-p[:y_year_0] = 2008.
+p["y_year_0"] = 2008.
 
 setleftoverparameters(m, p)
 #setparameter(m,:Population, :y_year_0, 2008.)
@@ -20,6 +20,3 @@ setleftoverparameters(m, p)
 run(m)
 
 pop = m[:Population, :pop_population]
-@test !isna(m[:Population, :pop_population])
-
-@test uspop2100 > 400 && uspop2100 < 500
