@@ -13,4 +13,4 @@ setparameter(m, :ch4forcing, :c_CH4concentration, ones(10).*300)
 ##running Model
 run(m)
 
-@test !isna(m[:ch4forcing, :f_CH4forcing][10])
+@test !isnan(m[:ch4forcing, :f_CH4forcing][10])
