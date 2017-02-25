@@ -16,7 +16,7 @@ adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
 p = load_parameters(m)
 p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
-p["gdp"] = transpose(repmat(readpagedata(m, "../data/gdp_0.csv"), 1, 10))
+p["gdp"] = readpagedata(m, "../test/validationdata/gdp.csv")
 setleftoverparameters(m, p)
 
 run(m)

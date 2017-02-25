@@ -1,7 +1,7 @@
-# Index: time,
-# Units:m,
-,
-Year,"""Sea Level Rise"""
+# Index: time
+# Units:m
+
+Year,"Sea Level Rise"
 2009,0.15
 2010,0.15
 2020,0.18
@@ -12,4 +12,3 @@ Year,"""Sea Level Rise"""
 2100,0.62
 2150,1.07
 2200,1.57
-,
