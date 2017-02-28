@@ -92,7 +92,7 @@ function addmarketdamages(model::Model)
     marketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
     marketdamagescomp[:pow_MarketImpactExponent]=2.17
     marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = 0.5
-    marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "../data/impmax_economic.csv")
+    marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "impmax_economic.csv"))
 
     return marketdamagescomp
 end
