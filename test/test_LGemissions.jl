@@ -1,11 +1,12 @@
 using Mimi
 
 include("../src/LGemissions.jl")
+include("../src/load_parameters.jl")
 
 m = Model()
 
-setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
+setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addcomponent(m, LGemissions)
 
