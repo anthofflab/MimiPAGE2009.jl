@@ -11,7 +11,7 @@ include("load_parameters.jl")
     # Impacts across all gases
     pop_population = Parameter(index=[time, region], unit="million person")
 
-    #Total and Per-Capita Abatemet and Adaptation Costs
+    #Total and Per-Capita Abatement and Adaptation Costs
     tct_percap_totalcosts_total = Parameter(index=[time, region], unit="\$/person")
     act_adaptationcosts_total = Parameter(index=[time, region], unit="\$million")
     act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
