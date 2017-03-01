@@ -1,5 +1,6 @@
 using Mimi
 using DataFrames
+using Base.Test
 
 include("../src/load_parameters.jl")
 include("../src/TotalAdaptationCosts.jl")
@@ -19,3 +20,5 @@ p = load_parameters(m)
 setleftoverparameters(m, p)
 
 run(m)
+
+@test !isna(m[:TotalAdaptationCosts, :act_adaptationcosts_total][10, 5])

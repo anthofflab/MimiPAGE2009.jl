@@ -1,5 +1,6 @@
 using Mimi
 using DataFrames
+using Base.Test
 
 include("../src/load_parameters.jl")
 include("../src/AbatementCosts.jl")
@@ -13,14 +14,10 @@ addabatementcosts(m, :CH4)
 addabatementcosts(m, :N2O)
 addabatementcosts(m, :Lin)
 
-setparameter(m, :AbatementCostsCO2, :bau_businessasusualemissions, ones(10,8))
-setparameter(m, :AbatementCostsCH4, :bau_businessasusualemissions, ones(10,8))
-setparameter(m, :AbatementCostsN2O, :bau_businessasusualemissions, ones(10,8))
-setparameter(m, :AbatementCostsLin, :bau_businessasusualemissions, ones(10,8))
-setparameter(m, :AbatementCostsCO2, :yagg, ones(10))
-setparameter(m, :AbatementCostsCH4, :yagg, ones(10))
-setparameter(m, :AbatementCostsN2O, :yagg, ones(10))
-setparameter(m, :AbatementCostsLin, :yagg, ones(10))
+setparameter(m, :AbatementCostsCO2, :yagg, [1.5,5.50,10,10,10,17.5,25,37.5,50,75])
+setparameter(m, :AbatementCostsCH4, :yagg, [1.5,5.50,10,10,10,17.5,25,37.5,50,75])
+setparameter(m, :AbatementCostsN2O, :yagg, [1.5,5.50,10,10,10,17.5,25,37.5,50,75])
+setparameter(m, :AbatementCostsLin, :yagg, [1.5,5.50,10,10,10,17.5,25,37.5,50,75])
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.

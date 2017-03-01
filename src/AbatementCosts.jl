@@ -134,7 +134,7 @@ function run_timestep(s::AbatementCosts, t::Int64)
         if v.cbe_absoluteemissionreductions[t,r]<v.q0_absolutecutbacksatnegativecost[t,r]
             v.tc_totalcost[t,r] = (v.alo[t,r]/v.blo[t,r])*(exp(v.blo[t,r]*(v.cbe_absoluteemissionreductions[t,r]- v.q0_absolutecutbacksatnegativecost[t,r]))- exp(-v.blo[t,r]*v.q0_absolutecutbacksatnegativecost[t,r])) - v.alo[t,r]*v.cbe_absoluteemissionreductions[t,r]
         else
-            v.tc_totalcost[t,r] = (v.ahi[t,r]/v.bhi[t,r])* (exp(v.bhi_[t,r]*(v.cbe_absoluteemissionreductions[t,r]-v.q0_absolutecutbacksatnegativecost[t,r]))-1) - v.ahi[t,r]*(v.cbe_absoluteemissionreductions[t,r] - v.q0_absolutecutbacksatnegativecost[t,r]) + v.tcq0[t,r]
+            v.tc_totalcost[t,r] = (v.ahi[t,r]/v.bhi[t,r])* (exp(v.bhi[t,r]*(v.cbe_absoluteemissionreductions[t,r]-v.q0_absolutecutbacksatnegativecost[t,r]))-1) - v.ahi[t,r]*(v.cbe_absoluteemissionreductions[t,r] - v.q0_absolutecutbacksatnegativecost[t,r]) + v.tcq0[t,r]
         end
     end
 end

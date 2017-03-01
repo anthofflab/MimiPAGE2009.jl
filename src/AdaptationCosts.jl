@@ -39,24 +39,24 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
 
     for rr in d.region
         #calculate adjusted tolerable level and max impact based on adaptation policy
-        if (p.y_year[t] - p.pstart_startdateofadaptpolicy[r]) < 0
-            v.atl_adjustedtolerablelevel[t,r]= 0
-        elseif ((p.y_year[t]-p.pstart_startdateofadaptpolicy[r])/p.pyears_yearstilfulleffect[r])<1.
-            v.atl_adjustedtolerablelevel[t,r]=
-                ((p.y_year[t]-p.pstart_startdateofadaptpolicy[r])/p.pyears_yearstilfulleffect[r]) *
-                p.plateau_increaseintolerableplateaufromadaptation[r]
+        if (p.y_year[tt] - p.pstart_startdateofadaptpolicy[rr]) < 0
+            v.atl_adjustedtolerablelevel[tt,rr]= 0
+        elseif ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr])<1.
+            v.atl_adjustedtolerablelevel[tt,rr]=
+                ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr]) *
+                p.plateau_increaseintolerableplateaufromadaptation[rr]
         else
-            v.atl_adjustedtolerablelevel[t,r] = p.plateau_increaseintolerableplateaufromadaptation[r]
+            v.atl_adjustedtolerablelevel[tt,rr] = p.plateau_increaseintolerableplateaufromadaptation[rr]
         end
 
-        if (p.y_year[t]- p.istart_startdate[r]) < 0
-            v.imp_actualreduction[t,r] = 0
-        elseif ((p.y_year[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r]) < 1
-            v.imp_actualreduction[t,r] =
-                (p.y_year[t]-p.istart_startdate[r])/p.iyears_yearstilfulleffect[r]*
-                p.impred_eventualpercentreduction[r]
+        if (p.y_year[tt]- p.istart_startdate[rr]) < 0
+            v.imp_adaptedimpacts[tt,rr] = 0
+        elseif ((p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]) < 1
+            v.imp_adaptedimpacts[tt,rr] =
+                (p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]*
+                p.impred_eventualpercentreduction[rr]
         else
-            v.imp_actualreduction[t,r] = p.impred_eventualpercentreduction[r]
+            v.imp_adaptedimpacts[tt,rr] = p.impred_eventualpercentreduction[rr]
         end
 
         # Hope (2009), p. 25, equations 1-2
@@ -73,7 +73,7 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
 end
 
 function addadaptationcosts_sealevel(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsSeaLevel"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, Symbol("AdaptiveCostsSeaLevel"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Sea Level-specific parameters
@@ -92,7 +92,7 @@ function addadaptationcosts_sealevel(model::Model)
 end
 
 function addadaptationcosts_economic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsEconomic"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, Symbol("AdaptiveCostsEconomic"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Economic-specific parameters
@@ -110,7 +110,7 @@ function addadaptationcosts_economic(model::Model)
 end
 
 function addadaptationcosts_noneconomic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, symbol("AdaptiveCostsEconomic"))
+    adaptationcosts = addcomponent(model, AdaptationCosts, Symbol("AdaptiveCostsNonEconomic"))
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Non-economic-specific parameters

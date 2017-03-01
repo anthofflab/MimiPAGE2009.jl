@@ -27,6 +27,7 @@ function run_timestep(s::Population, tt::Int64)
         else
             v.pop_population[tt, rr] = v.pop_population[tt-1, rr] * (1 + p.popgrw_populationgrowth[tt, rr]/100)^(p.y_year[tt] - p.y_year[tt-1])
         end
+        println([p.pop0_initpopulation[rr], p.popgrw_populationgrowth[tt,rr], p.y_year[tt], p.y_year_0])
     end
 end
 
