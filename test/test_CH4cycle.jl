@@ -1,4 +1,5 @@
 using Mimi
+using Base.Test
 
 include("../src/CH4cycle.jl")
 
@@ -11,7 +12,7 @@ addCH4cycle(m)
 setparameter(m, :ch4cycle, :e_globalCH4emissions, ones(10))
 setparameter(m, :ch4cycle, :y_year, [2001.,2002.,2010.,2020.,2040.,2060.,2080.,2100.,2150.,2200.]) #real value
 setparameter(m, :ch4cycle, :y_year_0, 2000.) #real value
-setparameter(m, :ch4cycle, :rtl_g0_baselandtemp, [0.5])
+setparameter(m, :ch4cycle, :rtl_g0_baselandtemp, [0.93])
 setparameter(m, :ch4cycle, :rtl_g_landtemperature, ones(10))
 
 ##running Model

@@ -1,4 +1,5 @@
 using Mimi
+using Base.Test
 
 include("../src/CH4emissions.jl")
 
