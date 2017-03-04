@@ -11,14 +11,23 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addtotaladaptationcosts(m)
 
-setparameter(m, :TotalAdaptationCosts, :pop_population, ones(10,8))
-setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_economic, ones(10,8))
-setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_noneconomic, ones(10,8))
-setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_sealevelrise, ones(10,8))
+setparameter(m, :TotalAdaptationCosts, :pop_population, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","pop_population.csv")))
+setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_economic, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","pop_population.csv")))
+setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_noneconomic, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","pop_population.csv")))
+setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_sealevelrise, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","pop_population.csv")))
 
 p = load_parameters(m)
 setleftoverparameters(m, p)
 
 run(m)
 
-@test !isna(m[:TotalAdaptationCosts, :act_adaptationcosts_total][10, 5])
+# Generated data
+adapt_cost = m[:TotalAdaptationCosts, :act_adaptationcosts_total]
+adapt_cost_per_cap = m[:TotalAdaptationCosts, :act_percap_adaptationcosts]
+
+# Recorded data
+cost_compare = readpagedata(m, "validationdata/act_adaptationcosts_tot.csv")
+cost_cap_compare = readpagedata(m, "validationdata/act_percap_adaptationcosts.csv")
+
+@test_approx_eq_eps adapt_cost cost_compare 1e-6
+@test_approx_eq_eps adapt_cost_per_cap cost_cap_compare 1e-6
