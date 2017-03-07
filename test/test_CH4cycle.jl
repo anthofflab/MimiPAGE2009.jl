@@ -19,5 +19,9 @@ setparameter(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m, joinpath(dirn
 ##running Model
 run(m)
 
+<<<<<<< HEAD
 #@test !isna(m[:ch4cycle, :c_CH4concentration][10])
 m[:ch4cycle,  :c_CH4concentration]
+=======
+@test !isnan(m[:ch4cycle, :c_CH4concentration][10])
+>>>>>>> d2699b2b0f70aacf724333646128ebf2530ad2f2

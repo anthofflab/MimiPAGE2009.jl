@@ -15,5 +15,9 @@ setparameter(m, :ch4emissions, :er_CH4emissionsgrowth, readpagedata(m, joinpath(
 ##running Model
 run(m)
 
+<<<<<<< HEAD
 #@test !isna(m[:ch4emissions, :e_globalCH4emissions][10])
 m[:ch4emissions,  :e_globalCH4emissions] #at present, consistently yields 3.64
+=======
+@test !isnan(m[:ch4emissions, :e_globalCH4emissions][10])
+>>>>>>> d2699b2b0f70aacf724333646128ebf2530ad2f2
