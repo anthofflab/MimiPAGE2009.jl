@@ -167,7 +167,7 @@ end
 function addequityweighting(model::Model)
     equityweightingcomp = addcomponent(model, EquityWeighting)
 
-    equityweightingcomp[:ptp_timepreference] = 1.033333 # <0.1,1, 2>
+    equityweightingcomp[:ptp_timepreference] = 1.03333333 # <0.1,1, 2>
     equityweightingcomp[:equity_proportion] = 1.0
     equityweightingcomp[:emuc_utilityconvexity] = 1.166667
     equityweightingcomp[:civvalue_civilizationvalue] = 5.3e10
