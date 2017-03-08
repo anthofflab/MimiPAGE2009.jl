@@ -25,6 +25,11 @@ function checktimeorder(model::Model, times, file)
 end
 
 function readpagedata(model::Model, filepath::AbstractString)
+    # Handle relative paths
+    if filepath[1] ∉ ['.', '/']
+        filepath = joinpath(dirname(@__FILE__), "..", filepath)
+    end
+
     content = readlines(filepath)
 
     firstline = chomp(content[1])
