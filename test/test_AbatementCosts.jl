@@ -37,7 +37,18 @@ tc_compare_ch4=readpagedata(m, "test/validationdata/tc_totalcosts_ch4.csv")
 tc_compare_n2o=readpagedata(m, "test/validationdata/tc_totalcosts_n2o.csv")
 tc_compare_lin=readpagedata(m, "test/validationdata/tc_totalcosts_linear.csv")
 
+zc_compare_co2=readpagedata(m, "test/validationdata/zc_zerocostemissionsCO2.csv")
+zc_compare_ch4=readpagedata(m, "test/validationdata/zc_zerocostemissionsCH4.csv")
+zc_compare_n2o=readpagedata(m, "test/validationdata/zc_zerocostemissionsN2O.csv")
+zc_compare_lin=readpagedata(m, "test/validationdata/zc_zerocostemissionsLG.csv")
+
+
 @test_approx_eq_eps m[:AbatementCostsCO2, :tc_totalcost] tc_compare_co2 1e-3
 @test_approx_eq_eps m[:AbatementCostsCH4, :tc_totalcost] tc_compare_ch4 1e-3
 @test_approx_eq_eps m[:AbatementCostsN2O, :tc_totalcost] tc_compare_n2o 1e-3
 @test_approx_eq_eps m[:AbatementCostsLin, :tc_totalcost] tc_compare_lin 1e-3
+
+@test_approx_eq_eps m[:AbatementCostsCO2, :zc_zerocostemissions] zc_compare_co2 1e-2
+@test_approx_eq_eps m[:AbatementCostsCH4, :zc_zerocostemissions] zc_compare_ch4 1e-2
+@test_approx_eq_eps m[:AbatementCostsN2O, :zc_zerocostemissions] zc_compare_n2o 1e-2
+@test_approx_eq_eps m[:AbatementCostsLin, :zc_zerocostemissions] zc_compare_lin 1e-2
