@@ -3,7 +3,7 @@ include("../src/load_parameters.jl")
 include("../src/CH4emissions.jl")
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
 setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addcomponent(m, ch4emissions)
@@ -16,4 +16,13 @@ setparameter(m, :ch4emissions, :er_CH4emissionsgrowth, readpagedata(m, joinpath(
 run(m)
 
 #@test !isna(m[:ch4emissions, :e_globalCH4emissions][10])
-m[:ch4emissions,  :e_globalCH4emissions] #at present, consistently yields 3.64
+
+# Generated data
+pop= m[:ch4emissions,  :e_globalCH4emissions]
+
+# Recorded data
+#pop_compare = readpagedata(m, "validationdata/e_globalCH4emissions.csv")
+temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globalCH4emissions.csv"))
+pop_compare=vec(sum(temp,2))
+
+@test_approx_eq_eps pop pop_compare 1e0
