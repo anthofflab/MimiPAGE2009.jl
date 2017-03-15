@@ -38,7 +38,7 @@ include("load_parameters.jl")
 
     # Discount rates
     ptp_timepreference = Parameter(unit="%/year")
-    grw_gdpgrowth = Parameter(index=[time, region], unit="%/year")
+    grw_gdpgrowthrate = Parameter(index=[time, region], unit="%/year")
     popgrw_populationgrowth = Parameter(index=[time, region], unit="%/year")
 
     dr_discountrate = Variable(index=[time, region], unit="%/year")
@@ -117,7 +117,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.wact_partiallyweighted[tt, rr] = v.wact_percap_partiallyweighted[tt, rr] * p.pop_population[tt, rr]
 
         # Discount rate calculations
-        v.dr_discountrate[tt, rr] = p.ptp_timepreference + p.emuc_utilityconvexity * (p.grw_gdpgrowth[tt, rr] - p.popgrw_populationgrowth[tt, rr])
+        v.dr_discountrate[tt, rr] = p.ptp_timepreference + p.emuc_utilityconvexity * (p.grw_gdpgrowthrate[tt, rr] - p.popgrw_populationgrowth[tt, rr])
         if tt == 1
             v.yp_yearsperiod[1] = p.y_year[1] - p.y_year_0
         else
