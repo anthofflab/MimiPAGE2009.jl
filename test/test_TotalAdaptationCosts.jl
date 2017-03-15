@@ -16,8 +16,8 @@ setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_economic, readpagedat
 setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_noneconomic, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","ac_adaptationcosts_noneconomic.csv")))
 setparameter(m, :TotalAdaptationCosts, :ac_adaptationcosts_sealevelrise, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","ac_adaptationcosts_sealevelrise.csv")))
 
-p = load_parameters(m)
-setleftoverparameters(m, p)
+#p = load_parameters(m)
+#setleftoverparameters(m, p)
 
 run(m)
 
@@ -30,5 +30,5 @@ cost_compare = readpagedata(m, joinpath(dirname(@__FILE__),
     "validationdata","act_adaptationcosts_tot.csv"))
 cost_cap_compare = readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","act_percap_adaptationcosts.csv"))
 
-@test_approx_eq_eps adapt_cost cost_compare 1e7
-@test_approx_eq_eps adapt_cost_per_cap cost_cap_compare 1e4
+@test_approx_eq_eps adapt_cost cost_compare 1e3
+@test_approx_eq_eps adapt_cost_per_cap cost_cap_compare 1e1
