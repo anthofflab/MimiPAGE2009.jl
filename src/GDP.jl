@@ -18,6 +18,7 @@ using Mimi
     grw_gdpgrowthrate = Parameter(index=[time, region], unit="%/year") #From p.32 of Hope 2009
     gdp_0             = Parameter(index=[region], unit="\$M") #GDP in y_year_0
     save_savingsrate  = Parameter(unit="%")
+    pop0_initpopulation = Parameter(index=[region], unit="million person")
     pop_population    = Parameter(index=[time,region],unit="million person")
 
     # Saturation, used in impacts
@@ -31,8 +32,8 @@ function init(s::GDP)
     d = s.Dimensions
 
     v.isatg_impactfxnsaturation = p.isat0_initialimpactfxnsaturation * (1 - p.save_savingsrate/100)
-    for rr in d.regions
-        v.cons_percap_consumption_0[rr] = (p.gdp_0[rr] / p.pop0_initpopulation[rr])^(1 - p.save_savingsrate / 100)
+    for rr in d.region
+        v.cons_percap_consumption_0[rr] = (p.gdp_0[rr] / p.pop0_initpopulation[rr])*(1 - p.save_savingsrate / 100)
     end
 end
 

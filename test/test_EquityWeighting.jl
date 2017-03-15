@@ -48,9 +48,9 @@ te_compare = 224812034.
 @test_approx_eq_eps df df_compare 1e-6
 @test_approx_eq_eps wtct_percap wtct_percap_compare 1e-4
 @test_approx_eq_eps pct_percap pct_percap_compare 1e-4
-@test_approx_eq_eps dr dr_compare 1e-2 # Not precise enough!
-@test_approx_eq_eps dfc dfc_compare 1e-2 # Not precise enough!
+@test_approx_eq_eps dr dr_compare 1e-5
+@test_approx_eq_eps dfc dfc_compare 1e-6
 
 @test_approx_eq_eps wacdt wacdt_compare 1e-1 # Not precise enough!
 
-@test_approx_eq_eps te te_compare 1.
+@test_approx_eq_eps te te_compare 1. # Fails!
