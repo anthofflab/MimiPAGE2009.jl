@@ -21,8 +21,7 @@ run(m)
 pop= m[:ch4emissions,  :e_globalCH4emissions]
 
 # Recorded data
-#pop_compare = readpagedata(m, "validationdata/e_globalCH4emissions.csv")
 temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globalCH4emissions.csv"))
 pop_compare=vec(sum(temp,2))
 
-@test_approx_eq_eps pop pop_compare 1e0
+@test_approx_eq_eps pop pop_compare 1e1

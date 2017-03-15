@@ -10,16 +10,19 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addcomponent(m, n2oemissions)
 
-#temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globalN2Oemissions.csv"))
-#globalemissions=vec(sum(temp,2))
-#setparameter(m, :n2oemissions, :e_globalN2Oemissions, globalemissions)
 
 setparameter(m, :n2oemissions, :e0_baselineN2Oemissions, [1.400109,1.234923,0.66379, 0.448255, 2.436778, 1.02158, 1.951801, 1.889284])
 setparameter(m, :n2oemissions, :er_N2Oemissionsgrowth, readpagedata(m, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv")))
-#setparameter(m, :n2oemissions, :er_N2Oemissionsgrowth, reshape(randn(30),10,3))
 
 ##running Model
 run(m)
-
-m[:n2oemissions,  :e_globalN2Oemissions]
 #@test !isna(m[:N2Oemissions, :e_globalN2Oemissions][10])
+
+# Generated data
+pop= m[:n2oemissions,  :e_globalN2Oemissions]
+
+# Recorded data
+temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globaln2oemissions.csv"))
+pop_compare=vec(sum(temp,2))
+
+@test_approx_eq_eps pop pop_compare 1e-1
