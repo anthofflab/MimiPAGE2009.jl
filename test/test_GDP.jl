@@ -1,4 +1,5 @@
 using Mimi
+using Base.Test
 
 include("../src/load_parameters.jl")
 include("../src/GDP.jl")
@@ -10,6 +11,7 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 population = addpopulation(m)
 gdp = addgdp(m)
+gdp[:pop_population_0] = readpagedata("data/pop0_initpopulation.csv")
 gdp[:pop_population] = population[:pop_population]
 
 p=load_parameters(m)
@@ -21,3 +23,7 @@ setleftoverparameters(m,p)
 run(m)
 
 m[:GDP, :gdp]
+
+cons_percap_consumption_0_compare = readpagedata(m, "test/validationdata/cons_percap_consumption_0.csv")
+@test_approx_eq_eps m[:GDP, :cons_percap_consumption_0] cons_percap_consumption_0_compare 1e-6
+

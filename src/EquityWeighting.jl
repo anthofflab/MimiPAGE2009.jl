@@ -18,7 +18,7 @@ include("load_parameters.jl")
 
     # Consumption
     cons_percap_consumption = Parameter(index=[time, region], unit="\$/person") # Called "CONS_PER_CAP"
-    # NOTE: Assumes that CONS_PER_CAP_FOCUS_0 = CONS_PER_CAP[1, 1]
+    cons_percap_consumption_0 = Parameter(index=[region], unit="\$/person")
     cons_percap_aftercosts = Parameter(index=[time, region], unit="\$/person")
 
     # Calculation of weighted costs
@@ -97,12 +97,12 @@ function run_timestep(s::EquityWeighting, tt::Int64)
 
         ## Gas Costs Accounting
         # Weighted costs (Page 23 of Hope 2009)
-        v.wtct_percap_weightedcosts[tt, rr] = ((p.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.tct_percap_totalcosts_total[tt, rr])^(1 - p.emuc_utilityconvexity))
+        v.wtct_percap_weightedcosts[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.tct_percap_totalcosts_total[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         # Add these into consumption
         v.rcons_percap_dis[tt, rr] = p.cons_percap_consumption[tt, rr] - p.isat_percap_dis[tt, rr]
 
-        v.eact_percap_weightedadaptationcosts[tt, rr] = ((p.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.act_percap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
+        v.eact_percap_weightedadaptationcosts[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.act_percap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         # Do partial weighting
         if p.equity_proportion == 0
@@ -142,7 +142,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.pcdat_partiallyweighted_discountedaggregated[tt, rr] = v.pcdt_partiallyweighted_discounted[tt, rr] * p.yagg_periodspan[tt]
 
         ## Equity weighted impacts (end of page 28, Hope 2009)
-        v.wit_equityweightedimpact[tt, rr] = ((p.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - v.rcons_percap_dis[tt, rr]^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
+        v.wit_equityweightedimpact[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - v.rcons_percap_dis[tt, rr]^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
 
         v.widt_equityweightedimpact_discounted[tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.df_utilitydiscountrate[tt]
 
