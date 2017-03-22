@@ -1,12 +1,12 @@
 # Index: region
-# Unit: unitless
+# Unit:
 
-Region,"Weights Factor"
-EU,1.0
-US,0.8
-OT,0.8
-EE,0.4
-CA,0.8
-IA,0.8
+Region,wincf
+EU,1
+US,0.7999999999999999
+OT,0.8000000000000002
+EE,0.4000000000000001
+CA,0.8000000000000002
+IA,0.8000000000000002
 AF,0.6
 LA,0.6

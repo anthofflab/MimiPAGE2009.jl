@@ -1,12 +1,12 @@
 # Index: region
-# Unit: degreeC
+# Unit:
 
-Region,"Realized Temperature"
+Region,rtl_0
 EU,1
 US,1
 OT,1.2
 EE,1.4
-CA,.6
-IA,.8
-AF,.7
-LA,.85
+CA,0.6
+IA,0.8
+AF,0.7
+LA,0.85

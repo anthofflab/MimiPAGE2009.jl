@@ -1,12 +1,12 @@
 # Index: region
-# Unit: meter
+# Unit:
 
-Region,"Plateau"
-EU,.25
-US,.25
-OT,.25
-EE,.25
-CA,.20
-IA,.20
-AF,.20
-LA,.20
+Region,plateau_s_a
+EU,0.25
+US,0.25
+OT,0.25
+EE,0.25
+CA,0.2
+IA,0.2
+AF,0.2
+LA,0.2

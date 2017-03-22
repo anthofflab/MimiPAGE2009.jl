@@ -1,7 +1,7 @@
 # Index: region
-# Unit: year
+# Unit:
 
-Region,"years until full impact effect in non-market"
+Region,iyears_2_a
 EU,40
 US,40
 OT,40

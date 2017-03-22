@@ -1,7 +1,7 @@
 # Index: region
-# Unit: degreeC
+# Unit:
 
-Region,"Max temp rise for adaptive policy in market sector"
+Region,impmax_1_a
 EU,2
 US,2
 OT,2

@@ -1,7 +1,7 @@
 # Index: region
-# Unit: degreeC
+# Unit:
 
-Region,"Increase in tolerable plateau from adaptation in non-market sector"
+Region,plateau_2_a
 EU,0
 US,0
 OT,0

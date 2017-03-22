@@ -1,7 +1,7 @@
 # Index: region
-# Unit: year
+# Unit:
 
-Region,"Start date of impacts in market"
+Region,istart_1_a
 EU,2010
 US,2010
 OT,2010
