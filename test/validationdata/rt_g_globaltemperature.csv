@@ -1,7 +1,7 @@
-# Index: time,
-# Units:degreeC
+# Index: time
+# Units: degreeC
 
-Year,Global Temperature
+year,GlobalTemperature
 2009,0.75
 2010,0.77
 2020,0.99
