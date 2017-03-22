@@ -108,6 +108,7 @@ climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 
 sealevelrise[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
+gdp[:pop0_initpopulation] = population[:pop0_initpopulation]
 gdp[:pop_population] = population[:pop_population]
 
 abatementcosts_CO2[:yagg] = gdp[:yagg_periodspan]
@@ -164,7 +165,9 @@ equityweighting[:act_adaptationcosts_total] = totaladaptationcosts[:act_adaptati
 equityweighting[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
 equityweighting[:cons_percap_consumption] = gdp[:cons_percap_consumption]
 equityweighting[:cons_percap_aftercosts] = slrdamages[:cons_percap_aftercosts]
+equityweighting[:rcons_percap_dis] = discontinuity[:rcons_per_cap_DiscRemainConsumption]
 equityweighting[:yagg_periodspan] = gdp[:yagg_periodspan]
+equityweighting[:cons_percap_consumption_0] = gdp[:cons_percap_consumption_0]
 equityweighting[:isat_percap_dis] = discontinuity[:isat_per_cap_DiscImpactperCapinclSaturation]
 
 # next: add vector and panel example

@@ -25,6 +25,11 @@ function checktimeorder(model::Model, times, file)
 end
 
 function readpagedata(model::Model, filepath::AbstractString)
+    # Handle relative paths
+    if filepath[1] ∉ ['.', '/']
+        filepath = joinpath(dirname(@__FILE__), "..", filepath)
+    end
+
     content = readlines(filepath)
 
     firstline = chomp(content[1])
@@ -51,7 +56,7 @@ function readpagedata(model::Model, filepath::AbstractString)
 
         return convert(Array{Float64}, data[1][:, 2:end])
     else
-        error("Unknown header in parameter file.")
+        error("Unknown header in parameter file $filepath.")
     end
 end
 
