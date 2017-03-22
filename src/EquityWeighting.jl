@@ -57,8 +57,7 @@ include("load_parameters.jl")
     wacdt_partiallyweighted_discounted = Variable(index=[time, region], unit="\$million")
 
     # Equity weighted impact totals
-    isat_percap_dis = Parameter(index=[time, region], unit="\$/person")
-    rcons_percap_dis = Variable(index=[time, region], unit="\$/person")
+    rcons_percap_dis = Parameter(index=[time, region], unit="\$/person")
 
     wit_equityweightedimpact = Variable(index=[time, region], unit="\$million")
     widt_equityweightedimpact_discounted = Variable(index=[time, region], unit="\$million")
@@ -100,8 +99,6 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.wtct_percap_weightedcosts[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.tct_percap_totalcosts_total[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         # Add these into consumption
-        v.rcons_percap_dis[tt, rr] = p.cons_percap_consumption[tt, rr] - p.isat_percap_dis[tt, rr]
-
         v.eact_percap_weightedadaptationcosts[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.act_percap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         # Do partial weighting
@@ -142,7 +139,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.pcdat_partiallyweighted_discountedaggregated[tt, rr] = v.pcdt_partiallyweighted_discounted[tt, rr] * p.yagg_periodspan[tt]
 
         ## Equity weighted impacts (end of page 28, Hope 2009)
-        v.wit_equityweightedimpact[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - v.rcons_percap_dis[tt, rr]^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
+        v.wit_equityweightedimpact[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - p.rcons_percap_dis[tt, rr]^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
 
         v.widt_equityweightedimpact_discounted[tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.df_utilitydiscountrate[tt]
 
@@ -167,9 +164,9 @@ end
 function addequityweighting(model::Model)
     equityweightingcomp = addcomponent(model, EquityWeighting)
 
-    equityweightingcomp[:ptp_timepreference] = 1.03333333 # <0.1,1, 2>
+    equityweightingcomp[:ptp_timepreference] = 1.0333333333 # <0.1,1, 2>
     equityweightingcomp[:equity_proportion] = 1.0
-    equityweightingcomp[:emuc_utilityconvexity] = 1.166667
+    equityweightingcomp[:emuc_utilityconvexity] = 1.1666666667
     equityweightingcomp[:civvalue_civilizationvalue] = 5.3e10
 
     return equityweightingcomp
