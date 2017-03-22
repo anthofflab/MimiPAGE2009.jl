@@ -77,13 +77,13 @@ function addadaptationcosts_sealevel(model::Model)
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Sea Level-specific parameters
-    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_sealevel.csv")
-    adaptationcosts[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/sealevel_plateau.csv")
-    adaptationcosts[:pstart_startdateofadaptpolicy] =readpagedata(model, "../data/sealeveladaptstart.csv")
-    adaptationcosts[:pyears_yearstilfulleffect] = readpagedata(model, "../data/sealeveladapttimetoeffect.csv")
-    adaptationcosts[:impred_eventualpercentreduction] = readpagedata(model, "../data/sealevelimpactreduction.csv")
-    adaptationcosts[:istart_startdate] = readpagedata(model, "../data/sealevelimpactstart.csv")
-    adaptationcosts[:iyears_yearstilfulleffect] = readpagedata(model, "../data/sealevelimpactyearstoeffect.csv")
+    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "impmax_sealevel.csv"))
+    adaptationcosts[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "sealevel_plateau.csv"))
+    adaptationcosts[:pstart_startdateofadaptpolicy] =readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "sealeveladaptstart.csv"))
+    adaptationcosts[:pyears_yearstilfulleffect] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "sealeveladapttimetoeffect.csv"))
+    adaptationcosts[:impred_eventualpercentreduction] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "sealevelimpactreduction.csv"))
+    adaptationcosts[:istart_startdate] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "sealevelimpactstart.csv"))
+    adaptationcosts[:iyears_yearstilfulleffect] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "sealevelimpactyearstoeffect.csv"))
     adaptationcosts[:cp_costplateau_eu] = 0.0233
     adaptationcosts[:ci_costimpact_eu] = 0.0012
 
@@ -96,13 +96,13 @@ function addadaptationcosts_economic(model::Model)
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Economic-specific parameters
-    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_economic.csv")
-    adaptationcosts[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/plateau_increaseintolerableplateaufromadaptationM.csv")
-    adaptationcosts[:pstart_startdateofadaptpolicy] =readpagedata(model, "../data/pstart_startdateofadaptpolicyM.csv")
-    adaptationcosts[:pyears_yearstilfulleffect] = readpagedata(model, "../data/pyears_yearstilfulleffectM.csv")
-    adaptationcosts[:impred_eventualpercentreduction] = readpagedata(model, "../data/impred_eventualpercentreductionM.csv")
-    adaptationcosts[:istart_startdate] = readpagedata(model, "../data/istart_startdateM.csv")
-    adaptationcosts[:iyears_yearstilfulleffect] = readpagedata(model, "../data/iyears_yearstilfulleffectM.csv")
+    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "impmax_economic.csv"))
+    adaptationcosts[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "plateau_increaseintolerableplateaufromadaptationM.csv"))
+    adaptationcosts[:pstart_startdateofadaptpolicy] =readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "pstart_startdateofadaptpolicyM.csv"))
+    adaptationcosts[:pyears_yearstilfulleffect] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "pyears_yearstilfulleffectM.csv"))
+    adaptationcosts[:impred_eventualpercentreduction] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "impred_eventualpercentreductionM.csv"))
+    adaptationcosts[:istart_startdate] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "istart_startdateM.csv"))
+    adaptationcosts[:iyears_yearstilfulleffect] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "iyears_yearstilfulleffectM.csv"))
     adaptationcosts[:cp_costplateau_eu] = 0.0117
     adaptationcosts[:ci_costimpact_eu] = 0.0040
 
@@ -114,13 +114,13 @@ function addadaptationcosts_noneconomic(model::Model)
     adaptationcosts[:automult_autonomouschange] = 0.22
 
     # Non-economic-specific parameters
-    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, "../data/impmax_noneconomic.csv")
-    adaptationcosts[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, "../data/plateau_increaseintolerableplateaufromadaptationNM.csv")
-    adaptationcosts[:pstart_startdateofadaptpolicy] =readpagedata(model, "../data/pstart_startdateofadaptpolicyNM.csv")
-    adaptationcosts[:pyears_yearstilfulleffect] = readpagedata(model, "../data/pyears_yearstilfulleffectNM.csv")
-    adaptationcosts[:impred_eventualpercentreduction] = readpagedata(model, "../data/impred_eventualpercentreductionNM.csv")
-    adaptationcosts[:istart_startdate] = readpagedata(model, "../data/istart_startdateNM.csv")
-    adaptationcosts[:iyears_yearstilfulleffect] = readpagedata(model, "../data/iyears_yearstilfulleffectNM.csv")
+    adaptationcosts[:impmax_maximumadaptivecapacity] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "impmax_noneconomic.csv"))
+    adaptationcosts[:plateau_increaseintolerableplateaufromadaptation] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "plateau_increaseintolerableplateaufromadaptationNM.csv"))
+    adaptationcosts[:pstart_startdateofadaptpolicy] =readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "pstart_startdateofadaptpolicyNM.csv"))
+    adaptationcosts[:pyears_yearstilfulleffect] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "pyears_yearstilfulleffectNM.csv"))
+    adaptationcosts[:impred_eventualpercentreduction] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "impred_eventualpercentreductionNM.csv"))
+    adaptationcosts[:istart_startdate] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "istart_startdateNM.csv"))
+    adaptationcosts[:iyears_yearstilfulleffect] = readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", "iyears_yearstilfulleffectNM.csv"))
     adaptationcosts[:cp_costplateau_eu] = 0.0233
     adaptationcosts[:ci_costimpact_eu] = 0.0057
 
