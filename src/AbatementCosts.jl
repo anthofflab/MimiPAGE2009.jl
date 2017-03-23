@@ -142,9 +142,9 @@ end
 function addabatementcosts(model::Model, class::Symbol)
     abatementcostscomp = addcomponent(model, AbatementCosts, symbol("AbatementCosts$class"))
 
-    abatementcostscomp[:q0propmult_cutbacksatnegativecostinfinalyear] = .73
-    abatementcostscomp[:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear] = 1.27
-    abatementcostscomp[:c0mult_mostnegativecostinfinalyear] = .83
+    abatementcostscomp[:q0propmult_cutbacksatnegativecostinfinalyear] = .733333333333333334
+    abatementcostscomp[:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear] = 1.2666666666666666
+    abatementcostscomp[:c0mult_mostnegativecostinfinalyear] = .8333333333333334
     abatementcostscomp[:curve_below_curvatureofMACcurvebelowzerocost] = .5
     abatementcostscomp[:curve_above_curvatureofMACcurveabovezerocost] = .4
     abatementcostscomp[:cross_experiencecrossoverratio] = .2
@@ -154,7 +154,7 @@ function addabatementcosts(model::Model, class::Symbol)
     abatementcostscomp[:y_year_0] = 2008.
 
     if class == :CO2
-        abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 8.33
+        abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 8.333333333333334
         abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 20.
         abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -233.333333333333
         abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 70.
@@ -167,7 +167,7 @@ function addabatementcosts(model::Model, class::Symbol)
         abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 25.
         abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
         abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -4333.3333333333333
-        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.67
+        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.66666666666666664
         abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 6333.33
         abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 2000.
         abatementcostscomp[:er_emissionsgrowth]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CH4emissionsgrowth.csv"))
@@ -177,7 +177,7 @@ function addabatementcosts(model::Model, class::Symbol)
         abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 0.
         abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
         abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -7333.333333333333
-        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.67
+        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.66666666666666664
         abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 27333.33
         abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 53.33
         abatementcostscomp[:er_emissionsgrowth]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv"))
