@@ -1,5 +1,6 @@
 # Index: time, region
-# Unit:
+# Unit: %/year
+# Notes: Population Growth Rate.  Year given as end of period (e.g., first is 2008 - 2009)
 
 year,EU,US,OT,EE,CA,IA,AF,LA
 2009,0.3187,0.7946,0.3657,0.2011,0.5082,1.5587,2.529,1.3131
