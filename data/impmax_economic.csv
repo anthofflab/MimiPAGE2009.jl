@@ -1,7 +1,7 @@
 # Index: region
 # Unit: degreeC
 
-Region,"Max adaptive capacity"
+Region,impmax_1_a
 EU,2
 US,2
 OT,2

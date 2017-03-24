@@ -1,11 +1,12 @@
 # Index: region
 # Unit: km2
-Region,"Area"
+
+Region,area
 EU,45e5
-US,936e4
-OT,142e5
+US,9363e3
+OT,14207e3
 EE,229e5
-CA,117e5
-IA,89e5
-AF,363e5
-LA,347e5
+CA,11729e3
+IA,8899e3
+AF,36337e3
+LA,34747e3

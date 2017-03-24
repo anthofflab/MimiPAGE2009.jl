@@ -1,7 +1,7 @@
 # Index: region
 # Unit: degreeC
 
-Region,"Max Temp Rise for Adaptive Policy in Non-Market Sector"
+Region,impmax_2_a
 EU,2
 US,2
 OT,2
