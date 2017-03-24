@@ -1,7 +1,7 @@
 # Completed tests
 
 module, check
-AbatementCosts,
+AbatementCosts, yes
 AdaptationCosts,
 CH4cycle,
 CH4emissions,
@@ -11,8 +11,9 @@ ClimateTemperature,
 CO2cycle,
 CO2emissions,
 CO2forcing,
-EquityWeighting,
-GDP,
+Discontinuity, yes
+EquityWeighting, yes
+GDP, yes
 LGcycle,
 LGemissions,
 LGforcing,
