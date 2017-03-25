@@ -27,8 +27,8 @@ run(m)
 
 rcons_per_cap = m[:MarketDamages, :rcons_per_cap_MarketRemainConsumption]
 rcons_per_cap_compare = readpagedata(m, "../test/validationdata/rcons_per_cap_MarketRemainConsumption.csv")
-@test_approx_eq_eps rcons_per_cap rcons_per_cap_compare 1e-2
+@test_approx_eq_eps rcons_per_cap rcons_per_cap_compare 1e-1
 
 rgdp_per_cap = m[:MarketDamages, :rgdp_per_cap_MarketRemainGDP]
 rgdp_per_cap_compare = readpagedata(m, "../test/validationdata/rgdp_per_cap_MarketRemainGDP.csv")
-@test_approx_eq_eps ones(10, 8) rgdp_per_cap ./ rgdp_per_cap_compare 0.02
+@test_approx_eq_eps rgdp_per_cap rgdp_per_cap_compare 1e-2

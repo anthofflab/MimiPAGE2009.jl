@@ -59,19 +59,19 @@ function run_timestep(s::MarketDamages, t::Int64)
 
         if v.igdp_ImpactatActualGDPperCap[t,r] < p.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
-        elseif v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyM[r]
+        else
             v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
                 ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
                 ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
                 (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
                 (v.igdp_ImpactatActualGDPperCap[t,r]-
-                p.isatg_impactfxnsaturation)))*(1-p.imp_actualreduction[t,r]/100)
+                p.isatg_impactfxnsaturation)))
+            end
+
+        if v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyM[r]
+            v.isat_ImpactinclSaturationandAdaptation[t,r]=v.isat_ImpactinclSaturationandAdaptation[t,r]*(1-p.imp_actualreduction[t,r]/100)
         else
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation) *
-                ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCap[t,r] * p.isatg_impactfxnsaturation))) *
+            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isat_ImpactinclSaturationandAdaptation[t,r] *
                 (1-(p.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyM[r] /
                 v.i_regionalimpact[t,r])
         end
