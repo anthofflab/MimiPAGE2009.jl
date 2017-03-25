@@ -139,7 +139,7 @@ connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :Ada
 slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
 slrdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
-marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+marketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
 marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
 marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
 connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
