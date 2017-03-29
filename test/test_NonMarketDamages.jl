@@ -12,17 +12,15 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 nonmarketdamages = addnonmarketdamages(m)
 
 nonmarketdamages[ :isatg_impactfxnsaturation] = 28.33333
-setparameter(m, :NonMarketDamages, :rt_realizedtemperature, readpagedata(m, "../test/validationdata/rt_realizedtemperature.csv"))
+setparameter(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "../test/validationdata/rtl_realizedtemperature.csv"))
 setparameter(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,
 "../test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
 setparameter(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, readpagedata(m,
 "../test/validationdata/rgdp_per_cap_MarketRemainGDP.csv"))
 setparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, readpagedata(m,
-"../test/validationdata/atl_adjustedtolerableleveloftemprise_market.csv"))
+"../test/validationdata/atl_adjustedtolerableleveloftemprise_nonmarket.csv"))
 setparameter(m, :NonMarketDamages, :imp_actualreduction, readpagedata(m,
-"../test/validationdata/imp_actualreduction_market.csv"))
-
-
+"../test/validationdata/imp_actualreduction_nonmarket.csv"))
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.

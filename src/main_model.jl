@@ -146,7 +146,7 @@ connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :Adap
 marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
 marketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
-nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+nonmarketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
 connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
