@@ -11,7 +11,6 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 nonmarketdamages = addnonmarketdamages(m)
 
-nonmarketdamages[ :isatg_impactfxnsaturation] = 28.33333
 setparameter(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "../test/validationdata/rtl_realizedtemperature.csv"))
 setparameter(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,
 "../test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
@@ -31,8 +30,8 @@ run(m)
 
 rcons_per_cap = m[:NonMarketDamages, :rcons_per_cap_NonMarketRemainConsumption]
 rcons_per_cap_compare = readpagedata(m, "../test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv")
-@test_approx_eq_eps ones(10, 8) rcons_per_cap ./ rcons_per_cap_compare .01
+@test_approx_eq_eps rcons_per_cap  rcons_per_cap_compare 1e-2
 
 rgdp_per_cap = m[:NonMarketDamages, :rgdp_per_cap_NonMarketRemainGDP]
 rgdp_per_cap_compare = readpagedata(m, "../test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv")
-@test_approx_eq_eps ones(10, 8) rgdp_per_cap ./ rgdp_per_cap_compare 0.01
+@test_approx_eq_eps rgdp_per_cap rgdp_per_cap_compare 1e-2

@@ -4,23 +4,23 @@ module, check
 AbatementCosts, yes
 AdaptationCosts,yes
 CH4cycle,alex
-CH4emissions,fran
+CH4emissions,yes
 CH4forcing,valeri
 climate_model,James
 ClimateTemperature,valeri
 CO2cycle,alex
-CO2emissions,fran
+CO2emissions,yes
 CO2forcing,valeri
 Discontinuity, yes
 EquityWeighting, yes
 GDP, yes
 LGcycle,alex
-LGemissions,fran
+LGemissions,yes
 LGforcing,valeri
 main_model,james
 MarketDamages,yes
 N2Ocycle,alex
-N2Oemissions,fran
+N2Oemissions,yes
 N2Oforcing,valeri
 NonMarketDamages,yes
 Discontinuity,yes
@@ -29,5 +29,5 @@ SeaLevelRise, yes
 SLRDamages,Cecilia
 SulphateForcing,valeri
 TotalAbatementCosts,yes
-TotalAdaptationCosts,James
+TotalAdaptationCosts,yes
 TotalForcing,valeri

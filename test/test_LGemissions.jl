@@ -1,4 +1,5 @@
 using Mimi
+using Base.Test
 
 include("../src/LGemissions.jl")
 include("../src/load_parameters.jl")
@@ -11,16 +12,13 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addcomponent(m, LGemissions)
 
-setparameter(m, :LGemissions, :e0_baselineLGemissions, [73.61871, 191.6451, 69.02367, 24.67513, 79.08005, 55.24011, 33.74054, 30.18799])
-setparameter(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, joinpath(dirname(@__FILE__), "..","data","er_LGemissionsgrowth.csv")))
+setparameter(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/e0_baselineLGemissions.csv"))
+setparameter(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/er_LGemissionsgrowth.csv"))
 
 # run Model
 run(m)
 
-pop= m[:LGemissions,  :e_globalLGemissions]
+emissions= m[:LGemissions,  :e_regionalLGemissions]
+emissions_compare=readpagedata(m, "test/validationdata/e_regionalLGemissions.csv")
 
-# Recorded data
-temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globalLGemissions.csv"))
-pop_compare=vec(sum(temp,2))
-
-@test_approx_eq_eps pop pop_compare 1e1
+@test_approx_eq_eps emissions emissions_compare 1e-3
