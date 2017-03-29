@@ -1,32 +1,33 @@
-# Completed tests
-
+# Completed tests,
+,
 module, check
 AbatementCosts, yes
-AdaptationCosts,
-CH4cycle,
-CH4emissions,
-CH4forcing,
-climate_model,
-ClimateTemperature,
-CO2cycle,
-CO2emissions,
-CO2forcing,
+AdaptationCosts,yes
+CH4cycle,alex
+CH4emissions,fran
+CH4forcing,valeri
+climate_model,James
+ClimateTemperature,valeri
+CO2cycle,alex
+CO2emissions,fran
+CO2forcing,valeri
 Discontinuity, yes
 EquityWeighting, yes
 GDP, yes
-LGcycle,
-LGemissions,
-LGforcing,
-main_model,
-MarketDamages,
-N2Ocycle,
-N2Oemissions,
-N2Oforcing,
-NonMarketDamages,
+LGcycle,alex
+LGemissions,fran
+LGforcing,valeri
+main_model,james
+MarketDamages,yes
+N2Ocycle,alex
+N2Oemissions,fran
+N2Oforcing,valeri
+NonMarketDamages,Fran
+Discontinuity,yes
 Population, yes
 SeaLevelRise, yes
-SLRDamages,
-SulphateForcing,
-TotalAbatementCosts, yes
-TotalAdaptationCosts, yes
-TotalForcing,
+SLRDamages,Cecilia
+SulphateForcing,valeri
+TotalAbatementCosts,yes
+TotalAdaptationCosts,James
+TotalForcing,valeri
