@@ -10,7 +10,8 @@ setindex(m, :time, convert(Vector{Float64}, [2009, 2010, 2020, 2030, 2040, 2050,
 setindex(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
 
 gdp = addgdp(m)
-gdp[:pop_population] = readpagedata(m, "validationdata/pop_population.csv")
+gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
+gdp[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")
 gdp[:y_year] = m.indices_values[:time]
 gdp[:y_year_0] = 2008.
 
@@ -24,6 +25,9 @@ run(m)
 gdp = m[:GDP, :gdp]
 
 # Recorded data
-gdp_compare = readpagedata(m, "validationdata/gdp.csv")
+gdp_compare = readpagedata(m, "test/validationdata/gdp.csv")
 
 @test_approx_eq_eps gdp gdp_compare 100
+
+cons_percap_consumption_0_compare = readpagedata(m, "test/validationdata/cons_percap_consumption_0.csv")
+@test_approx_eq_eps m[:GDP, :cons_percap_consumption_0] cons_percap_consumption_0_compare 1e-2

@@ -8,20 +8,16 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addcomponent(m, ch4emissions)
 
-setparameter(m, :ch4emissions, :e0_baselineCH4emissions, [24.,29., 22., 38., 56., 71., 66., 58.]) #PAGE 2009 documentation pp38
-setparameter(m, :ch4emissions, :er_CH4emissionsgrowth, readpagedata(m, joinpath(dirname(@__FILE__), "..","data","er_CH4emissionsgrowth.csv")))
-#    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/sealevelmaxrise.csv")
+setparameter(m, :ch4emissions, :e0_baselineCH4emissions, readpagedata(m, "data/e0_baselineCH4emissions.csv")) #PAGE 2009 documentation pp38
+setparameter(m, :ch4emissions, :er_CH4emissionsgrowth, readpagedata(m, "data/er_CH4emissionsgrowth.csv"))
 
 ##running Model
 run(m)
 
-#@test !isna(m[:ch4emissions, :e_globalCH4emissions][10])
-
 # Generated data
-pop= m[:ch4emissions,  :e_globalCH4emissions]
+emissions= m[:ch4emissions,  :e_regionalCH4emissions]
 
 # Recorded data
-temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globalCH4emissions.csv"))
-pop_compare=vec(sum(temp,2))
+emissions_compare=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_regionalCH4emissions.csv"))
 
-@test_approx_eq_eps pop pop_compare 1e1
+@test_approx_eq_eps emissions emissions_compare 1e-3

@@ -10,17 +10,51 @@ setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
+adaptationcosts_noneconomic[:y_year_0] = 2008.
+adaptationcosts_noneconomic[:y_year] = m.indices_values[:time]
+adaptationcosts_noneconomic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
+
 adaptationcosts_economic = addadaptationcosts_economic(m)
+adaptationcosts_economic[:y_year_0] = 2008.
+adaptationcosts_economic[:y_year] = m.indices_values[:time]
+adaptationcosts_economic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
+
 adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
+adaptationcosts_sealevel[:y_year_0] = 2008.
+adaptationcosts_sealevel[:y_year] = m.indices_values[:time]
+adaptationcosts_sealevel[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 p = load_parameters(m)
-p["y_year_0"] = 2008.
-p["y_year"] = m.indices_values[:time]
-p["gdp"] = readpagedata(m, "../test/validationdata/gdp.csv")
 setleftoverparameters(m, p)
 
 run(m)
 
-@test !isna(m[:AdaptiveCostsNonEconomic, :ac_adaptivecosts][10, 5])
-@test !isna(m[:AdaptiveCostsEconomic, :ac_adaptivecosts][10, 5])
-@test !isna(m[:AdaptiveCostsSeaLevel, :ac_adaptivecosts][10, 5])
+autofac = m[:AdaptiveCostsEconomic, :autofac_autonomouschangefraction]
+atl_economic = m[:AdaptiveCostsEconomic, :atl_adjustedtolerablelevel]
+imp_economic = m[:AdaptiveCostsEconomic, :imp_adaptedimpacts]
+acp_economic = m[:AdaptiveCostsEconomic, :acp_adaptivecostplateau]
+aci_economic = m[:AdaptiveCostsEconomic, :aci_adaptivecostimpact]
+
+autofac_compare = readpagedata(m, "test/validationdata/autofac_autonomouschangefraction.csv")
+atl_economic_compare = readpagedata(m, "test/validationdata/atl_1.csv")
+imp_economic_compare = readpagedata(m, "test/validationdata/imp_1.csv")
+acp_economic_compare = readpagedata(m, "test/validationdata/acp_adaptivecostplateau_economic.csv")
+aci_economic_compare = readpagedata(m, "test/validationdata/aci_adaptivecostimpact_economic.csv")
+
+@test_approx_eq_eps autofac autofac_compare 1e-8
+@test_approx_eq_eps atl_economic atl_economic_compare 1e-8
+@test_approx_eq_eps imp_economic imp_economic_compare 1e-8
+@test_approx_eq_eps acp_economic acp_economic_compare 1e-3
+@test_approx_eq_eps aci_economic aci_economic_compare 1e-3
+
+ac_noneconomic = m[:AdaptiveCostsNonEconomic, :ac_adaptivecosts]
+ac_economic = m[:AdaptiveCostsEconomic, :ac_adaptivecosts]
+ac_sealevel = m[:AdaptiveCostsSeaLevel, :ac_adaptivecosts]
+
+ac_noneconomic_compare = readpagedata(m, "test/validationdata/ac_adaptationcosts_noneconomic.csv")
+ac_economic_compare = readpagedata(m, "test/validationdata/ac_adaptationcosts_economic.csv")
+ac_sealevel_compare = readpagedata(m, "test/validationdata/ac_adaptationcosts_sealevelrise.csv")
+
+@test_approx_eq_eps ac_noneconomic ac_noneconomic_compare 1e-2
+@test_approx_eq_eps ac_economic ac_economic_compare 1e-3
+@test_approx_eq_eps ac_sealevel ac_sealevel_compare 1e-2

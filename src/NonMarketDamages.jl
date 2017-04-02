@@ -6,7 +6,7 @@ using DataFrames
     y_year = Parameter(index=[time], unit="year")
 
     #incoming parameters from Climate
-    rt_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
+    rtl_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
 
     #tolerability parameters
     impmax_maxtempriseforadaptpolicyNM = Parameter(index=[region], unit= "degreeC")
@@ -47,10 +47,10 @@ function run_timestep(s::NonMarketDamages, t::Int64)
 
     for r in d.region
 
-        if p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r] < 0
+        if p.rtl_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r] < 0
             v.i_regionalimpact[t,r] = 0
         else
-            v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
+            v.i_regionalimpact[t,r] = p.rtl_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
         v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*
@@ -60,19 +60,24 @@ function run_timestep(s::NonMarketDamages, t::Int64)
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_NonMarketIncomeFxnExponent
 
-        if v.igdp_ImpactatActualGDPperCap[t,r] < p.isatg_impactfxnsaturation
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
-        else
-
-            v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)*
+            if v.igdp_ImpactatActualGDPperCap[t,r] < p.isatg_impactfxnsaturation
+                v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
+            else
+                v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
+                    ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
                     ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
-                    (((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)+
-                        (v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)))* (1-p.imp_actualreduction[t,r]/100) *
-                            (v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r] ? 1 :
-                                    p.impmax_maxtempriseforadaptpolicyNM[r] /
-                                        v.i_regionalimpact[t,r])
-        end
+                    (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
+                    (v.igdp_ImpactatActualGDPperCap[t,r]-
+                    p.isatg_impactfxnsaturation)))
+                end
+
+            if v.i_regionalimpact[t,r] < p.impmax_maxtempriseforadaptpolicyNM[r]
+                v.isat_ImpactinclSaturationandAdaptation[t,r]=v.isat_ImpactinclSaturationandAdaptation[t,r]*(1-p.imp_actualreduction[t,r]/100)
+            else
+                v.isat_ImpactinclSaturationandAdaptation[t,r] = v.isat_ImpactinclSaturationandAdaptation[t,r] *
+                    (1-(p.imp_actualreduction[t,r]/100)* p.impmax_maxtempriseforadaptpolicyNM[r] /
+                    v.i_regionalimpact[t,r])
+            end
 
         v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_MarketRemainGDP[t,r]
         v.rcons_per_cap_NonMarketRemainConsumption[t,r] = p.rcons_per_cap_MarketRemainConsumption[t,r] - v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r]
@@ -84,13 +89,14 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp = addcomponent(model, NonMarketDamages)
 
     nonmarketdamagescomp[:tcal_CalibrationTemp]= 3.
-    nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = .53
-    nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = .08
+    nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = 0.5333333333333333
+    nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = 0.08333333333333333
     nonmarketdamagescomp[:ipow_NonMarketIncomeFxnExponent] = 0.
     nonmarketdamagescomp[:save_savingsrate]= 15.
-    nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= (1.39*10^7)/496
-    nonmarketdamagescomp[:pow_NonMarketExponent] = 2.17
+    nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
+    nonmarketdamagescomp[:pow_NonMarketExponent] = 2.1666666666666665
     nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "../data/impmax_noneconomic.csv")
+    nonmarketdamagescomp[:isatg_impactfxnsaturation]=28.333333333333336
 
     return nonmarketdamagescomp
 end

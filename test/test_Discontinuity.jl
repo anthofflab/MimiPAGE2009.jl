@@ -27,3 +27,10 @@ run(m)
 @test !isna(m[:Discontinuity, :isat_satdiscimpact][10,8])
 @test !isna(m[:Discontinuity, :isat_per_cap_DiscImpactperCapinclSaturation][10,8])
 @test !isna(m[:Discontinuity, :rcons_per_cap_DiscRemainConsumption][10])
+
+#validating - comparison spreadsheet has discontinuity occuring in 2200
+#keep running model until m[:Discontinuity,:occurdis_occurrencedummy] shows discontiuity occuring in 2200
+output=m[:Discontinuity,:rcons_per_cap_DiscRemainConsumption]
+validation=readpagedata(m,"test/validationdata/rcons_per_cap_DiscRemainConsumption.csv")
+
+@test_approx_eq_eps output validation 1e-2
