@@ -25,4 +25,9 @@ setleftoverparameters(m,p) #important for setting left over component values
 ##running Model
 run(m)
 
-m[:co2cycle,  :c_CO2concentration]
+pop=m[:co2cycle,  :c_CO2concentration]
+
+temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata", "c_co2concentration.csv"))
+pop_compare=vec(sum(temp,2))
+
+@test_approx_eq_eps pop pop_compare 1e1
