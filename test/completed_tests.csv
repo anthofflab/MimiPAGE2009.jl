@@ -5,29 +5,29 @@ AbatementCosts, yes
 AdaptationCosts,yes
 CH4cycle,alex
 CH4emissions,yes
-CH4forcing,valeri
+CH4forcing,yes
 climate_model,James
 ClimateTemperature,valeri
 CO2cycle,alex
 CO2emissions,yes
-CO2forcing,valeri
+CO2forcing,yes
 Discontinuity, yes
 EquityWeighting, yes
 GDP, yes
 LGcycle,alex
 LGemissions,yes
-LGforcing,valeri
+LGforcing,yes
 main_model,james
 MarketDamages,yes
 N2Ocycle,alex
 N2Oemissions,yes
-N2Oforcing,valeri
+N2Oforcing,yes
 NonMarketDamages,yes
 Discontinuity,yes
 Population, yes
 SeaLevelRise, yes
 SLRDamages,Cecilia
-SulphateForcing,valeri
+SulphateForcing,yes
 TotalAbatementCosts,yes
 TotalAdaptationCosts,yes
-TotalForcing,valeri
+TotalForcing,yes

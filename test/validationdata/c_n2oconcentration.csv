@@ -1,7 +1,7 @@
 # Index: time
-# Units: ppbv
+# Unit:
 
-year,concentration
+year,c_n2o
 2009,322.9569242
 2010,323.9068347
 2020,333.0896681
