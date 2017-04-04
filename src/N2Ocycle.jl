@@ -2,6 +2,7 @@ using Mimi
 
 @defcomp n2ocycle begin
     e_globalN2Oemissions=Parameter(index=[time],unit="Mtonne/year")
+    e_0globalN2Oemissions=Parameter(unit="Mtonne/year")
     c_N2Oconcentration=Variable(index=[time],unit="ppbv")
     pic_preindustconcN2O=Parameter(unit="ppbv")
     exc_excessconcN2O=Variable(unit="ppbv")
@@ -17,7 +18,7 @@ using Mimi
     res_N2Oatmlifetime=Parameter(unit="year")
     den_N2Odensity=Parameter(unit="Mtonne/ppbv")
     stim_N2Oemissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g0_baselandtemp=Parameter(index=[1],unit="degreeC")
+    rtl_g0_baselandtemp=Parameter(unit="degreeC")
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
 end
 
@@ -28,11 +29,13 @@ function run_timestep(s::n2ocycle,t::Int64)
 
     if t==1
         #eq.3 from Hope (2006) - natural emissions feedback, using global temperatures calculated in ClimateTemperature component
-        v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g0_baselandtemp[1]
+        nte_0=p.stim_N2Oemissionfeedback*p.rtl_g0_baselandtemp
+        v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g_landtemperature[t]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_N2Oemissionstoatm[t]=(p.e_globalN2Oemissions[t]+v.nte_natN2Oemissions[t])*p.air_N2Ofractioninatm/100
+        tea_0=(p.e_0globalN2Oemissions+nte_0)*p.air_N2Ofractioninatm/100
         #unclear how calculated in first time period - assume emissions from period 1 are used. Check with Chris Hope.
-        v.teay_N2Oemissionstoatm[t]=v.tea_N2Oemissionstoatm[t]
+        v.teay_N2Oemissionstoatm[t]=(v.tea_N2Oemissionstoatm[t]+tea_0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcN2O=p.c0_N2Oconcbaseyr-p.pic_preindustconcN2O
         #Eq. 2 from Hope (2006) - base-year remaining emissions
@@ -67,6 +70,8 @@ function addN2Ocycle(model::Model)
     n2ocyclecomp[:air_N2Ofractioninatm] = 100.
     n2ocyclecomp[:res_N2Oatmlifetime] = 114.
     n2ocyclecomp[:c0_N2Oconcbaseyr] = 322.
+    n2ocyclecomp[:rtl_g0_baselandtemp] = 0.9258270139190647
+    n2ocyclecomp[:e_0globalN2Oemissions] = 11.046520000000001
 
     n2ocyclecomp
 end

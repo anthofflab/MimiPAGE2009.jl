@@ -2,6 +2,7 @@ using Mimi
 
 @defcomp LGcycle begin
     e_globalLGemissions=Parameter(index=[time],unit="Mtonne/year")
+    e_0globalLGemissions=Parameter(unit="Mtonne/year")
     c_LGconcentration=Variable(index=[time],unit="ppbv")
     pic_preindustconcLG=Parameter(unit="ppbv")
     exc_excessconcLG=Variable(unit="ppbv")
@@ -16,7 +17,7 @@ using Mimi
     res_LGatmlifetime=Parameter(unit="year")
     den_LGdensity=Parameter(unit="Mtonne/ppbv")
     stim_LGemissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g0_baselandtemp=Parameter(index=[1],unit="degreeC")
+    rtl_g0_baselandtemp=Parameter(unit="degreeC")
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
     re_remainLGbase=Variable(unit="Mtonne")
 end
@@ -27,11 +28,13 @@ function run_timestep(s::LGcycle,t::Int64)
 
     if t==1
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
-        v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g0_baselandtemp[1]
+        nte0=p.stim_LGemissionfeedback*p.rtl_g0_baselandtemp
+        v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g_landtemperature[t]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
+        tea0=(p.e_0globalLGemissions+nte0)*p.air_LGfractioninatm/100
         v.tea_LGemissionstoatm[t]=(p.e_globalLGemissions[t]+v.nte_natLGemissions[t])*p.air_LGfractioninatm/100
         #Check with Chris Hope - unclear how calculated in first time period - assume emissions from period 1 are used
-        v.teay_LGemissionstoatm[t]=v.tea_LGemissionstoatm[t]
+        v.teay_LGemissionstoatm[t]=(v.tea_LGemissionstoatm[t]+tea0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcLG=p.c0_LGconcbaseyr-p.pic_preindustconcLG
         #Eq. 2 from Hope (2006) - base-year remaining emissions
@@ -66,6 +69,8 @@ function addLGcycle(model::Model)
     lgcyclecomp[:air_LGfractioninatm] = 100.
     lgcyclecomp[:res_LGatmlifetime] = 1000.
     lgcyclecomp[:c0_LGconcbaseyr] = 0.11
+    lgcyclecomp[:rtl_g0_baselandtemp] = 0.9258270139190647
+    lgcyclecomp[:e_0globalLGemissions] = 557.2112715473608
 
     return lgcyclecomp
 end

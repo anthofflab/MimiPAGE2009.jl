@@ -10,18 +10,19 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addCH4cycle(m)
 
-temp=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_globalCH4emissions.csv")) #horizontal addition of regions to get globalemissions
-globalemissions=vec(sum(temp,2))
-setparameter(m, :ch4cycle, :e_globalCH4emissions, globalemissions)
-setparameter(m, :ch4cycle, :y_year, [2009.,2010.,2020.,2030.,2040., 2050., 2075.,2100.,2150.,2200.]) #real value
-setparameter(m, :ch4cycle, :y_year_0, 2008.) #real value
-setparameter(m, :ch4cycle, :rtl_g0_baselandtemp, [0.925827])
+setparameter(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
+setparameter(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
+setparameter(m,:ch4cycle,:y_year_0,2008.)
 
-temp2=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","rtl_g_landtemperature.csv")) #average of regional land temperatures to get global *DOUBLE CHECK*
-globallandtemp=vec(sum(temp2,2)/8)
-setparameter(m, :ch4cycle, :rtl_g_landtemperature, globallandtemp)
+p = load_parameters(m)
+#p["y_year_0"] = 2008.
+p["y_year"] = m.indices_values[:time]
+setleftoverparameters(m, p)
 
-##running Model
+#running Model
 run(m)
 
-m[:ch4cycle,  :c_CH4concentration]
+conc=m[:ch4cycle,  :c_CH4concentration]
+conc_compare=readpagedata(m,"test/validationdata/c_ch4concentration.csv")
+
+@test_approx_eq_eps conc conc_compare 1e-4

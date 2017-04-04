@@ -3,7 +3,7 @@
 module, check
 AbatementCosts, yes
 AdaptationCosts,yes
-CH4cycle,alex
+CH4cycle,yes
 CH4emissions,yes
 CH4forcing,yes
 climate_model,James
@@ -19,7 +19,7 @@ LGemissions,yes
 LGforcing,yes
 main_model,james
 MarketDamages,yes
-N2Ocycle,alex
+N2Ocycle,yes
 N2Oemissions,yes
 N2Oforcing,yes
 NonMarketDamages,yes
