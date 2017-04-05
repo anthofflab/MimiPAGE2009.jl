@@ -2,6 +2,7 @@ using Mimi
 
 @defcomp co2cycle begin
     e_globalCO2emissions=Parameter(index=[time],unit="Mtonne/year")
+    e0_globalCO2emissions=Parameter(unit="Mtonne/year")
     c_CO2concentration=Variable(index=[time],unit="ppbv")
     pic_preindustconcCO2=Parameter(unit="ppbv")
     exc_excessconcCO2=Variable(unit="ppbv")
@@ -33,9 +34,9 @@ function run_timestep(s::co2cycle,t::Int64)
         #CO2 emissions gain calculated based on PAGE 2009
         gain=p.ccf_CO2feedback*p.rt_g0_baseglobaltemp[1]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
+        tea0=p.e0_globalCO2emissions*p.air_CO2fractioninatm/100
         v.tea_CO2emissionstoatm[t]=(p.e_globalCO2emissions[t])*p.air_CO2fractioninatm/100
-        #unclear how calculated in first time period - assume emissions from period 1 are used. Check with Chris Hope.
-        v.teay_CO2emissionstoatm[t]=v.tea_CO2emissionstoatm[t]
+        v.teay_CO2emissionstoatm[t]=(v.tea_CO2emissionstoatm[t]+tea0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcCO2=p.c0_CO2concbaseyr-p.pic_preindustconcCO2
         #Eq. 2 from Hope (2006) - base-year remaining emissions
@@ -92,6 +93,7 @@ function addCO2cycle(model::Model)
     co2cycleref[:ccfmax_maxCO2feedback] = 53.3333333333333
     co2cycleref[:air_CO2fractioninatm] = 62.00
     co2cycleref[:rt_g0_baseglobaltemp] = 0.735309967925382
+    co2cycleref[:e0_globalCO2emissions] = 38191.0315797948
 
     return co2cycleref
 end

@@ -30,7 +30,7 @@ function run_timestep(s::n2ocycle,t::Int64)
     if t==1
         #eq.3 from Hope (2006) - natural emissions feedback, using global temperatures calculated in ClimateTemperature component
         nte_0=p.stim_N2Oemissionfeedback*p.rtl_g0_baselandtemp
-        v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g_landtemperature[t]
+        v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g0_baselandtemp
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_N2Oemissionstoatm[t]=(p.e_globalN2Oemissions[t]+v.nte_natN2Oemissions[t])*p.air_N2Ofractioninatm/100
         tea_0=(p.e_0globalN2Oemissions+nte_0)*p.air_N2Ofractioninatm/100

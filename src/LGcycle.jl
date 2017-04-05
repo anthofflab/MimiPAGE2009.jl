@@ -29,7 +29,7 @@ function run_timestep(s::LGcycle,t::Int64)
     if t==1
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
         nte0=p.stim_LGemissionfeedback*p.rtl_g0_baselandtemp
-        v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g_landtemperature[t]
+        v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g0_baselandtemp
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         tea0=(p.e_0globalLGemissions+nte0)*p.air_LGfractioninatm/100
         v.tea_LGemissionstoatm[t]=(p.e_globalLGemissions[t]+v.nte_natLGemissions[t])*p.air_LGfractioninatm/100

@@ -29,7 +29,7 @@ function run_timestep(s::ch4cycle,t::Int64)
     if t==1
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
         nte_0=p.stim_CH4emissionfeedback*p.rtl_g0_baselandtemp
-        v.nte_natCH4emissions[t]=p.stim_CH4emissionfeedback*p.rtl_g_landtemperature[t]
+        v.nte_natCH4emissions[t]=p.stim_CH4emissionfeedback*p.rtl_g0_baselandtemp
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_CH4emissionstoatm[t]=(p.e_globalCH4emissions[t]+v.nte_natCH4emissions[t])*p.air_CH4fractioninatm/100
         tea_0=(p.e_0globalCH4emissions+nte_0)*p.air_CH4fractioninatm/100

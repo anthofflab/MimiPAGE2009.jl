@@ -36,8 +36,8 @@ using Mimi
     rtl_g_landtemperature = Variable(index=[time], unit="degreeC")
     rto_g_oceantemperature = Variable(index=[time], unit="degreeC")
     rt_g_globaltemperature = Variable(index=[time], unit="degreeC")
-    rt_g0_baseglobaltemp=Variable(index=[1],unit="degreeC") #needed for feedback in CO2 cycle component
-    rtl_g0_baselandtemp=Variable(index=[1],unit="degreeC") #needed for feedback in CH4 and N2O cycles
+    rt_g0_baseglobaltemp=Variable(unit="degreeC") #needed for feedback in CO2 cycle component
+    rtl_g0_baselandtemp=Variable(unit="degreeC") #needed for feedback in CH4 and N2O cycles
 end
 
 function init(s::ClimateTemperature)
@@ -101,7 +101,7 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
     end
 
     # Equation 21 from Hope (2006): global realized temperature estimate
-    v.rtl_g_landtemperature[tt] = sum(v.rtl_realizedtemperature[tt, :]' .* p.area) / sum(p.area)
+    v.rtl_g_landtemperature[tt] = sum(v.rtl_realizedtemperature[tt, :]' .* p.area') / sum(p.area)
 
     # Ocean and global average temperature from Hope (2009)
     v.rto_g_oceantemperature[tt] = v.rtl_g_landtemperature[tt] / p.rlo_ratiolandocean

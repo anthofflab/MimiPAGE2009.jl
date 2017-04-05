@@ -8,16 +8,16 @@ CH4emissions,yes
 CH4forcing,yes
 climate_model,James
 ClimateTemperature,yes
-CO2cycle,alex
+CO2cycle,yes
 CO2emissions,yes
 CO2forcing,yes
 Discontinuity, yes
 EquityWeighting, yes
 GDP, yes
-LGcycle,alex
+LGcycle,yes
 LGemissions,yes
 LGforcing,yes
-main_model,James
+main_model,james
 MarketDamages,yes
 N2Ocycle,yes
 N2Oemissions,yes
@@ -26,7 +26,7 @@ NonMarketDamages,yes
 Discontinuity,yes
 Population, yes
 SeaLevelRise, yes
-SLRDamages,Cecilia
+SLRDamages,yes
 SulphateForcing,yes
 TotalAbatementCosts,yes
 TotalAdaptationCosts,yes
