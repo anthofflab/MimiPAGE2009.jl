@@ -21,7 +21,7 @@ using Mimi
     y_year_0=Parameter(unit="year")
     res_CO2atmlifetime=Parameter(unit="year")
     den_CO2density=Parameter(unit="Mtonne/ppbv")
-    rt_g0_baseglobaltemp=Parameter(index=[1],unit="degreeC")
+    rt_g0_baseglobaltemp=Parameter(unit="degreeC")
     rt_g_globaltemperature=Parameter(index=[time],unit="degreeC")
 end
 
@@ -87,10 +87,11 @@ function addCO2cycle(model::Model)
     co2cycleref[:stay_fractionCO2emissionsinatm] = 0.3 #Check with Chris Hope - this is described as a fraction (and is not divided by 100 in the equation) but is given as 30% in the documentation
     co2cycleref[:c0_CO2concbaseyr] = 395000.
     co2cycleref[:ce_0_basecumCO2emissions] = 2050000.
-    co2cycleref[:res_CO2atmlifetime] = 73.33
-    co2cycleref[:ccf_CO2feedback] = 9.67
-    co2cycleref[:ccfmax_maxCO2feedback] = 53.33
+    co2cycleref[:res_CO2atmlifetime] = 73.3333333333333
+    co2cycleref[:ccf_CO2feedback] = 9.66666666666666
+    co2cycleref[:ccfmax_maxCO2feedback] = 53.3333333333333
     co2cycleref[:air_CO2fractioninatm] = 62.00
+    co2cycleref[:rt_g0_baseglobaltemp] = 0.735309967925382
 
     return co2cycleref
 end
