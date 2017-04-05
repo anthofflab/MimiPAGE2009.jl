@@ -7,7 +7,7 @@ CH4cycle,yes
 CH4emissions,yes
 CH4forcing,yes
 climate_model,James
-ClimateTemperature,valeri
+ClimateTemperature,yes
 CO2cycle,alex
 CO2emissions,yes
 CO2forcing,yes
@@ -17,7 +17,7 @@ GDP, yes
 LGcycle,alex
 LGemissions,yes
 LGforcing,yes
-main_model,james
+main_model,James
 MarketDamages,yes
 N2Ocycle,yes
 N2Oemissions,yes
