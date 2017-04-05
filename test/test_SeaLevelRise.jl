@@ -1,3 +1,4 @@
+
 using Mimi
 using DataFrames
 using Base.Test
@@ -16,7 +17,7 @@ setparameter(m, :SeaLevelRise, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 207
 run(m)
 
 
-es_equilibriumSL = m[:SeaLevelRise, :es_equilibriumSL] # currently throwing NaNs
+es_equilibriumSL = m[:SeaLevelRise, :es_equilibriumSL] 
 es_equilibriumSL_compare = readpagedata(m, "../test/validationdata/es_equilibriumSL.csv")
 @test_approx_eq_eps ones(10) es_equilibriumSL ./ es_equilibriumSL .01
 
