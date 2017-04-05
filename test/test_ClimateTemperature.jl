@@ -1,30 +1,28 @@
 using Mimi
+using Base.Test
 
+include("../src/load_parameters.jl")
 include("../src/ClimateTemperature.jl")
 
 m = Model()
-setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
+setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-addcomponent(m, ClimateTemperature)
+climatetemperature = addclimatetemperature(m)
 
-setparameter(m, :ClimateTemperature, :area, ones(3))
-setparameter(m, :ClimateTemperature, :y_year_0, 0.)
-setparameter(m, :ClimateTemperature, :y_year, collect(1.0:10.0))
+climatetemperature[:y_year_0] = 2008.
+climatetemperature[:y_year] = m.indices_values[:time]
 
-setparameter(m, :ClimateTemperature, :tcr_transientresponse, 3.0)
-setparameter(m, :ClimateTemperature, :frt_warminghalflife, 20.0)
+climatetemperature[:ft_totalforcing] = readpagedata(m, "test/validationdata/ft_totalforcing.csv")
+climatetemperature[:fs_sulfateforcing] = readpagedata(m, "test/validationdata/fs_sulfateforcing.csv")
 
-setparameter(m, :ClimateTemperature, :fslope_CO2forcingslope, 0.8)
-
-setparameter(m, :ClimateTemperature, :ft_totalforcing, ones(10).*3)
-setparameter(m, :ClimateTemperature, :fs_sulfateforcing, ones(10, 3).*0.5)
-
-setparameter(m, :ClimateTemperature, :pole_polardifference, 1.0)
-setparameter(m, :ClimateTemperature, :lat_latitude, [-20., 10., 40.])
-setparameter(m, :ClimateTemperature, :lat_g_meanlatitude, 10.)
-
-setparameter(m, :ClimateTemperature, :rtl_0_realizedtemperature, ones(3).*4)
+p = load_parameters(m)
+setleftoverparameters(m, p)
 
 ##running Model
 run(m)
+
+rt_g = m[:ClimateTemperature, :rt_g_globaltemperature]
+rt_g_compare = readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv")
+
+@test_approx_eq_eps rt_g rt_g_compare 1e-10
