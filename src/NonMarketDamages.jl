@@ -64,9 +64,9 @@ function run_timestep(s::NonMarketDamages, t::Int64)
                 v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
             else
                 v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
-                    ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
+                    ((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)*
                     ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
-                    (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
+                    (((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)+
                     (v.igdp_ImpactatActualGDPperCap[t,r]-
                     p.isatg_impactfxnsaturation)))
                 end
