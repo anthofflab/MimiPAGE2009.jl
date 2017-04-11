@@ -47,11 +47,9 @@ function init(s::ClimateTemperature)
     d = s.Dimensions
 
     ocean_prop_ortion = 1. - sum(p.area) / 510000000.
-    rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs(p.lat_latitude) - p.lat_g_meanlatitude)
-    rt_0_realizedtemperature = (p.rtl_0_realizedtemperature - rt_adj_temperatureadjustment) * (1. + (ocean_prop_ortion / p.rlo_ratiolandocean) - ocean_prop_ortion)
 
     # Equation 21 from Hope (2006): initial global land temperature
-    v.rtl_g0_baselandtemp = sum(rt_0_realizedtemperature' .* p.area) / sum(p.area)
+    v.rtl_g0_baselandtemp = sum(p.rtl_0_realizedtemperature' .* p.area') / sum(p.area)
 
     # initial ocean and global temperatures
     rto_g0_baseoceantemp = v.rtl_g0_baselandtemp[1]/ p.rlo_ratiolandocean
@@ -101,7 +99,7 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
     end
 
     # Equation 21 from Hope (2006): global realized temperature estimate
-    v.rtl_g_landtemperature[tt] = sum(v.rtl_realizedtemperature[tt, :]' .* p.area) / sum(p.area)
+    v.rtl_g_landtemperature[tt] = sum(v.rtl_realizedtemperature[tt, :]' .* p.area') / sum(p.area)
 
     # Ocean and global average temperature from Hope (2009)
     v.rto_g_oceantemperature[tt] = v.rtl_g_landtemperature[tt] / p.rlo_ratiolandocean
