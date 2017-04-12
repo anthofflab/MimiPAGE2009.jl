@@ -68,23 +68,19 @@ function run_timestep(s::SLRDamages, t::Int64)
 
         if v.igdp_ImpactatActualGDPperCapSLR[t,r] < p.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.igdp_ImpactatActualGDPperCapSLR[t,r]
-        elseif v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
+        else
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = p.isatg_impactfxnsaturation+
                 ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
                 ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-p.isatg_impactfxnsaturation)/
                 (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCapSLR[t,r]- p.isatg_impactfxnsaturation)))*
-                (1-p.imp_actualreductionSLR[t,r]/100)
-
+                (v.igdp_ImpactatActualGDPperCapSLR[t,r]- p.isatg_impactfxnsaturation)))
+            end
+        if v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r]=v.isat_ImpactinclSaturationandAdaptationSLR[t,r]*(1-p.imp_actualreductionSLR[t,r]/100)
         else
-            v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation) *
-                ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-p.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCapSLR[t,r] * p.isatg_impactfxnsaturation))) *
-                (1-(p.imp_actualreductionSLR[t,r]/100)* p.impmax_maxSLRforadaptpolicySLR[r] /
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r]=v.isat_ImpactinclSaturationandAdaptationSLR[t,r]*(1-(p.imp_actualreductionSLR[t,r]/100)* p.impmax_maxSLRforadaptpolicySLR[r] /
                 v.i_regionalimpactSLR[t,r])
-        end
+            end
 
               v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptationSLR[t,r]/100)*v.gdp_percap_aftercosts[t,r]
               v.rcons_per_cap_SLRRemainConsumption[t,r] = v.cons_percap_aftercosts[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
@@ -99,16 +95,15 @@ function addslrdamages(model::Model)
 
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/sealevelmaxrise.csv")
     SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "../data/wincf_weightsfactor.csv")
-    SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.73
+    SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.7333333333333334
     SLRDamagescomp[:ipow_SLRIncomeFxnExponent] = -0.30
     SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
     SLRDamagescomp[:scal_calibrationSLR] = 0.5
-
+    SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
     SLRDamagescomp[:SAVE_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
-    SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU] = (1.3 * 10^7/ 496) #pp31 PAGE 09 documentation, EU GDP divided by population
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/impmax_sealevel.csv")
-
+    SLRDamagescomp[:isatg_impactfxnsaturation] = 28.333333333333336
 
     return SLRDamagescomp
 end

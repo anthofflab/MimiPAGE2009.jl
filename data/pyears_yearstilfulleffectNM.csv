@@ -1,7 +1,7 @@
 # Index: region
 # Unit: year
 
-Region,"Years until full policy effect non-market"
+Region,pyears_2_a
 EU,100
 US,100
 OT,100

@@ -1,0 +1,33 @@
+# Completed tests,
+,
+module, check
+AbatementCosts, yes
+AdaptationCosts,yes
+CH4cycle,yes
+CH4emissions,yes
+CH4forcing,yes
+climate_model,James
+ClimateTemperature,yes
+CO2cycle,yes
+CO2emissions,yes
+CO2forcing,yes
+Discontinuity, yes
+EquityWeighting, yes
+GDP, yes
+LGcycle,yes
+LGemissions,yes
+LGforcing,yes
+main_model,james
+MarketDamages,yes
+N2Ocycle,yes
+N2Oemissions,yes
+N2Oforcing,yes
+NonMarketDamages,yes
+Discontinuity,yes
+Population, yes
+SeaLevelRise, yes
+SLRDamages,yes
+SulphateForcing,yes
+TotalAbatementCosts,yes
+TotalAdaptationCosts,yes
+TotalForcing,yes

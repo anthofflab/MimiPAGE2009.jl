@@ -4,14 +4,19 @@ using Mimi
 include("../src/SulphateForcing.jl")
 
 m = Model()
-setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
+setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-sulphateforcing = addcomponent(m, SulphateForcing)
+addsulphatecomp(m)
 
-sulphateforcing[:se0_sulphateemissionsbase] = ones(10)
-sulphateforcing[:pse_sulphatevsbase] = ones(10, 3)
-sulphateforcing[:area] = ones(10)
-sulphateforcing[:nf_naturalsfx] = ones(10)
+p = load_parameters(m)
+p["y_year_0"] = 2008.
+p["y_year"] = m.indices_values[:time]
+setleftoverparameters(m, p)
 
 run(m)
+
+forcing=m[:SulphateForcing,:fs_sulphateforcing]
+forcing_compare=readpagedata(m,"test/validationdata/fs_sulphateforcing.csv")
+
+@test_approx_eq_eps forcing forcing_compare 1e-3

@@ -1,14 +1,20 @@
 using Mimi
+using Base.Test
 
 include("../src/LGforcing.jl")
 
 m = Model()
+setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-setindex(m, :time, 10)
+addLGforcing(m)
 
-addcomponent(m, LGforcing)
-
-setparameter(m, :LGforcing, :c_LGconcentration, ones(10)*0.2)
+setparameter(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
 
 # run Model
 run(m)
+
+forcing=m[:LGforcing,:f_LGforcing]
+forcing_compare=readpagedata(m,"test/validationdata/f_LGforcing.csv")
+
+@test_approx_eq_eps forcing forcing_compare 1e-3

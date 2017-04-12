@@ -11,14 +11,14 @@ include("load_parameters.jl")
     # Impacts across all gases
     pop_population = Parameter(index=[time, region], unit="million person")
 
-    #Total and Per-Capita Abatemet and Adaptation Costs
+    #Total and Per-Capita Abatement and Adaptation Costs
     tct_percap_totalcosts_total = Parameter(index=[time, region], unit="\$/person")
     act_adaptationcosts_total = Parameter(index=[time, region], unit="\$million")
     act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
 
     # Consumption
     cons_percap_consumption = Parameter(index=[time, region], unit="\$/person") # Called "CONS_PER_CAP"
-    # NOTE: Assumes that CONS_PER_CAP_FOCUS_0 = CONS_PER_CAP[1, 1]
+    cons_percap_consumption_0 = Parameter(index=[region], unit="\$/person")
     cons_percap_aftercosts = Parameter(index=[time, region], unit="\$/person")
 
     # Calculation of weighted costs
@@ -38,7 +38,7 @@ include("load_parameters.jl")
 
     # Discount rates
     ptp_timepreference = Parameter(unit="%/year")
-    grw_gdpgrowth = Parameter(index=[time, region], unit="%/year")
+    grw_gdpgrowthrate = Parameter(index=[time, region], unit="%/year")
     popgrw_populationgrowth = Parameter(index=[time, region], unit="%/year")
 
     dr_discountrate = Variable(index=[time, region], unit="%/year")
@@ -57,8 +57,7 @@ include("load_parameters.jl")
     wacdt_partiallyweighted_discounted = Variable(index=[time, region], unit="\$million")
 
     # Equity weighted impact totals
-    isat_percap_dis = Parameter(index=[time, region], unit="\$/person")
-    rcons_percap_dis = Variable(index=[time, region], unit="\$/person")
+    rcons_percap_dis = Parameter(index=[time, region], unit="\$/person")
 
     wit_equityweightedimpact = Variable(index=[time, region], unit="\$million")
     widt_equityweightedimpact_discounted = Variable(index=[time, region], unit="\$million")
@@ -97,12 +96,10 @@ function run_timestep(s::EquityWeighting, tt::Int64)
 
         ## Gas Costs Accounting
         # Weighted costs (Page 23 of Hope 2009)
-        v.wtct_percap_weightedcosts[tt, rr] = ((p.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.tct_percap_totalcosts_total[tt, rr])^(1 - p.emuc_utilityconvexity))
+        v.wtct_percap_weightedcosts[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.tct_percap_totalcosts_total[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         # Add these into consumption
-        v.rcons_percap_dis[tt, rr] = p.cons_percap_consumption[tt, rr] - p.isat_percap_dis[tt, rr]
-
-        v.eact_percap_weightedadaptationcosts[tt, rr] = ((p.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.act_percap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
+        v.eact_percap_weightedadaptationcosts[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_consumption[tt, rr]^(1 - p.emuc_utilityconvexity) - (p.cons_percap_consumption[tt, rr] - p.act_percap_adaptationcosts[tt, rr])^(1 - p.emuc_utilityconvexity))
 
         # Do partial weighting
         if p.equity_proportion == 0
@@ -117,7 +114,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.wact_partiallyweighted[tt, rr] = v.wact_percap_partiallyweighted[tt, rr] * p.pop_population[tt, rr]
 
         # Discount rate calculations
-        v.dr_discountrate[tt, rr] = p.ptp_timepreference + p.emuc_utilityconvexity * (p.grw_gdpgrowth[tt, rr] - p.popgrw_populationgrowth[tt, rr])
+        v.dr_discountrate[tt, rr] = p.ptp_timepreference + p.emuc_utilityconvexity * (p.grw_gdpgrowthrate[tt, rr] - p.popgrw_populationgrowth[tt, rr])
         if tt == 1
             v.yp_yearsperiod[1] = p.y_year[1] - p.y_year_0
         else
@@ -142,7 +139,7 @@ function run_timestep(s::EquityWeighting, tt::Int64)
         v.pcdat_partiallyweighted_discountedaggregated[tt, rr] = v.pcdt_partiallyweighted_discounted[tt, rr] * p.yagg_periodspan[tt]
 
         ## Equity weighted impacts (end of page 28, Hope 2009)
-        v.wit_equityweightedimpact[tt, rr] = ((p.cons_percap_consumption[1, 1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - v.rcons_percap_dis[tt, rr]^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
+        v.wit_equityweightedimpact[tt, rr] = ((p.cons_percap_consumption_0[1]^p.emuc_utilityconvexity) / (1 - p.emuc_utilityconvexity)) * (p.cons_percap_aftercosts[tt, rr]^(1 - p.emuc_utilityconvexity) - p.rcons_percap_dis[tt, rr]^(1 - p.emuc_utilityconvexity)) * p.pop_population[tt, rr]
 
         v.widt_equityweightedimpact_discounted[tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.df_utilitydiscountrate[tt]
 
@@ -167,9 +164,9 @@ end
 function addequityweighting(model::Model)
     equityweightingcomp = addcomponent(model, EquityWeighting)
 
-    equityweightingcomp[:ptp_timepreference] = 1.033333 # <0.1,1, 2>
+    equityweightingcomp[:ptp_timepreference] = 1.0333333333 # <0.1,1, 2>
     equityweightingcomp[:equity_proportion] = 1.0
-    equityweightingcomp[:emuc_utilityconvexity] = 1.166667
+    equityweightingcomp[:emuc_utilityconvexity] = 1.1666666667
     equityweightingcomp[:civvalue_civilizationvalue] = 5.3e10
 
     return equityweightingcomp

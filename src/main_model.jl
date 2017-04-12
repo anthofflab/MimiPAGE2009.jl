@@ -138,14 +138,14 @@ connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :Ada
 slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
 slrdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
-marketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+marketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
 marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
 marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
 connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
 marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
 marketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
-nonmarketdamages[:rt_realizedtemperature] = climatetemperature[:rt_realizedtemperature]
+nonmarketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
 nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
 nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
 connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
@@ -163,9 +163,10 @@ equityweighting[:tct_percap_totalcosts_total] = totalabatementcosts[:tct_per_cap
 equityweighting[:act_adaptationcosts_total] = totaladaptationcosts[:act_adaptationcosts_total]
 equityweighting[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
 equityweighting[:cons_percap_consumption] = gdp[:cons_percap_consumption]
+equityweighting[:cons_percap_consumption_0] = gdp[:cons_percap_consumption_0]
 equityweighting[:cons_percap_aftercosts] = slrdamages[:cons_percap_aftercosts]
+equityweighting[:rcons_percap_dis] = discontinuity[:rcons_per_cap_DiscRemainConsumption]
 equityweighting[:yagg_periodspan] = gdp[:yagg_periodspan]
-equityweighting[:isat_percap_dis] = discontinuity[:isat_per_cap_DiscImpactperCapinclSaturation]
 
 # next: add vector and panel example
 p = load_parameters(m)

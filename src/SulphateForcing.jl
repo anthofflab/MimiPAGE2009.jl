@@ -42,8 +42,8 @@ end
 function addsulphatecomp(model::Model)
     sulphatecomp = addcomponent(model, SulphateForcing)
 
-    sulphatecomp[:d_sulphateforcingbase] = -0.47
-    sulphatecomp[:ind_slopeSEforcing_indirect] = -0.40
+    sulphatecomp[:d_sulphateforcingbase] = -0.46666666666666673
+    sulphatecomp[:ind_slopeSEforcing_indirect] = -0.4000000000000001
 
     return sulphatecomp
 end

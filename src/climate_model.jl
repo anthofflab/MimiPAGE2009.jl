@@ -15,8 +15,6 @@ include("LGforcing.jl")
 include("SulphateForcing.jl")
 include("TotalForcing.jl")
 include("ClimateTemperature.jl")
-include("SeaLevelRise.jl")
-include("AdaptationCosts.jl")
 
 
 m = Model()
@@ -42,12 +40,16 @@ climatetemperature = addclimatetemperature(m)
 
 #connect parameters together
 
+CO2cycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
+CO2cycle[:y_year_0] = 2008.
 CO2cycle[:e_globalCO2emissions] = CO2emissions[:e_globalCO2emissions]
 CO2cycle[:rt_g0_baseglobaltemp] = climatetemperature[:rt_g0_baseglobaltemp]
 CO2cycle[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
 
 CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration]
 
+CH4cycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
+CH4cycle[:y_year_0] = 2008.
 CH4cycle[:e_globalCH4emissions] = CH4emissions[:e_globalCH4emissions]
 CH4cycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
 CH4cycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
@@ -55,6 +57,8 @@ CH4cycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
 CH4forcing[:c_CH4concentration] = CH4cycle[:c_CH4concentration]
 CH4forcing[:c_N2Oconcentration] = N2Ocycle[:c_N2Oconcentration]
 
+N2Ocycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
+N2Ocycle[:y_year_0] = 2008.
 N2Ocycle[:e_globalN2Oemissions] = N2Oemissions[:e_globalN2Oemissions]
 N2Ocycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
 N2Ocycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
@@ -62,6 +66,8 @@ N2Ocycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
 N2Oforcing[:c_CH4concentration] = CH4cycle[:c_CH4concentration]
 N2Oforcing[:c_N2Oconcentration] = N2Ocycle[:c_N2Oconcentration]
 
+lgcycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
+lgcycle[:y_year_0] = 2008.
 lgcycle[:e_globalLGemissions] = lgemissions[:e_globalLGemissions]
 lgcycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
 lgcycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
@@ -73,6 +79,8 @@ totalforcing[:f_CH4forcing] = CH4forcing[:f_CH4forcing]
 totalforcing[:f_N2Oforcing] = N2Oforcing[:f_N2Oforcing]
 totalforcing[:f_lineargasforcing] = lgforcing[:f_LGforcing]
 
+climatetemperature[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
+climatetemperature[:y_year_0] = 2008.
 climatetemperature[:ft_totalforcing] = totalforcing[:ft_totalforcing]
 climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 

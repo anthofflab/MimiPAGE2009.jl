@@ -1,21 +1,28 @@
 using Mimi
 using Base.Test
 
+include("../src/load_parameters.jl")
 include("../src/CH4cycle.jl")
 
 m = Model()
-setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
+setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075.,2100.,2150.,2200.])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addCH4cycle(m)
 
-setparameter(m, :ch4cycle, :e_globalCH4emissions, ones(10))
-setparameter(m, :ch4cycle, :y_year, [2001.,2002.,2010.,2020.,2040.,2060.,2080.,2100.,2150.,2200.]) #real value
-setparameter(m, :ch4cycle, :y_year_0, 2000.) #real value
-setparameter(m, :ch4cycle, :rtl_g0_baselandtemp, [0.93])
-setparameter(m, :ch4cycle, :rtl_g_landtemperature, ones(10))
+setparameter(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
+setparameter(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
+setparameter(m,:ch4cycle,:y_year_0,2008.)
 
-##running Model
+p = load_parameters(m)
+#p["y_year_0"] = 2008.
+p["y_year"] = m.indices_values[:time]
+setleftoverparameters(m, p)
+
+#running Model
 run(m)
 
-@test !isnan(m[:ch4cycle, :c_CH4concentration][10])
+conc=m[:ch4cycle,  :c_CH4concentration]
+conc_compare=readpagedata(m,"test/validationdata/c_ch4concentration.csv")
+
+@test_approx_eq_eps conc conc_compare 1e-4

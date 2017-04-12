@@ -1,12 +1,12 @@
 # Index: region
 # Unit: year
 
-Region,"Year of adaptive policy start in sea level sector"
-EU,2000
-US,2000
-OT,2000
-EE,2000
-CA,2000
-IA,2000
-AF,2000
-LA,2000
+Region,pstart_s_a
+EU,2e3
+US,2e3
+OT,2e3
+EE,2e3
+CA,2e3
+IA,2e3
+AF,2e3
+LA,2e3
