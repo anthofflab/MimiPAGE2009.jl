@@ -44,7 +44,7 @@ end
 function addSLR(model::Model)
     slrcomp = addcomponent(model, SeaLevelRise)
 
-    slrcomp[:sltemp_SLtemprise] = 1.73
+    slrcomp[:sltemp_SLtemprise] = 1.7333333333333334
     slrcomp[:sla_SLbaselinerise] = 1.00
     slrcomp[:sltau_SLresponsetime] = 1000.
     slrcomp[:s0_initialSL] = 0.15

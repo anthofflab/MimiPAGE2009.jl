@@ -73,7 +73,7 @@ function addgdp(model::Model)
     gdpcomp = addcomponent(model, GDP)
 
     gdpcomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
-    gdpcomp[:isat0_initialimpactfxnsaturation] = 0.3333 #pp34 PAGE09 documentation, "impacts saturate beyond." check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
+    gdpcomp[:isat0_initialimpactfxnsaturation] = 33.333333333333336 #pp34 PAGE09 documentation, "impacts saturate beyond." check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
 
     return gdpcomp
 end
