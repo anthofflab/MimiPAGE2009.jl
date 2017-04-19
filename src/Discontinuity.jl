@@ -98,3 +98,8 @@ function adddiscontinuity(model::Model)
 
     return discontinuitycomp
 end
+
+function randomizediscontinuity(model::Model)
+    setparameter(model, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
+    setparameter(model, :pdis_probability, rand(TriangularDist(10, 30, 20)))
+end

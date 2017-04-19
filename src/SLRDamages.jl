@@ -107,3 +107,7 @@ function addslrdamages(model::Model)
 
     return SLRDamagescomp
 end
+
+function randomizeslrdamages(model::Model)
+    setparameter(model, :SAVE_savingsrate, rand(TriangularDist(10, 20, 15)))
+end
