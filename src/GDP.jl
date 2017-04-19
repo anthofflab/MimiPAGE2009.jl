@@ -77,3 +77,7 @@ function addgdp(model::Model)
 
     return gdpcomp
 end
+
+function randomizegdp(model::Model)
+    setparameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+end
