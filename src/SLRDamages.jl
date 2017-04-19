@@ -1,4 +1,5 @@
 using Mimi
+using Distributions
 include("load_parameters.jl")
 
 @defcomp SLRDamages begin
@@ -17,7 +18,7 @@ include("load_parameters.jl")
     #component parameters
     impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m")
 
-    SAVE_savingsrate = Parameter(unit= "%")
+    save_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_SatCalibrationSLR =Parameter()
     ipow_SLRIncomeFxnExponent =Parameter()
@@ -52,7 +53,7 @@ function run_timestep(s::SLRDamages, t::Int64)
 
     for r in d.region
         v.cons_percap_aftercosts[t, r] = p.cons_percap_consumption[t, r] - p.tct_per_cap_totalcostspercap[t, r] - p.act_percap_adaptationcosts[t, r] # Check with Chris Hope: add or subtract adaptationcosts?
-        v.gdp_percap_aftercosts[t,r]=v.cons_percap_aftercosts[t, r]/(1 - p.SAVE_savingsrate/100)
+        v.gdp_percap_aftercosts[t,r]=v.cons_percap_aftercosts[t, r]/(1 - p.save_savingsrate/100)
 
         if (p.s_sealevel[t]-p.atl_adjustedtolerablelevelofsealevelrise[t,r]) < 0
             v.i_regionalimpactSLR[t,r] = 0
@@ -70,9 +71,9 @@ function run_timestep(s::SLRDamages, t::Int64)
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.igdp_ImpactatActualGDPperCapSLR[t,r]
         else
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
+                ((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)*
                 ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-p.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
+                (((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)+
                 (v.igdp_ImpactatActualGDPperCapSLR[t,r]- p.isatg_impactfxnsaturation)))
             end
         if v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
@@ -84,7 +85,7 @@ function run_timestep(s::SLRDamages, t::Int64)
 
               v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptationSLR[t,r]/100)*v.gdp_percap_aftercosts[t,r]
               v.rcons_per_cap_SLRRemainConsumption[t,r] = v.cons_percap_aftercosts[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
-              v.rgdp_per_cap_SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
+              v.rgdp_per_cap_SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.save_savingsrate/100)
 
     end
 
@@ -101,7 +102,7 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:scal_calibrationSLR] = 0.5
     SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
-    SLRDamagescomp[:SAVE_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
+    SLRDamagescomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/impmax_sealevel.csv")
     SLRDamagescomp[:isatg_impactfxnsaturation] = 28.333333333333336
 
@@ -109,5 +110,6 @@ function addslrdamages(model::Model)
 end
 
 function randomizeslrdamages(model::Model)
-    setparameter(model, :SAVE_savingsrate, rand(TriangularDist(10, 20, 15)))
+    # GDP also randomizes this, but the last randomization will apply to both so it's fine.
+    setparameter(model, :SLRDamages, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
 end

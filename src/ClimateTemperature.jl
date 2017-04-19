@@ -1,4 +1,5 @@
 using Mimi
+using Distributions
 
 @defcomp ClimateTemperature begin
     region = Index(region)
@@ -120,8 +121,7 @@ function addclimatetemperature(model::Model)
 end
 
 function randomizeclimatetemperature(model::Model)
-    setparameter(model, :air_CO2fractioninatm, rand(TriangularDist(1, 2.8, 1.3)))
-    setparameter(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
-    setparameter(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
-    setparameter(model, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
+    setparameter(model, :ClimateTemperature, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
+    setparameter(model, :ClimateTemperature, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
+    setparameter(model, :ClimateTemperature, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
 end

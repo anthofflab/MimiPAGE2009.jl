@@ -1,5 +1,5 @@
-
 using Mimi
+using Distributions
 
 @defcomp Discontinuity begin
 
@@ -100,6 +100,6 @@ function adddiscontinuity(model::Model)
 end
 
 function randomizediscontinuity(model::Model)
-    setparameter(model, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
-    setparameter(model, :pdis_probability, rand(TriangularDist(10, 30, 20)))
+    setparameter(model, :Discontinuity, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
+    setparameter(model, :Discontinuity, :pdis_probability, rand(TriangularDist(10, 30, 20)))
 end

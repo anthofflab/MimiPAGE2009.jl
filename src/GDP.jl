@@ -1,4 +1,5 @@
 using Mimi
+using Distributions
 
 @defcomp GDP begin
 # GDP: Gross domestic product $M
@@ -79,5 +80,5 @@ function addgdp(model::Model)
 end
 
 function randomizegdp(model::Model)
-    setparameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    setparameter(model, :GDP, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
 end

@@ -1,4 +1,5 @@
 using Mimi
+using Distributions
 
 @defcomp SulphateForcing begin
     region = Index()
@@ -49,6 +50,6 @@ function addsulphatecomp(model::Model)
 end
 
 function randomizesulphatecomp(model::Model)
-    setparameter(model, :d_sulphateforcingbase, rand(TriangularDist(-0.8, -0.8, -0.4)))
-    setparameter(model, :ind_slopeSEforcing_indirect, rand(TriangularDist(-0.8, 0, -0.4)))
+    setparameter(model, :SulphateForcing, :d_sulphateforcingbase, rand(TriangularDist(-0.8, -0.2, -0.4)))
+    setparameter(model, :SulphateForcing, :ind_slopeSEforcing_indirect, rand(TriangularDist(-0.8, 0, -0.4)))
 end
