@@ -118,3 +118,9 @@ function addclimatetemperature(model::Model)
 
     return climatetemperaturecomp
 end
+
+function randomizeclimatetemperature(model::Model)
+    setparameter(model, :air_CO2fractioninatm, rand(TriangularDist(1, 2.8, 1.3)))
+    setparameter(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
+    setparameter(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
+end
