@@ -117,7 +117,6 @@ function run_timestep(s::AbatementCosts, t::Int64)
         v.alo[t,r] = v.c0[t]/(exp(-v.blo[t,r]*v.q0_absolutecutbacksatnegativecost[t,r])-1)
         v.bhi[t,r] = 2*log((1+p.curve_above_curvatureofMACcurveabovezerocost)/(1-p.curve_above_curvatureofMACcurveabovezerocost))/ (v.qmax_maxreferencereductions[t,r] - v.q0_absolutecutbacksatnegativecost[t,r])
         v.ahi[t,r] = v.cmax[t,r]/ (exp(v.bhi[t,r]*(v.qmax_maxreferencereductions[t,r]-v.q0_absolutecutbacksatnegativecost[t,r]))-1)
-        #check with Chris Hope about missing parentheses
 
         if v.cbe_absoluteemissionreductions[t,r]< v.q0_absolutecutbacksatnegativecost[t,r]
             v.mc_marginalcost[t,r] = v.alo[t,r]* (exp(v.blo[t,r]*(v.cbe_absoluteemissionreductions[t,r]- v.q0_absolutecutbacksatnegativecost[t,r]))-1)
@@ -211,13 +210,13 @@ function randomizeabatementcosts(model::Model)
   setparameter(m,:AbatementCostsN2O,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
   setparameter(m,:AbatementCostsLin,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
 
-  setparameter(m,:AbatementCostsCO2,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-200,-100)))
+  setparameter(m,:AbatementCostsCO2,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
   setparameter(m,:AbatementCostsCH4,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-8000,-1000,-4000)))
   setparameter(m,:AbatementCostsN2O,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-15000,0,-7000)))
   setparameter(m,:AbatementCostsLin,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
 
   setparameter(m,:AbatementCostsCO2,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
-  setparameter(m,:abatementcostsCH4,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
+  setparameter(m,:AbatementCostsCH4,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
   setparameter(m,:AbatementCostsN2O,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
   setparameter(m,:AbatementCostsLin,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
 
@@ -231,19 +230,34 @@ function randomizeabatementcosts(model::Model)
   setparameter(m,:AbatementCostsN2O,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(30,80,50)))
   setparameter(m,:AbatementCostsLin,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
 
+  #the following variables need to be randomized, but set the same in all 4 abatement cost components
   #note that for these regional variables, the first region is the focus region (EU), which is randomized in the preceding code, and so is always one for these variables
   emitf=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.65,1.35,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0))]
-  q0f=[1,rand(TriangularDist(0.75,1.5,1.0)),rand(TriangularDist(0.75,1.25,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0))]
-  cmax=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1.0,1.2,1.5)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(1,1.5,1.2)),,rand(TriangularDist(0.4,0.7,1.0))]
+  q0f=[1,rand(TriangularDist(0.75,1.5,1.0)),rand(TriangularDist(0.75,1.25,1.0)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7))]
+  cmaxf=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1.0,1.5,1.2)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(0.4,1.0,0.7))]
+  q0propmult=rand(TriangularDist(0.3,1.2,0.7))
+  qmax_minus_q0propmult=rand(TriangularDist(1,1.5,1.3))
+  c0mult=rand(TriangularDist(0.5,1.2,0.8))
+  curve_below=rand(TriangularDist(0.25,0.8,0.45))
+  curve_above=rand(TriangularDist(0.1,0.7,0.4))
+  cross=rand(TriangularDist(0.1,0.3,0.2))
+  learn=rand(TriangularDist(0.05,0.35,0.2))
+  automult=rand(TriangularDist(0.5,0.8,0.65))
 
 
-
-  comps=[:AbatementCostsCO2,:AbatementCostsCH4,:AbatementCostsN20,:AbatementCostsLin]
+  comps=[:AbatementCostsCO2,:AbatementCostsCH4,:AbatementCostsN2O,:AbatementCostsLin]
 
   for i in comps
-    setparameter(m,i,:emitf_uncertaintyinBAUemissfactor...)
-
-
-
-
+    setparameter(m,i,:emitf_uncertaintyinBAUemissfactor,emitf)
+    setparameter(m,i,:q0f_negativecostpercentagefactor,q0f)
+    setparameter(m,i,:cmaxf_maxcostfactor,cmaxf)
+    setparameter(m,i,:q0propmult_cutbacksatnegativecostinfinalyear,q0propmult)
+    setparameter(m,i,:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear,qmax_minus_q0propmult)
+    setparameter(m,i,:c0mult_mostnegativecostinfinalyear,c0mult)
+    setparameter(m,i,:curve_below_curvatureofMACcurvebelowzerocost,curve_below)
+    setparameter(m,i,:curve_above_curvatureofMACcurveabovezerocost,curve_above)
+    setparameter(m,i,:cross_experiencecrossoverratio,cross)
+    setparameter(m,i,:learn_learningrate,learn)
+    setparameter(m,i,:automult_autonomoustechchange,automult)
+  end
 end
