@@ -199,3 +199,51 @@ function addabatementcosts(model::Model, class::Symbol)
 
     return abatementcostscomp
 end
+
+function randomizeabatementcosts(model::Model)
+  setparameter(m,:AbatementCostsCO2,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,75,0)))
+  setparameter(m,:AbatementCostsCH4,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-25,100,0)))
+  setparameter(m,:AbatementCostsN2O,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,50,0)))
+  setparameter(m,:AbatementCostsLin,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,50,0)))
+
+  setparameter(m,:AbatementCostsCO2,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,40,20)))
+  setparameter(m,:AbatementCostsCH4,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
+  setparameter(m,:AbatementCostsN2O,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
+  setparameter(m,:AbatementCostsLin,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
+
+  setparameter(m,:AbatementCostsCO2,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-200,-100)))
+  setparameter(m,:AbatementCostsCH4,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-8000,-1000,-4000)))
+  setparameter(m,:AbatementCostsN2O,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-15000,0,-7000)))
+  setparameter(m,:AbatementCostsLin,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
+
+  setparameter(m,:AbatementCostsCO2,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
+  setparameter(m,:abatementcostsCH4,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
+  setparameter(m,:AbatementCostsN2O,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
+  setparameter(m,:AbatementCostsLin,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
+
+  setparameter(m,:AbatementCostsCO2,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(100,700,400)))
+  setparameter(m,:AbatementCostsCH4,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(3000,10000,6000)))
+  setparameter(m,:AbatementCostsN2O,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(2000,60000,20000)))
+  setparameter(m,:AbatementCostsLin,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(100,600,300)))
+
+  setparameter(m,:AbatementCostsCO2,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(100000,200000,150000)))
+  setparameter(m,:AbatementCostsCH4,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
+  setparameter(m,:AbatementCostsN2O,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(30,80,50)))
+  setparameter(m,:AbatementCostsLin,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
+
+  #note that for these regional variables, the first region is the focus region (EU), which is randomized in the preceding code, and so is always one for these variables
+  emitf=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.65,1.35,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0))]
+  q0f=[1,rand(TriangularDist(0.75,1.5,1.0)),rand(TriangularDist(0.75,1.25,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.4,0.7,1.0))]
+  cmax=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1.0,1.2,1.5)),rand(TriangularDist(0.4,0.7,1.0)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(1,1.5,1.2)),,rand(TriangularDist(0.4,0.7,1.0))]
+
+
+
+  comps=[:AbatementCostsCO2,:AbatementCostsCH4,:AbatementCostsN20,:AbatementCostsLin]
+
+  for i in comps
+    setparameter(m,i,:emitf_uncertaintyinBAUemissfactor...)
+
+
+
+
+end
