@@ -1,4 +1,5 @@
 using DataFrames
+using Distributions
 
 @defcomp NonMarketDamages begin
     region = Index(region)
@@ -99,4 +100,14 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp[:isatg_impactfxnsaturation]=28.333333333333336
 
     return nonmarketdamagescomp
+end
+
+function randomizenonmarketdamages(model::Model)
+    setparameter(model, :NonMarketDamages, :tcal_CalibrationTemp, rand(TriangularDist(2.5, 3.5, 3.)))
+    setparameter(model, :NonMarketDamages, :iben_NonMarketInitialBenefit, rand(TriangularDist(0, .2, .05)))
+    setparameter(model, :NonMarketDamages, :w_NonImpactsatCalibrationTemp, rand(TriangularDist(.1, 1, .5)))
+    setparameter(model, :NonMarketDamages, :pow_NonMarketExponent, rand(TriangularDist(1.5, 3, 2)))
+    setparameter(model, :NonMarketDamages, :ipow_NonMarketIncomeFxnExponent, rand(TriangularDist(-.2, .2, 0)))
+    # Also randomized in GDP and SLRDamages
+    setparameter(model, :NonMarketDamages, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
 end

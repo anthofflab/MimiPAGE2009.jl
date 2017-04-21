@@ -81,4 +81,5 @@ end
 
 function randomizegdp(model::Model)
     setparameter(model, :GDP, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    setparameter(model, :GDP, :isat0_initialimpactfxnsaturation, rand(TriangularDist(20, 50, 30)))
 end
