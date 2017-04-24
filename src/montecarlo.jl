@@ -22,6 +22,7 @@ te=zeros(nit)
     randomizediscontinuity(m)
     randomizeequityweighting(m)
     randomizeabatementcosts(m)
+    randomizeadaptationcosts(m)
 
     run(m)
 

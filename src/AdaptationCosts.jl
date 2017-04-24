@@ -130,3 +130,21 @@ function addadaptationcosts_noneconomic(model::Model)
 
     return adaptationcosts
 end
+
+function randomizeadaptationcosts(model::Model)
+    setparameter(m,:AdaptiveCostsSeaLevel,:cp_costplateau_eu,rand(TriangularDist(0.01,0.04,0.02)))
+    setparameter(m,:AdaptiveCostsSeaLevel,:ci_costimpact_eu,rand(TriangularDist(0.0005,0.002,0.001)))
+    setparameter(m,:AdaptiveCostsEconomic,:cp_costplateau_eu,rand(TriangularDist(0.005,0.02,0.01)))
+    setparameter(m,:AdaptiveCostsEconomic,:ci_costimpact_eu,rand(TriangularDist(0.001,0.008,0.003)))
+    setparameter(m,:AdaptiveCostsNonEconomic,:cp_costplateau_eu,rand(TriangularDist(0.01,0.04,0.02)))
+    setparameter(m,:AdaptiveCostsNonEconomic,:ci_costimpact_eu,rand(TriangularDist(0.002,0.01,0.005)))
+
+    cf=[1.,rand(TriangularDist(0.6,1,0.8)),rand(TriangularDist(0.4,1.2,0.8)),rand(TriangularDist(0.2,0.6,0.4)),rand(TriangularDist(0.4,1.2,0.8)),rand(TriangularDist(0.4,1.2,0.8)),rand(TriangularDist(0.4,0.8,0.6)),rand(TriangularDist(0.4,0.8,0.6))]
+    comps=[:AdaptiveCostsSeaLevel,:AdaptiveCostsEconomic,:AdaptiveCostsNonEconomic]
+    automult=rand(TriangularDist(0.5,0.8,0.65)) #Note - this parameter also randomized in Abatement Costs
+
+    for i in comps
+        setparameter(m,i,:cf_costregional,cf)
+        setparameter(m,i,:automult_autonomouschange,automult)
+    end
+end
