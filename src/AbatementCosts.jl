@@ -138,8 +138,27 @@ function run_timestep(s::AbatementCosts, t::Int64)
     end
 end
 
+"""
+Create a parameter `component`_`name` with the given value,
+and connect parameter `name` within `component` to this distinct global parameter.
+"""
+function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
+    globalname = Symbol(lowercase(string(component, '_', name)))
+    set_external_parameter(m, globalname, value)
+
+    #connectparameter(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
+    p = m.external_parameters[globalname]
+    Mimi.disconnect(m, component, name)
+    x = Mimi.ExternalParameterConnection(component, name, p)
+    push!(m.external_parameter_connections, x)
+
+    m.mi = Nullable{Mimi.ModelInstance}()
+    nothing
+end
+
 function addabatementcosts(model::Model, class::Symbol)
-    abatementcostscomp = addcomponent(model, AbatementCosts, symbol("AbatementCosts$class"))
+    componentname = Symbol("AbatementCosts$class")
+    abatementcostscomp = addcomponent(model, AbatementCosts, componentname)
 
     abatementcostscomp[:q0propmult_cutbacksatnegativecostinfinalyear] = .733333333333333334
     abatementcostscomp[:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear] = 1.2666666666666666
@@ -153,45 +172,45 @@ function addabatementcosts(model::Model, class::Symbol)
     abatementcostscomp[:y_year_0] = 2008.
 
     if class == :CO2
-        abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 8.333333333333334
-        abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 20.
-        abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -233.333333333333
-        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 70.
-        abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 400.
-        abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 150000.
-        abatementcostscomp[:er_emissionsgrowth]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CO2emissionsgrowth.csv"))
-        abatementcostscomp[:e0_baselineemissions]= readpagedata(model, joinpath(dirname(@__FILE__),"..", "data","e0_baselineCO2emissions.csv"))
-        abatementcostscomp[:bau_businessasusualemissions] = readpagedata(model, joinpath(dirname(@__FILE__),"..","data","bau_co2emissions.csv"))
+        setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 8.333333333333334)
+        setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 20.)
+        setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -233.333333333333)
+        setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
+        setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 400.)
+        setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 150000.)
+        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CO2emissionsgrowth.csv")))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, joinpath(dirname(@__FILE__),"..", "data","e0_baselineCO2emissions.csv")))
+        setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model, joinpath(dirname(@__FILE__),"..","data","bau_co2emissions.csv")))
     elseif class == :CH4
-        abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 25.
-        abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
-        abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -4333.3333333333333
-        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.66666666666666664
-        abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 6333.33
-        abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 2000.
-        abatementcostscomp[:er_emissionsgrowth]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CH4emissionsgrowth.csv"))
-        abatementcostscomp[:e0_baselineemissions]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","e0_baselineCH4emissions.csv"))
-        abatementcostscomp[:bau_businessasusualemissions] = readpagedata(model, joinpath(dirname(@__FILE__), "..","data","bau_ch4emissions.csv"))
+        setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 25.)
+        setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 10.)
+        setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -4333.3333333333333)
+        setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
+        setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 6333.33)
+        setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
+        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CH4emissionsgrowth.csv")))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","e0_baselineCH4emissions.csv")))
+        setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","bau_ch4emissions.csv")))
     elseif class == :N2O
-        abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 0.
-        abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
-        abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -7333.333333333333
-        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 51.66666666666666664
-        abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 27333.33
-        abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 53.33
-        abatementcostscomp[:er_emissionsgrowth]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv"))
-        abatementcostscomp[:e0_baselineemissions]= readpagedata(model, joinpath(dirname(@__FILE__), "..","data","e0_baselineN2Oemissions.csv"))
-        abatementcostscomp[:bau_businessasusualemissions] = readpagedata(model, joinpath(dirname(@__FILE__), "..","data","bau_n2oemissions.csv"))
+        setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 0.)
+        setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 10.)
+        setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -7333.333333333333)
+        setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
+        setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 27333.33)
+        setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 53.33)
+        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv")))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","e0_baselineN2Oemissions.csv")))
+        setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","bau_n2oemissions.csv")))
     elseif class == :Lin
-        abatementcostscomp[:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear] = 0.
-        abatementcostscomp[:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear] = 10.
-        abatementcostscomp[:c0init_MostNegativeCostCutbackinBaseYear] = -233.333333333333
-        abatementcostscomp[:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear] = 70.
-        abatementcostscomp[:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear] = 333.33
-        abatementcostscomp[:ies_InitialExperienceStockofCutbacks] = 2000.
-        abatementcostscomp[:er_emissionsgrowth]= readpagedata(model,joinpath(dirname(@__FILE__), "..","data","er_LGemissionsgrowth.csv"))
-        abatementcostscomp[:e0_baselineemissions]= readpagedata(model,joinpath(dirname(@__FILE__), "..","data","e0_baselineLGemissions.csv"))
-        abatementcostscomp[:bau_businessasusualemissions] = readpagedata(model,joinpath(dirname(@__FILE__), "..","data","bau_linemissions.csv"))
+        setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 0.)
+        setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 10.)
+        setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -233.333333333333)
+        setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
+        setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 333.33)
+        setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
+        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","er_LGemissionsgrowth.csv")))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","e0_baselineLGemissions.csv")))
+        setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","bau_linemissions.csv")))
     else
         error("Unknown class of abatement costs.")
     end
@@ -200,64 +219,47 @@ function addabatementcosts(model::Model, class::Symbol)
 end
 
 function randomizeabatementcosts(model::Model)
-  setparameter(m,:AbatementCostsCO2,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,75,0)))
-  setparameter(m,:AbatementCostsCH4,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-25,100,0)))
-  setparameter(m,:AbatementCostsN2O,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,50,0)))
-  setparameter(m,:AbatementCostsLin,:emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,50,0)))
+    set_external_parameter(m,:AbatementCostsCO2_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,75,0)))
+    set_external_parameter(m,:AbatementCostsCH4_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-25,100,0)))
+    set_external_parameter(m,:AbatementCostsN2O_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,50,0)))
+    set_external_parameter(m,:AbatementCostsLin_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,50,0)))
 
-  setparameter(m,:AbatementCostsCO2,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,40,20)))
-  setparameter(m,:AbatementCostsCH4,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
-  setparameter(m,:AbatementCostsN2O,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
-  setparameter(m,:AbatementCostsLin,:q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
+    set_external_parameter(m,:AbatementCostsCO2_q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,40,20)))
+    set_external_parameter(m,:AbatementCostsCH4_q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
+    set_external_parameter(m,:AbatementCostsN2O_q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
+    set_external_parameter(m,:AbatementCostsLin_q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear,rand(TriangularDist(0,20,10)))
 
-  setparameter(m,:AbatementCostsCO2,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
-  setparameter(m,:AbatementCostsCH4,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-8000,-1000,-4000)))
-  setparameter(m,:AbatementCostsN2O,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-15000,0,-7000)))
-  setparameter(m,:AbatementCostsLin,:c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
+    set_external_parameter(m,:AbatementCostsCO2_c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
+    set_external_parameter(m,:AbatementCostsCH4_c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-8000,-1000,-4000)))
+    set_external_parameter(m,:AbatementCostsN2O_c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-15000,0,-7000)))
+    set_external_parameter(m,:AbatementCostsLin_c0init_MostNegativeCostCutbackinBaseYear,rand(TriangularDist(-400,-100,-200)))
 
-  setparameter(m,:AbatementCostsCO2,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
-  setparameter(m,:AbatementCostsCH4,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
-  setparameter(m,:AbatementCostsN2O,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
-  setparameter(m,:AbatementCostsLin,:qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
+    set_external_parameter(m,:AbatementCostsCO2_qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
+    set_external_parameter(m,:AbatementCostsCH4_qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
+    set_external_parameter(m,:AbatementCostsN2O_qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(35,70,50)))
+    set_external_parameter(m,:AbatementCostsLin_qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear,rand(TriangularDist(60,80,70)))
 
-  setparameter(m,:AbatementCostsCO2,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(100,700,400)))
-  setparameter(m,:AbatementCostsCH4,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(3000,10000,6000)))
-  setparameter(m,:AbatementCostsN2O,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(2000,60000,20000)))
-  setparameter(m,:AbatementCostsLin,:cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(100,600,300)))
+    set_external_parameter(m,:AbatementCostsCO2_cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(100,700,400)))
+    set_external_parameter(m,:AbatementCostsCH4_cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(3000,10000,6000)))
+    set_external_parameter(m,:AbatementCostsN2O_cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(2000,60000,20000)))
+    set_external_parameter(m,:AbatementCostsLin_cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear,rand(TriangularDist(100,600,300)))
 
-  setparameter(m,:AbatementCostsCO2,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(100000,200000,150000)))
-  setparameter(m,:AbatementCostsCH4,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
-  setparameter(m,:AbatementCostsN2O,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(30,80,50)))
-  setparameter(m,:AbatementCostsLin,:ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
+    set_external_parameter(m,:AbatementCostsCO2_ies_InitialExperienceStockofCutbacks,rand(TriangularDist(100000,200000,150000)))
+    set_external_parameter(m,:AbatementCostsCH4_ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
+    set_external_parameter(m,:AbatementCostsN2O_ies_InitialExperienceStockofCutbacks,rand(TriangularDist(30,80,50)))
+    set_external_parameter(m,:AbatementCostsLin_ies_InitialExperienceStockofCutbacks,rand(TriangularDist(1500,2500,2000)))
 
-  #the following variables need to be randomized, but set the same in all 4 abatement cost components
-  #note that for these regional variables, the first region is the focus region (EU), which is randomized in the preceding code, and so is always one for these variables
-  emitf=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.65,1.35,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0))]
-  q0f=[1,rand(TriangularDist(0.75,1.5,1.0)),rand(TriangularDist(0.75,1.25,1.0)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7))]
-  cmaxf=[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1.0,1.5,1.2)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(0.4,1.0,0.7))]
-  q0propmult=rand(TriangularDist(0.3,1.2,0.7))
-  qmax_minus_q0propmult=rand(TriangularDist(1,1.5,1.3))
-  c0mult=rand(TriangularDist(0.5,1.2,0.8))
-  curve_below=rand(TriangularDist(0.25,0.8,0.45))
-  curve_above=rand(TriangularDist(0.1,0.7,0.4))
-  cross=rand(TriangularDist(0.1,0.3,0.2))
-  learn=rand(TriangularDist(0.05,0.35,0.2))
-  automult=rand(TriangularDist(0.5,0.8,0.65))
-
-
-  comps=[:AbatementCostsCO2,:AbatementCostsCH4,:AbatementCostsN2O,:AbatementCostsLin]
-
-  for i in comps
-    setparameter(m,i,:emitf_uncertaintyinBAUemissfactor,emitf)
-    setparameter(m,i,:q0f_negativecostpercentagefactor,q0f)
-    setparameter(m,i,:cmaxf_maxcostfactor,cmaxf)
-    setparameter(m,i,:q0propmult_cutbacksatnegativecostinfinalyear,q0propmult)
-    setparameter(m,i,:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear,qmax_minus_q0propmult)
-    setparameter(m,i,:c0mult_mostnegativecostinfinalyear,c0mult)
-    setparameter(m,i,:curve_below_curvatureofMACcurvebelowzerocost,curve_below)
-    setparameter(m,i,:curve_above_curvatureofMACcurveabovezerocost,curve_above)
-    setparameter(m,i,:cross_experiencecrossoverratio,cross)
-    setparameter(m,i,:learn_learningrate,learn)
-    setparameter(m,i,:automult_autonomoustechchange,automult)
-  end
+    #the following variables need to be randomized, but set the same in all 4 abatement cost components
+    #note that for these regional variables, the first region is the focus region (EU), which is randomized in the preceding code, and so is always one for these variables
+    set_external_parameter(m,:emitf_uncertaintyinBAUemissfactor,[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(0.65,1.35,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0)),rand(TriangularDist(0.5,1.5,1.0))])
+    set_external_parameter(m,:q0f_negativecostpercentagefactor,[1,rand(TriangularDist(0.75,1.5,1.0)),rand(TriangularDist(0.75,1.25,1.0)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.4,1.0,0.7))])
+    set_external_parameter(m,:cmaxf_maxcostfactor,[1,rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1.0,1.5,1.2)),rand(TriangularDist(0.4,1.0,0.7)),rand(TriangularDist(0.8,1.2,1.0)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(1,1.5,1.2)),rand(TriangularDist(0.4,1.0,0.7))])
+    set_external_parameter(m,:q0propmult_cutbacksatnegativecostinfinalyear,rand(TriangularDist(0.3,1.2,0.7)))
+    set_external_parameter(m,:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear,rand(TriangularDist(1,1.5,1.3)))
+    set_external_parameter(m,:c0mult_mostnegativecostinfinalyear,rand(TriangularDist(0.5,1.2,0.8)))
+    set_external_parameter(m,:curve_below_curvatureofMACcurvebelowzerocost,rand(TriangularDist(0.25,0.8,0.45)))
+    set_external_parameter(m,:curve_above_curvatureofMACcurveabovezerocost,rand(TriangularDist(0.1,0.7,0.4)))
+    set_external_parameter(m,:cross_experiencecrossoverratio,rand(TriangularDist(0.1,0.3,0.2)))
+    set_external_parameter(m,:learn_learningrate,rand(TriangularDist(0.05,0.35,0.2)))
+    set_external_parameter(m,:automult_autonomoustechchange,rand(TriangularDist(0.5,0.8,0.65)))
 end
