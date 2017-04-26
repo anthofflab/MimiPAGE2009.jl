@@ -1,10 +1,12 @@
 using Distributions
+using DataFrames
+using RCall
 
 include("getpagefunction.jl")
 m = getpage()
 run(m)
 
-nit=50
+nit=100000
 td=zeros(nit)
 tpc=zeros(nit)
 tac=zeros(nit)
@@ -30,6 +32,14 @@ te=zeros(nit)
     tpc[i]=m[:EquityWeighting,:tpc_totalaggregatedcosts]
     tac[i]=m[:EquityWeighting,:tac_totaladaptationcosts]
     te[i]=m[:EquityWeighting,:te_totaleffect]
+end
 
-    print(i)
+df=DataFrame(td=td,tpc=tpc,tac=tac,te=te)
+writetable("../test/validationdata/mimipagemontecarlooutput.csv",df)
+#make plots of output Distributions
+R"x11()"
+R"par(mfrow=c(2,2))"
+for i in 1:4
+    R"hist($df[,$i]/1e9,main=c('Total Damages','Total Abatement Costs','Total Adaptation Costs','Total Effect')[$i],xlab='Billions of Dollars',col=c('darkslategray1','navyblue','deepskyblue3','dodgerblue4')[$i])"
+    R"abline(v=quantile($df[,$i]/1e9,probs=c(0.05,0.95)),lty=2)"
 end
