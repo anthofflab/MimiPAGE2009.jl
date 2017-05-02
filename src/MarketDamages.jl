@@ -17,7 +17,7 @@ using Distributions
     rcons_per_cap_SLRRemainConsumption = Parameter(index=[time, region], unit = "\$/person")
     rgdp_per_cap_SLRRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
-    SAVE_savingsrate = Parameter(unit= "%")
+    save_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_MarketImpactsatCalibrationTemp =Parameter(unit="%GDP")
     ipow_MarketIncomeFxnExponent =Parameter()
@@ -62,9 +62,9 @@ function run_timestep(s::MarketDamages, t::Int64)
             v.isat_ImpactinclSaturationandAdaptation[t,r] = v.igdp_ImpactatActualGDPperCap[t,r]
         else
             v.isat_ImpactinclSaturationandAdaptation[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
+                ((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)*
                 ((v.igdp_ImpactatActualGDPperCap[t,r]-p.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
+                (((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)+
                 (v.igdp_ImpactatActualGDPperCap[t,r]-
                 p.isatg_impactfxnsaturation)))
             end
@@ -79,7 +79,7 @@ function run_timestep(s::MarketDamages, t::Int64)
 
         v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptation[t,r]/100)*p.rgdp_per_cap_SLRRemainGDP[t,r]
         v.rcons_per_cap_MarketRemainConsumption[t,r] = p.rcons_per_cap_SLRRemainConsumption[t,r] - v.isat_per_cap_ImpactperCapinclSaturationandAdaptation[t,r]
-        v.rgdp_per_cap_MarketRemainGDP[t,r] = v.rcons_per_cap_MarketRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
+        v.rgdp_per_cap_MarketRemainGDP[t,r] = v.rcons_per_cap_MarketRemainConsumption[t,r]/(1-p.save_savingsrate/100)
     end
 
 end
@@ -90,7 +90,7 @@ function addmarketdamages(model::Model)
     marketdamagescomp[:tcal_CalibrationTemp]= 3.
     marketdamagescomp[:iben_MarketInitialBenefit] = .1333333333333
     marketdamagescomp[:ipow_MarketIncomeFxnExponent] = -0.13333333333333333
-    marketdamagescomp[:SAVE_savingsrate]= 15.
+    marketdamagescomp[:save_savingsrate]= 15.
     marketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     marketdamagescomp[:pow_MarketImpactExponent]=2.16666666666665
     marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = 0.5
