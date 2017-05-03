@@ -2,6 +2,8 @@ using Distributions
 using DataFrames
 using RCall
 
+using Mimi.ScalarModelParameter
+
 include("getpagefunction.jl")
 m = getpage()
 run(m)
@@ -25,6 +27,16 @@ te=zeros(nit)
     randomizeequityweighting(m)
     randomizeabatementcosts(m)
     randomizeadaptationcosts(m)
+
+    # Update all parameters
+    for x in m.external_parameter_connections
+        param = x.external_parameter
+        if isa(param, ScalarModelParameter)
+            setfield!(get(m.mi).components[x.component_name].Parameters, x.param_name, param.value)
+        else
+            setfield!(get(m.mi).components[x.component_name].Parameters, x.param_name, param.values)
+        end
+    end
 
     run(m)
 

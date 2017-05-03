@@ -1,5 +1,6 @@
 using Mimi
 include("load_parameters.jl")
+include("mctools.jl")
 
 @defcomp AdaptationCosts begin
     region = Index()
@@ -77,24 +78,6 @@ function run_timestep(s::AdaptationCosts, tt::Int64)
     end
 end
 
-"""
-Create a parameter `component`_`name` with the given value,
-and connect parameter `name` within `component` to this distinct global parameter.
-"""
-function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
-    globalname = Symbol(lowercase(string(component, '_', name)))
-    set_external_parameter(m, globalname, value)
-
-    #connectparameter(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
-    p = m.external_parameters[globalname]
-    Mimi.disconnect(m, component, name)
-    x = Mimi.ExternalParameterConnection(component, name, p)
-    push!(m.external_parameter_connections, x)
-
-    m.mi = Nullable{Mimi.ModelInstance}()
-    nothing
-end
-
 function addadaptationcosts_sealevel(model::Model)
     adaptationcosts = addcomponent(model, AdaptationCosts, :AdaptiveCostsSeaLevel)
     adaptationcosts[:automult_autonomouschange] = 0.65
@@ -150,13 +133,13 @@ function addadaptationcosts_noneconomic(model::Model)
 end
 
 function randomizeadaptationcosts(model::Model)
-    set_external_parameter(m, :AdaptiveCostsSeaLevel_cp_costplateau_eu, rand(TriangularDist(0.01, 0.04, 0.02)))
-    set_external_parameter(m, :AdaptiveCostsSeaLevel_ci_costimpact_eu, rand(TriangularDist(0.0005, 0.002, 0.001)))
-    set_external_parameter(m, :AdaptiveCostsEconomic_cp_costplateau_eu, rand(TriangularDist(0.005, 0.02, 0.01)))
-    set_external_parameter(m, :AdaptiveCostsEconomic_ci_costimpact_eu, rand(TriangularDist(0.001, 0.008, 0.003)))
-    set_external_parameter(m, :AdaptiveCostsNonEconomic_cp_costplateau_eu, rand(TriangularDist(0.01, 0.04, 0.02)))
-    set_external_parameter(m, :AdaptiveCostsNonEconomic_ci_costimpact_eu, rand(TriangularDist(0.002, 0.01, 0.005)))
+    update_external_parameter(m, :AdaptiveCostsSeaLevel_cp_costplateau_eu, rand(TriangularDist(0.01, 0.04, 0.02)))
+    update_external_parameter(m, :AdaptiveCostsSeaLevel_ci_costimpact_eu, rand(TriangularDist(0.0005, 0.002, 0.001)))
+    update_external_parameter(m, :AdaptiveCostsEconomic_cp_costplateau_eu, rand(TriangularDist(0.005, 0.02, 0.01)))
+    update_external_parameter(m, :AdaptiveCostsEconomic_ci_costimpact_eu, rand(TriangularDist(0.001, 0.008, 0.003)))
+    update_external_parameter(m, :AdaptiveCostsNonEconomic_cp_costplateau_eu, rand(TriangularDist(0.01, 0.04, 0.02)))
+    update_external_parameter(m, :AdaptiveCostsNonEconomic_ci_costimpact_eu, rand(TriangularDist(0.002, 0.01, 0.005)))
 
-    set_external_parameter(m, :cf_costregional, [1., rand(TriangularDist(0.6, 1, 0.8)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.2, 0.6, 0.4)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.4, 0.8, 0.6)), rand(TriangularDist(0.4, 0.8, 0.6))])
-    set_external_parameter(m, :automult_autonomouschange, rand(TriangularDist(0.5, 0.8, 0.65))) # Note - this parameter also randomized in Abatement Costs
+    update_external_parameter(m, :cf_costregional, [1., rand(TriangularDist(0.6, 1, 0.8)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.2, 0.6, 0.4)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.4, 0.8, 0.6)), rand(TriangularDist(0.4, 0.8, 0.6))])
+    update_external_parameter(m, :automult_autonomouschange, rand(TriangularDist(0.5, 0.8, 0.65))) # Note - this parameter also randomized in Abatement Costs
 end

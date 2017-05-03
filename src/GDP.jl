@@ -1,5 +1,6 @@
 using Mimi
 using Distributions
+include("mctools.jl")
 
 @defcomp GDP begin
 # GDP: Gross domestic product $M
@@ -80,6 +81,6 @@ function addgdp(model::Model)
 end
 
 function randomizegdp(model::Model)
-    setparameter(model, :GDP, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
-    setparameter(model, :GDP, :isat0_initialimpactfxnsaturation, rand(TriangularDist(20, 50, 30)))
+    update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    update_external_parameter(model, :isat0_initialimpactfxnsaturation, rand(TriangularDist(20, 50, 30)))
 end

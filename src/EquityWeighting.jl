@@ -1,6 +1,7 @@
 using Mimi
 using Distributions
 include("load_parameters.jl")
+include("mctools.jl")
 
 @defcomp EquityWeighting begin
     region = Index()
@@ -174,5 +175,5 @@ function addequityweighting(model::Model)
 end
 
 function randomizeequityweighting(model::Model)
-    setparameter(model, :EquityWeighting, :civvalue_civilizationvalue, rand(TriangularDist(1e10, 1e11, 5e10)))
+    update_external_parameter(model, :civvalue_civilizationvalue, rand(TriangularDist(1e10, 1e11, 5e10)))
 end

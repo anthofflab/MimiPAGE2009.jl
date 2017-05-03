@@ -1,6 +1,7 @@
 using Mimi
 using Distributions
 include("load_parameters.jl")
+include("mctools.jl")
 
 @defcomp SLRDamages begin
     region = Index()
@@ -111,12 +112,12 @@ end
 
 function randomizeslrdamages(model::Model)
     # GDP also randomizes this, but the last randomization will apply to both so it's fine.
-    setparameter(model, :SLRDamages, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
-    setparameter(model, :SLRDamages, :scal_calibrationSLR, rand(TriangularDist(0.45, 0.55, .5)))
-    #setparameter(model, :SLRDamages, :iben_SLRInitialBenefit, rand(TriangularDist(0, 0, 0))) # only usable if lb <> ub
-    setparameter(model, :SLRDamages, :W_SatCalibrationSLR, rand(TriangularDist(.5, 1.5, 1)))
-    setparameter(model, :SLRDamages, :pow_SLRImpactFxnExponent, rand(TriangularDist(.5, 1, .7)))
-    setparameter(model, :SLRDamages, :ipow_SLRIncomeFxnExponent, rand(TriangularDist(-.4, -.2, -.3)))
+    update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    update_external_parameter(model, :scal_calibrationSLR, rand(TriangularDist(0.45, 0.55, .5)))
+    #update_external_parameter(model, :iben_SLRInitialBenefit, rand(TriangularDist(0, 0, 0))) # only usable if lb <> ub
+    update_external_parameter(model, :W_SatCalibrationSLR, rand(TriangularDist(.5, 1.5, 1)))
+    update_external_parameter(model, :pow_SLRImpactFxnExponent, rand(TriangularDist(.5, 1, .7)))
+    update_external_parameter(model, :ipow_SLRIncomeFxnExponent, rand(TriangularDist(-.4, -.2, -.3)))
 
     wincf = [1.0,
              rand(TriangularDist(.6, 1, .8)),
@@ -127,5 +128,5 @@ function randomizeslrdamages(model::Model)
              rand(TriangularDist(.4, .8, .6)),
              rand(TriangularDist(.4, .8, .6))]
 
-    setparameter(model, :SLRDamages, :WINCF_weightsfactor, wincf)
+    update_external_parameter(model, :WINCF_weightsfactor, wincf)
 end

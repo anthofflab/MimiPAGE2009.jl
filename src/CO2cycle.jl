@@ -1,5 +1,6 @@
 using Mimi
 using Distributions
+include("mctools.jl")
 
 @defcomp co2cycle begin
     e_globalCO2emissions=Parameter(index=[time],unit="Mtonne/year")
@@ -100,9 +101,9 @@ function addCO2cycle(model::Model)
 end
 
 function randomizeCO2cycle(model::Model)
-    setparameter(model, :co2cycle, :air_CO2fractioninatm, rand(TriangularDist(57, 67, 62)))
-    setparameter(model, :co2cycle, :res_CO2atmlifetime, rand(TriangularDist(50, 100, 70)))
-    setparameter(model, :co2cycle, :ccf_CO2feedback, rand(TriangularDist(4, 15, 10)))
-    setparameter(model, :co2cycle, :ccfmax_maxCO2feedback, rand(TriangularDist(30, 80, 50)))
+    update_external_parameter(model, :air_CO2fractioninatm, rand(TriangularDist(57, 67, 62)))
+    update_external_parameter(model, :res_CO2atmlifetime, rand(TriangularDist(50, 100, 70)))
+    update_external_parameter(model, :ccf_CO2feedback, rand(TriangularDist(4, 15, 10)))
+    update_external_parameter(model, :ccfmax_maxCO2feedback, rand(TriangularDist(30, 80, 50)))
 end
 

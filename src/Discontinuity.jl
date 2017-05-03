@@ -1,5 +1,6 @@
 using Mimi
 using Distributions
+include("mctools.jl")
 
 @defcomp Discontinuity begin
 
@@ -100,9 +101,9 @@ function adddiscontinuity(model::Model)
 end
 
 function randomizediscontinuity(model::Model)
-    setparameter(model, :Discontinuity, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
-    setparameter(model, :Discontinuity, :pdis_probability, rand(TriangularDist(10, 30, 20)))
-    setparameter(model, :Discontinuity, :wdis_gdplostdisc, rand(TriangularDist(5, 25, 15)))
-    setparameter(model, :Discontinuity, :ipow_incomeexponent, rand(TriangularDist(-.3, 0, -.1)))
-    setparameter(model, :Discontinuity, :distau_discontinuityexponent, rand(TriangularDist(20, 200, 50)))
+    update_external_parameter(model, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
+    update_external_parameter(model, :pdis_probability, rand(TriangularDist(10, 30, 20)))
+    update_external_parameter(model, :wdis_gdplostdisc, rand(TriangularDist(5, 25, 15)))
+    update_external_parameter(model, :ipow_incomeexponent, rand(TriangularDist(-.3, 0, -.1)))
+    update_external_parameter(model, :distau_discontinuityexponent, rand(TriangularDist(20, 200, 50)))
 end

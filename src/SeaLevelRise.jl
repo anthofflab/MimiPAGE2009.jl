@@ -1,5 +1,6 @@
 using Mimi
 using Distributions
+include("mctools.jl")
 
 @defcomp SeaLevelRise begin
 
@@ -54,8 +55,8 @@ function addSLR(model::Model)
 end
 
 function randomizeSLR(model::Model)
-    setparameter(model, :SeaLevelRise, :s0_initialSL, rand(TriangularDist(0.1, 0.2, 0.15)))
-    setparameter(model, :SeaLevelRise, :sltemp_SLtemprise, rand(TriangularDist(0.7, 3., 1.5)))
-    setparameter(model, :SeaLevelRise, :sla_SLbaselinerise, rand(TriangularDist(0.5, 1.5, 1.)))
-    setparameter(model, :SeaLevelRise, :sltau_SLresponsetime, rand(TriangularDist(500, 1500, 1000)))
+    update_external_parameter(model, :s0_initialSL, rand(TriangularDist(0.1, 0.2, 0.15)))
+    update_external_parameter(model, :sltemp_SLtemprise, rand(TriangularDist(0.7, 3., 1.5)))
+    update_external_parameter(model, :sla_SLbaselinerise, rand(TriangularDist(0.5, 1.5, 1.)))
+    update_external_parameter(model, :sltau_SLresponsetime, rand(TriangularDist(500, 1500, 1000)))
 end

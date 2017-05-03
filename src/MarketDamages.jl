@@ -1,5 +1,6 @@
 using Mimi
 using Distributions
+include("mctools.jl")
 
 @defcomp MarketDamages begin
     region = Index(region)
@@ -101,9 +102,9 @@ function addmarketdamages(model::Model)
 end
 
 function randomizemarketdamages(model::Model)
-    setparameter(model, :MarketDamages, :tcal_CalibrationTemp, rand(TriangularDist(2.5, 3.5, 3.)))
-    setparameter(model, :MarketDamages, :iben_MarketInitialBenefit, rand(TriangularDist(0, .3, .1)))
-    setparameter(model, :MarketDamages, :W_MarketImpactsatCalibrationTemp, rand(TriangularDist(.2, .8, .5)))
-    setparameter(model, :MarketDamages, :pow_MarketImpactExponent, rand(TriangularDist(1.5, 3, 2)))
-    setparameter(model, :MarketDamages, :ipow_MarketIncomeFxnExponent, rand(TriangularDist(-.3, 0, -.1)))
+    update_external_parameter(model, :tcal_CalibrationTemp, rand(TriangularDist(2.5, 3.5, 3.)))
+    update_external_parameter(model, :iben_MarketInitialBenefit, rand(TriangularDist(0, .3, .1)))
+    update_external_parameter(model, :W_MarketImpactsatCalibrationTemp, rand(TriangularDist(.2, .8, .5)))
+    update_external_parameter(model, :pow_MarketImpactExponent, rand(TriangularDist(1.5, 3, 2)))
+    update_external_parameter(model, :ipow_MarketIncomeFxnExponent, rand(TriangularDist(-.3, 0, -.1)))
 end
