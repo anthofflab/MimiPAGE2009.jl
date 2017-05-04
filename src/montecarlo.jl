@@ -8,11 +8,11 @@ include("getpagefunction.jl")
 m = getpage()
 run(m)
 
-nit=100000
-td=zeros(nit)
-tpc=zeros(nit)
-tac=zeros(nit)
-te=zeros(nit)
+nit=1000;
+td=zeros(nit);
+tpc=zeros(nit);
+tac=zeros(nit);
+te=zeros(nit);
 @time for i in 1:nit
     # Randomize all components with random parameters
     randomizeCO2cycle(m)
@@ -30,7 +30,13 @@ te=zeros(nit)
 
     # Update all parameters
     for x in m.external_parameter_connections
-        param = x.external_parameter
+        # Look to see if this is a normal parameter, with the local name identical to the external name
+        if Symbol(lowercase(string(x.param_name))) in keys(m.external_parameters)
+            # Guess that this is the intended parameter, and use it instead
+            param = m.external_parameters[Symbol(lowercase(string(x.param_name)))]
+        else
+            param = x.external_parameter
+        end
         if isa(param, ScalarModelParameter)
             setfield!(get(m.mi).components[x.component_name].Parameters, x.param_name, param.value)
         else
