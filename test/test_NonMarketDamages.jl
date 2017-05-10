@@ -20,6 +20,7 @@ setparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, readpa
 "../test/validationdata/atl_adjustedtolerableleveloftemprise_nonmarket.csv"))
 setparameter(m, :NonMarketDamages, :imp_actualreduction, readpagedata(m,
 "../test/validationdata/imp_actualreduction_nonmarket.csv"))
+setparameter(m, :NonMarketDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.

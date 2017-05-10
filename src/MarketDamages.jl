@@ -96,7 +96,6 @@ function addmarketdamages(model::Model)
     marketdamagescomp[:pow_MarketImpactExponent]=2.16666666666665
     marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = 0.5
     marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "../data/impmax_economic.csv")
-    marketdamagescomp[:isatg_impactfxnsaturation]=28.333333333333336
 
     return marketdamagescomp
 end
@@ -107,4 +106,14 @@ function randomizemarketdamages(model::Model)
     update_external_parameter(model, :W_MarketImpactsatCalibrationTemp, rand(TriangularDist(.2, .8, .5)))
     update_external_parameter(model, :pow_MarketImpactExponent, rand(TriangularDist(1.5, 3, 2)))
     update_external_parameter(model, :ipow_MarketIncomeFxnExponent, rand(TriangularDist(-.3, 0, -.1)))
+    update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    wincf = [1.0,
+             rand(TriangularDist(.6, 1, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.2, .6, .4)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, .8, .6)),
+             rand(TriangularDist(.4, .8, .6))]
+    update_external_parameter(model, :WINCF_weightsfactor, wincf)
 end

@@ -23,7 +23,7 @@ include("mctools.jl")
     rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
     save_savingsrate = Parameter(unit= "%")
-    wincf_weightsfactor =Parameter(index=[region], unit="unitless")
+    WINCF_weightsfactor =Parameter(index=[region], unit="unitless")
     w_NonImpactsatCalibrationTemp =Parameter(unit="%GDP")
     ipow_NonMarketIncomeFxnExponent =Parameter(unit="unitless")
     iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC")
@@ -55,7 +55,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
             v.i_regionalimpact[t,r] = p.rtl_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
-        v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*
+        v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*
             ((p.w_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit *p.tcal_CalibrationTemp)*
                 (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_NonMarketExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
 
@@ -98,7 +98,6 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     nonmarketdamagescomp[:pow_NonMarketExponent] = 2.1666666666666665
     nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "../data/impmax_noneconomic.csv")
-    nonmarketdamagescomp[:isatg_impactfxnsaturation]=28.333333333333336
 
     return nonmarketdamagescomp
 end
@@ -109,6 +108,15 @@ function randomizenonmarketdamages(model::Model)
     update_external_parameter(model, :w_NonImpactsatCalibrationTemp, rand(TriangularDist(.1, 1, .5)))
     update_external_parameter(model, :pow_NonMarketExponent, rand(TriangularDist(1.5, 3, 2)))
     update_external_parameter(model, :ipow_NonMarketIncomeFxnExponent, rand(TriangularDist(-.2, .2, 0)))
-    # Also randomized in GDP and SLRDamages
+    # Also randomized in GDP and SLRDamages and Market Damages
     update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    wincf = [1.0,
+             rand(TriangularDist(.6, 1, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.2, .6, .4)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, .8, .6)),
+             rand(TriangularDist(.4, .8, .6))]
+    update_external_parameter(model, :WINCF_weightsfactor, wincf)
 end

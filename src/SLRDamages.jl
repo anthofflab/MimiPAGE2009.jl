@@ -105,7 +105,6 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
     SLRDamagescomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/impmax_sealevel.csv")
-    SLRDamagescomp[:isatg_impactfxnsaturation] = 28.333333333333336
 
     return SLRDamagescomp
 end

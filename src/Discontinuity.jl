@@ -99,7 +99,6 @@ function adddiscontinuity(model::Model)
     discontinuitycomp[:tdis_tolerabilitydisc]=3.
     discontinuitycomp[:pdis_probability]=20.
     discontinuitycomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
-    discontinuitycomp[:isatg_saturationmodification]=28.333333333333336
 
     return discontinuitycomp
 end
@@ -112,4 +111,14 @@ function randomizediscontinuity(model::Model)
     update_external_parameter(model, :wdis_gdplostdisc, rand(TriangularDist(5, 25, 15)))
     update_external_parameter(model, :ipow_incomeexponent, rand(TriangularDist(-.3, 0, -.1)))
     update_external_parameter(model, :distau_discontinuityexponent, rand(TriangularDist(20, 200, 50)))
+    wincf = [1.0,
+             rand(TriangularDist(.6, 1, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.2, .6, .4)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, .8, .6)),
+             rand(TriangularDist(.4, .8, .6))]
+
+    update_external_parameter(model, :WINCF_weightsfactor, wincf)
 end

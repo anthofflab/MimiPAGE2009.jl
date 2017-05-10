@@ -14,7 +14,7 @@ setparameter(m, :Discontinuity, :y_year_0, 2008.)
 setparameter(m, :Discontinuity, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 setparameter(m, :Discontinuity, :rgdp_per_cap_NonMarketRemainGDP, readpagedata(m, "../test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv"))
 setparameter(m, :Discontinuity, :rcons_per_cap_NonMarketRemainConsumption, readpagedata(m, "../test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv"))
-
+setparameter(m, :Discontinuity, :isatg_saturationmodification, 28.333333333333336)
 ##running Model
 run(m)
 

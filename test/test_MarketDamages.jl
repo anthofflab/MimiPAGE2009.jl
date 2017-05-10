@@ -16,6 +16,7 @@ setparameter(m, :MarketDamages, :rcons_per_cap_SLRRemainConsumption, readpagedat
 setparameter(m, :MarketDamages, :rgdp_per_cap_SLRRemainGDP, readpagedata(m,"test/validationdata/rgdp_per_cap_SLRRemainGDP.csv"))
 setparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, readpagedata(m,"test/validationdata/atl_adjustedtolerableleveloftemprise_market.csv"))
 setparameter(m, :MarketDamages, :imp_actualreduction, readpagedata(m,"test/validationdata/imp_actualreduction_market.csv"))
+setparameter(m, :MarketDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
