@@ -176,4 +176,6 @@ end
 
 function randomizeequityweighting(model::Model)
     update_external_parameter(model, :civvalue_civilizationvalue, rand(TriangularDist(1e10, 1e11, 5e10)))
+    update_external_parameter(model, :ptp_timepreference, rand(TriangularDist(0.1,2,1)))
+    update_external_parameter(model, :emuc_utilityconvexity, rand(TriangularDist(0.5,2,1)))
 end

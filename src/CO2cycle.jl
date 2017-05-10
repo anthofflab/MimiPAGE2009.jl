@@ -105,5 +105,5 @@ function randomizeCO2cycle(model::Model)
     update_external_parameter(model, :res_CO2atmlifetime, rand(TriangularDist(50, 100, 70)))
     update_external_parameter(model, :ccf_CO2feedback, rand(TriangularDist(4, 15, 10)))
     update_external_parameter(model, :ccfmax_maxCO2feedback, rand(TriangularDist(30, 80, 50)))
+    update_external_parameter(model, :stay_fractionCO2emissionsinatm, rand(TriangularDist(0.25,0.35,0.3)))
 end
-
