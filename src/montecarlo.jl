@@ -8,7 +8,7 @@ include("getpagefunction.jl")
 m = getpage()
 run(m)
 
-nit=1000;
+nit=100000;
 td=zeros(nit);
 tpc=zeros(nit);
 tac=zeros(nit);
@@ -70,8 +70,11 @@ for i in 1:nit
 end
 
 df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
+probs=[0.01,0.05,0.1,0.25,0.5,0.75,0.9,0.95,0.99]
+quantiles=DataFrame(quantile=probs,td=quantile(df[1],probs),tpc=quantile(df[2],probs),tac=quantile(df[3],probs),te=quantile(df[4],probs))
 
 writetable("../test/validationdata/mimipagemontecarlooutput.csv",df)
+
 #make plots of output Distributions
 R"x11()"
 R"par(mfrow=c(2,2))"
