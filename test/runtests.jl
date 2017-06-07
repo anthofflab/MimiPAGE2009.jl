@@ -1,15 +1,15 @@
 using Base.Test
 
 tests = [
+    "climatemodel",
     "AbatementCosts",
-    "AdaptationCosts",    
+    "AdaptationCosts",
     "CH4cycle",
     "CH4emissions",
     "CH4forcing",
-    "climatemodel",
     "ClimateTemperature",
     "CO2cycle",
-    "CO2emissions",    
+    "CO2emissions",
     "CO2forcing",
     "Discontinuity",
     "EquityWeighting",
@@ -31,7 +31,7 @@ tests = [
     "SulphateForcing",
     "TotalAbatementCosts",
     "TotalAdaptationCosts",
-    "TotalForcing"   
+    "TotalForcing"
 ]
 
 for t in tests
