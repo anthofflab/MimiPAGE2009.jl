@@ -1,4 +1,6 @@
 using Mimi
+using Distributions
+include("mctools.jl")
 
 @defcomp GDP begin
 # GDP: Gross domestic product $M
@@ -76,4 +78,9 @@ function addgdp(model::Model)
     gdpcomp[:isat0_initialimpactfxnsaturation] = 33.333333333333336 #pp34 PAGE09 documentation, "impacts saturate beyond." check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
 
     return gdpcomp
+end
+
+function randomizegdp(model::Model)
+    update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    update_external_parameter(model, :isat0_initialimpactfxnsaturation, rand(TriangularDist(20, 50, 30)))
 end
