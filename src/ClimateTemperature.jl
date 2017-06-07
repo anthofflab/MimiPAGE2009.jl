@@ -1,4 +1,6 @@
 using Mimi
+using Distributions
+include("mctools.jl")
 
 @defcomp ClimateTemperature begin
     region = Index(region)
@@ -117,4 +119,11 @@ function addclimatetemperature(model::Model)
     climatetemperaturecomp[:frt_warminghalflife] = 35.00
 
     return climatetemperaturecomp
+end
+
+function randomizeclimatetemperature(model::Model)
+    update_external_parameter(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
+    update_external_parameter(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
+    update_external_parameter(model, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
+    update_external_parameter(model, :tcr_transientresponse, rand(TriangularDist(1, 2.8, 1.3)))
 end

@@ -20,6 +20,7 @@ setparameter(m, :SLRDamages, :s_sealevel, readpagedata(m, "../test/validationdat
 setparameter(m, :SLRDamages, :cons_percap_consumption, readpagedata(m, "../test/validationdata/cons_percap_consumption.csv"))
 setparameter(m, :SLRDamages, :tct_per_cap_totalcostspercap, readpagedata(m, "../test/validationdata/tct_per_cap_totalcostspercap.csv"))
 setparameter(m, :SLRDamages, :act_percap_adaptationcosts, readpagedata(m, "../test/validationdata/act_percap_adaptationcosts.csv"))
+setparameter(m, :SLRDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 
 ##running Model
 run(m)
