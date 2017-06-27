@@ -28,7 +28,7 @@ include("TotalAdaptationCosts.jl")
 include("Population.jl")
 include("EquityWeighting.jl")
 
-function getpage()
+function buildpage()
     m = Model()
     setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
@@ -169,11 +169,21 @@ function getpage()
     equityweighting[:rcons_percap_dis] = discontinuity[:rcons_per_cap_DiscRemainConsumption]
     equityweighting[:yagg_periodspan] = gdp[:yagg_periodspan]
 
-    # next: add vector and panel example
+    return m
+end
+
+function initpage(m)
     p = load_parameters(m)
     p["y_year_0"] = 2008.
     p["y_year"] = m.indices_values[:time]
     setleftoverparameters(m, p)
+end
+
+function getpage()
+    m = buildpage()
+
+    # next: add vector and panel example
+    initpage(m)
 
     return m
 end
