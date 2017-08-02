@@ -2,6 +2,8 @@ using Mimi
 using OptiMimi
 include("getpagefunction.jl")
 
+optimized_gases = [:CO2, :CH4, :N2O, :Lin]
+
 # Create the model
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -29,10 +31,26 @@ function run_timestep(s::AbatementScale, tt::Int64)
     d = s.Dimensions
 
     for rr in d.region
-        v.er_CO2emissionsgrowth_new[tt, rr] = p.er_CO2emissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
-        v.er_CH4emissionsgrowth_new[tt, rr] = p.er_CH4emissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
-        v.er_N2Oemissionsgrowth_new[tt, rr] = p.er_N2Oemissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
-        v.er_LGemissionsgrowth_new[tt, rr] = p.er_LGemissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
+        if :CO2 in optimized_gases
+            v.er_CO2emissionsgrowth_new[tt, rr] = p.er_CO2emissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
+        else
+            v.er_CO2emissionsgrowth_new[tt, rr] = p.er_CO2emissionsgrowth[tt, rr]
+        end
+        if :CH4 in optimized_gases
+            v.er_CH4emissionsgrowth_new[tt, rr] = p.er_CH4emissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
+        else
+            v.er_CH4emissionsgrowth_new[tt, rr] = p.er_CH4emissionsgrowth[tt, rr]
+        end
+        if :N20 in optimized_gases
+            v.er_N2Oemissionsgrowth_new[tt, rr] = p.er_N2Oemissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
+        else
+            v.er_N2Oemissionsgrowth_new[tt, rr] = p.er_N2Oemissionsgrowth[tt, rr]
+        end
+        if :Lin in optimized_gases
+            v.er_LGemissionsgrowth_new[tt, rr] = p.er_LGemissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
+        else
+            v.er_LGemissionsgrowth_new[tt, rr] = p.er_LGemissionsgrowth[tt, rr]
+        end
     end
 end
 
@@ -59,16 +77,33 @@ run(m)
 bestpolicy(model::Model) = -model[:EquityWeighting, :te_totaleffect]
 
 optprob = problem(m, [:AbatementScale], [:emissiongrowthfactor], repmat([0.], 10), repmat([100.0], 10), bestpolicy);
-(maxf, maxx) = solution(optprob, () -> repmat([90.], 10))
+optimized_gases = [:CO2, :CH4, :N2O, :Lin]
+(maxf, maxx) = solution(optprob, () -> repmat([100.], 10))
 
 # Uniform across all gases
 # Across all periods
 # (-6.263442759850269e7,[85.709,84.6415,84.3794,79.9315,79.9212,73.3482,58.1531,33.0268,2.94466e-20,4.91144e-20])
 
-worstpolicy(model::Model) = model[:EquityWeighting, :te_totaleffect]
+results = DataFrame(time=copy(getindexvalues(m, :time)), control=repmat([:All], 10), level=maxx)
 
-optprob = problem(m, [:AbatementScale], [:emissiongrowthfactor], [0.], [100.0], worstpolicy);
-(maxf, maxx) = solution(optprob, () -> repmat([90.], 10))
+for gas in [:CO2, :CH4, :N2O, :Lin]
+    optimized_gases = [gas]
+    (maxf, maxx) = solution(optprob, () -> repmat([100.], 10))
+    append!(results, DataFrame(time=copy(getindexvalues(m, :time)), control=repmat([gas], 10), level=maxx))
+end
+
+using Plots
+plotly()
+
+using StatPlots
+
+plot(results, :time, :level, group=:control, xlabel="Time", ylabel="Emissions growth allowed")
+
+
+# worstpolicy(model::Model) = model[:EquityWeighting, :te_totaleffect]
+
+# optprob = problem(m, [:AbatementScale], [:emissiongrowthfactor], [0.], [100.0], worstpolicy);
+# (maxf, maxx) = solution(optprob, () -> repmat([90.], 10))
 
 # Uniform across all gases
 # Across all periods
@@ -77,6 +112,4 @@ optprob = problem(m, [:AbatementScale], [:emissiongrowthfactor], [0.], [100.0], 
 erfactors = convert(Vector{Float64}, linspace(0, 100, 100))
 results = sensitivity(m, :AbatementScale, :emissiongrowthfactor, model -> model[:EquityWeighting, :te_totaleffect], erfactors)
 
-using Plots
-plotly()
 plot(erfactors, results, xlab="Emissions Growth Factor (%)", ylab="Total Effect")
