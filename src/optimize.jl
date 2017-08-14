@@ -41,7 +41,7 @@ function run_timestep(s::AbatementScale, tt::Int64)
         else
             v.er_CH4emissionsgrowth_new[tt, rr] = p.er_CH4emissionsgrowth[tt, rr]
         end
-        if :N20 in optimized_gases
+        if :N2O in optimized_gases
             v.er_N2Oemissionsgrowth_new[tt, rr] = p.er_N2Oemissionsgrowth[tt, rr] * p.emissiongrowthfactor[tt] / 100
         else
             v.er_N2Oemissionsgrowth_new[tt, rr] = p.er_N2Oemissionsgrowth[tt, rr]
