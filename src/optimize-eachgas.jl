@@ -57,3 +57,28 @@ setparameter(m, :AbatementScale, :emissiongrowthfactor_CO2, repmat([100.], 10))
 setparameter(m, :AbatementScale, :emissiongrowthfactor_CH4, repmat([100.], 10))
 setparameter(m, :AbatementScale, :emissiongrowthfactor_N2O, repmat([100.], 10))
 setparameter(m, :AbatementScale, :emissiongrowthfactor_LG, repmat([100.], 10))
+
+initpage(m)
+run(m)
+
+bestpolicy(model::Model) = -model[:EquityWeighting, :te_totaleffect]
+
+optprob = problem(m, [:AbatementScale, :AbatementScale, :AbatementScale, :AbatementScale], [:emissiongrowthfactor_CO2, :emissiongrowthfactor_CH4, :emissiongrowthfactor_N2O, :emissiongrowthfactor_LG], repmat([0.], 40), repmat([100.0], 40), bestpolicy)
+(maxf, maxx) = solution(optprob, () -> repmat([100.], 40))
+
+results = DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4), control=repeat([:CO2,:CH4,:N2O,:LG],inner=10), level=maxx)
+
+using Plots
+plotly()
+
+using StatPlots
+
+plot(results, :time, :level, group=:control, xlabel="Time", ylabel="Emissions growth allowed")
+
+#plot emissions instead of emissions growth
+emissions=DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4),control=repeat(["CO2 (billion tons per year)","CH4 (million tons per year)","N2O (million tons per year)","LG (million tons per year)"],inner=10),level=[m[:co2emissions,:e_globalCO2emissions]/1000; m[:ch4emissions,:e_globalCH4emissions]; m[:n2oemissions,:e_globalN2Oemissions]; m[:LGemissions,:e_globalLGemissions]])
+plot(emissions, :time, :level, group=:control, xlabel="Time", ylabel="Emissions")
+
+#plot emissions in terms of CO2 equivalents - note problem with LG emissions - seem like they are a factor of 1000 too big
+emissions=DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4),control=repeat(["CO2 (GWP=1)","CH4 (GWP=25)","N2O (GWP=298)","LG (GWP=500)"],inner=10),level=[m[:co2emissions,:e_globalCO2emissions]/1000; m[:ch4emissions,:e_globalCH4emissions]*25/1000; m[:n2oemissions,:e_globalN2Oemissions]*298/1000; m[:LGemissions,:e_globalLGemissions]*500/1000000])
+plot(emissions, :time, :level, group=:control, xlabel="Time", ylabel="Emissions (billion tons CO2 equivalents per year)")
