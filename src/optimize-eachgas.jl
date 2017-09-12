@@ -2,6 +2,8 @@ using Mimi
 using OptiMimi
 include("getpagefunction.jl")
 
+do_stochastic = true
+
 # Create the model
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -63,22 +65,64 @@ run(m)
 
 bestpolicy(model::Model) = -model[:EquityWeighting, :te_totaleffect]
 
-optprob = problem(m, [:AbatementScale, :AbatementScale, :AbatementScale, :AbatementScale], [:emissiongrowthfactor_CO2, :emissiongrowthfactor_CH4, :emissiongrowthfactor_N2O, :emissiongrowthfactor_LG], repmat([0.], 40), repmat([100.0], 40), bestpolicy)
-(maxf, maxx) = solution(optprob, () -> repmat([100.], 40))
+if do_stochastic
+    optprob = uncertainproblem(m, [:AbatementScale, :AbatementScale, :AbatementScale, :AbatementScale], [:emissiongrowthfactor_CO2, :emissiongrowthfactor_CH4, :emissiongrowthfactor_N2O, :emissiongrowthfactor_LG], repmat([0.], 40), repmat([100.0], 40), bestpolicy)
+    results = try
+        readtable("stochastic-solutions.csv")
+    catch
+        nothing
+    end
+    for samplemult in [1, 2]
+        for mcperlife in [5, 10]
+            if results != nothing && sum((results[:mcperlife] .== mcperlife) & (results[:samplemult] .== samplemult) & (results[:algorithm] .== "social")) == 0
+                @time soln = solution(optprob, () -> repmat([100.], 40), :social, mcperlife, samplemult)
+                if results == nothing
+                    results = DataFrame(algorithm=["social"], mcperlife=[mcperlife], samplemult=[samplemult])
+                    for gas in [:CO2,:CH4,:N2O,:LG]
+                        for ii in 1:10
+                            results[Symbol("$gas$ii")] = [soln.xmean[ii]]
+                        end
+                    end
+                else
+                    push!(results, ["social"; mcperlife; samplemult; soln.xmean])
+                end
 
-results = DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4), control=repeat([:CO2,:CH4,:N2O,:LG],inner=10), level=maxx)
+                writetable("stochastic-solutions.csv", results)
+            end
 
-using Plots
-plotly()
+            if sum((results[:mcperlife] .== mcperlife) & (results[:samplemult] .== samplemult) & (results[:algorithm] .== "biological")) == 0
+                @time soln = solution(optprob, () -> repmat([100.], 40), :biological, mcperlife, 100000*samplemult)
+                push!(results, ["biological"; mcperlife; samplemult; soln.xmean])
 
-using StatPlots
+                writetable("stochastic-solutions.csv", results)
+            end
 
-plot(results, :time, :level, group=:control, xlabel="Time", ylabel="Emissions growth allowed")
+            if sum((results[:mcperlife] .== mcperlife) & (results[:samplemult] .== samplemult) & (results[:algorithm] .== "sampled")) == 0
+                @time soln = solution(optprob, () -> repmat([100.], 40), :sampled, mcperlife, 60*samplemult)
+                push!(results, ["sampled"; mcperlife; samplemult; soln.xmean])
 
-#plot emissions instead of emissions growth
-emissions=DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4),control=repeat(["CO2 (billion tons per year)","CH4 (million tons per year)","N2O (million tons per year)","LG (million tons per year)"],inner=10),level=[m[:co2emissions,:e_globalCO2emissions]/1000; m[:ch4emissions,:e_globalCH4emissions]; m[:n2oemissions,:e_globalN2Oemissions]; m[:LGemissions,:e_globalLGemissions]])
-plot(emissions, :time, :level, group=:control, xlabel="Time", ylabel="Emissions")
+                writetable("stochastic-solutions.csv", results)
+            end
+        end
+    end
+else
+    optprob = problem(m, [:AbatementScale, :AbatementScale, :AbatementScale, :AbatementScale], [:emissiongrowthfactor_CO2, :emissiongrowthfactor_CH4, :emissiongrowthfactor_N2O, :emissiongrowthfactor_LG], repmat([0.], 40), repmat([100.0], 40), bestpolicy)
+    (maxf, maxx) = solution(optprob, () -> repmat([100.], 40))
 
-#plot emissions in terms of CO2 equivalents - note problem with LG emissions - seem like they are a factor of 1000 too big
-emissions=DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4),control=repeat(["CO2 (GWP=1)","CH4 (GWP=25)","N2O (GWP=298)","LG (GWP=500)"],inner=10),level=[m[:co2emissions,:e_globalCO2emissions]/1000; m[:ch4emissions,:e_globalCH4emissions]*25/1000; m[:n2oemissions,:e_globalN2Oemissions]*298/1000; m[:LGemissions,:e_globalLGemissions]*500/1000000])
-plot(emissions, :time, :level, group=:control, xlabel="Time", ylabel="Emissions (billion tons CO2 equivalents per year)")
+    results = DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4), control=repeat([:CO2,:CH4,:N2O,:LG],inner=10), level=maxx)
+
+    using Plots
+    plotly()
+
+    using StatPlots
+
+    plot(results, :time, :level, group=:control, xlabel="Time", ylabel="Emissions growth allowed")
+
+    #plot emissions instead of emissions growth
+    emissions=DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4),control=repeat(["CO2 (billion tons per year)","CH4 (million tons per year)","N2O (million tons per year)","LG (million tons per year)"],inner=10),level=[m[:co2emissions,:e_globalCO2emissions]/1000; m[:ch4emissions,:e_globalCH4emissions]; m[:n2oemissions,:e_globalN2Oemissions]; m[:LGemissions,:e_globalLGemissions]])
+    plot(emissions, :time, :level, group=:control, xlabel="Time", ylabel="Emissions")
+
+    #plot emissions in terms of CO2 equivalents - note problem with LG emissions - seem like they are a factor of 1000 too big
+    emissions=DataFrame(time=repeat(copy(getindexvalues(m, :time)),outer=4),control=repeat(["CO2 (GWP=1)","CH4 (GWP=25)","N2O (GWP=298)","LG (GWP=500)"],inner=10),level=[m[:co2emissions,:e_globalCO2emissions]/1000; m[:ch4emissions,:e_globalCH4emissions]*25/1000; m[:n2oemissions,:e_globalN2Oemissions]*298/1000; m[:LGemissions,:e_globalLGemissions]*500/1000000])
+    plot(emissions, :time, :level, group=:control, xlabel="Time", ylabel="Emissions (billion tons CO2 equivalents per year)")
+end
