@@ -12,10 +12,10 @@ test: &TEST
     - checkout
     - run:
         name: Build package
-        command: julia -e "Pkg.add(\"Mimi\"); Pkg.add(\"ExcelReaders\")"
+        command: julia -e "Pkg.update(); Pkg.add(\"Mimi\"); Pkg.add(\"ExcelReaders\")"
     - run:
         name: Test package
-        command: julia -e "include(\"test/runtests.jl\")" --code-coverage
+        command: julia -e "cd(\"test\"); include(\"runtests.jl\")" --code-coverage
     - persist_to_workspace:
         root: ~/
         paths:
