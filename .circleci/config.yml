@@ -33,7 +33,7 @@ coverage: &COVERAGE
         command: julia -e "cd(expanduser(\"$CIRCLE_WORKING_DIRECTORY\")); using Coverage; Codecov.submit(Codecov.process_folder())"
 
 jobs:
-  test_0.6:
+  build:
     <<: [*DEFAULTS, *POINT_SIX, *TEST]
   coverage_0.6:
     <<: [*DEFAULTS, *POINT_SIX, *COVERAGE]
@@ -42,7 +42,7 @@ workflows:
   version: 2
   linux_env:
     jobs:
-      - test_0.6
+      - build
       - coverage_0.6:
           requires:
-            - test_0.6
+            - build
