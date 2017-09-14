@@ -24,6 +24,6 @@ setleftoverparameters(m,p) #important for setting left over component values
 run(m)
 
 conc=m[:LGcycle,  :c_LGconcentration]
-conc_compare=readpagedata(m,"test/validationdata/c_lgconcentration.csv")
+conc_compare=readpagedata(m,"test/validationdata/c_LGconcentration.csv")
 
 @test_approx_eq_eps conc conc_compare 1e-4
