@@ -9,9 +9,9 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 totalforcing = addcomponent(m, TotalForcing)
 
-totalforcing[:f_CO2forcing] = readpagedata(m,"test/validationdata/f_CO2forcing.csv")
-totalforcing[:f_CH4forcing] = readpagedata(m,"test/validationdata/f_CH4forcing.csv")
-totalforcing[:f_N2Oforcing] = readpagedata(m,"test/validationdata/f_N2Oforcing.csv")
+totalforcing[:f_CO2forcing] = readpagedata(m,"test/validationdata/f_co2forcing.csv")
+totalforcing[:f_CH4forcing] = readpagedata(m,"test/validationdata/f_ch4forcing.csv")
+totalforcing[:f_N2Oforcing] = readpagedata(m,"test/validationdata/f_n2oforcing.csv")
 totalforcing[:f_lineargasforcing] = readpagedata(m,"test/validationdata/f_LGforcing.csv")
 totalforcing[:exf_excessforcing] = readpagedata(m,"data/exf_excessforcing.csv")
 

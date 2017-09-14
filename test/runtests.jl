@@ -8,7 +8,7 @@ tests = [
     "CH4emissions",
     "CH4forcing",
     "ClimateTemperature",
-    "CO2cycle",
+    "co2cycle",
     "CO2emissions",
     "CO2forcing",
     "Discontinuity",
