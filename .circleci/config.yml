@@ -1,0 +1,48 @@
+version: 2
+
+defaults: &DEFAULTS
+  working_directory: ~/mimi-page.jl
+
+v0.6: &POINT_SIX
+  docker:
+    - image: invenia/julia-ci-extras:0.6-latest
+
+test: &TEST
+  steps:
+    - checkout
+    - run:
+        name: Build package
+        command: julia -e "Pkg.add(\"Mimi\"); Pkg.add(\"ExcelReaders\")"
+    - run:
+        name: Test package
+        command: julia -e "include(\"test/runtests.jl\")" --code-coverage
+    - persist_to_workspace:
+        root: ~/
+        paths:
+          - ./
+
+coverage: &COVERAGE
+  steps:
+    - attach_workspace:
+        at: ~/
+    - run:
+        name: Update Coverage.jl to get Circle CI support
+        command: julia -e 'Pkg.add("Coverage")'
+    - run:
+        name: Submit Coverage
+        command: julia -e "cd(expanduser(\"$CIRCLE_WORKING_DIRECTORY\")); using Coverage; Codecov.submit(Codecov.process_folder())"
+
+jobs:
+  test_0.6:
+    <<: [*DEFAULTS, *POINT_SIX, *TEST]
+  coverage_0.6:
+    <<: [*DEFAULTS, *POINT_SIX, *COVERAGE]
+
+workflows:
+  version: 2
+  linux_env:
+    jobs:
+      - test_0.6
+      - coverage_0.6:
+          requires:
+            - test_0.6
