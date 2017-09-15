@@ -54,8 +54,8 @@ function init(s::ClimateTemperature)
     v.rtl_g0_baselandtemp = sum(p.rtl_0_realizedtemperature' .* p.area') / sum(p.area)
 
     # initial ocean and global temperatures
-    rto_g0_baseoceantemp = v.rtl_g0_baselandtemp[1]/ p.rlo_ratiolandocean
-    v.rt_g0_baseglobaltemp = ocean_prop_ortion * rto_g0_baseoceantemp + (1. - ocean_prop_ortion) * v.rtl_g0_baselandtemp[1]
+    rto_g0_baseoceantemp = v.rtl_g0_baselandtemp/ p.rlo_ratiolandocean
+    v.rt_g0_baseglobaltemp = ocean_prop_ortion * rto_g0_baseoceantemp + (1. - ocean_prop_ortion) * v.rtl_g0_baselandtemp
 end
 
 function run_timestep(s::ClimateTemperature, tt::Int64)
