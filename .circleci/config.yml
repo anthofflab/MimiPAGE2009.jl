@@ -27,7 +27,7 @@ coverage: &COVERAGE
         at: ~/
     - run:
         name: Update Coverage.jl to get Circle CI support
-        command: julia -e 'Pkg.add("Coverage")'
+        command: julia -e 'Pkg.checkout("Coverage")'
     - run:
         name: Submit Coverage
         command: julia -e "cd(expanduser(\"$CIRCLE_WORKING_DIRECTORY\")); using Coverage; Codecov.submit(Codecov.process_folder())"
