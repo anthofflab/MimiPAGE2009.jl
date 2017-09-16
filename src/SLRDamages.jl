@@ -95,8 +95,8 @@ end
 function addslrdamages(model::Model)
     SLRDamagescomp = addcomponent(model, SLRDamages)
 
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/sealevelmaxrise.csv")
-    SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "../data/wincf_weightsfactor.csv")
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/sealevelmaxrise.csv")
+    SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
     SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.7333333333333334
     SLRDamagescomp[:ipow_SLRIncomeFxnExponent] = -0.30
     SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
@@ -104,7 +104,7 @@ function addslrdamages(model::Model)
     SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
     SLRDamagescomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/impmax_sealevel.csv")
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
 
     return SLRDamagescomp
 end

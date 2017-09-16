@@ -97,7 +97,7 @@ function addnonmarketdamages(model::Model)
     nonmarketdamagescomp[:save_savingsrate]= 15.
     nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     nonmarketdamagescomp[:pow_NonMarketExponent] = 2.1666666666666665
-    nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "../data/impmax_noneconomic.csv")
+    nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "data/impmax_noneconomic.csv")
 
     return nonmarketdamagescomp
 end
