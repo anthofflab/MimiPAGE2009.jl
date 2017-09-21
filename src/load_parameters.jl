@@ -1,3 +1,4 @@
+using Compat
 
 function checkregionorder(model::Model, regions, file)
     regionaliases = Dict{AbstractString, Vector{AbstractString}}("EU" => [],
@@ -27,7 +28,7 @@ end
 function readpagedata(model::Model, filepath::AbstractString)
     # Handle relative paths
     if filepath[1] ∉ ['.', '/'] && !isfile(filepath)
-        filepath = joinpath(dirname(@__FILE__), "..", filepath)
+        filepath = joinpath(@__DIR__, "..", filepath)
     end
 
     content = readlines(filepath)
