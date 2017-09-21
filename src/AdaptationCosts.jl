@@ -83,13 +83,13 @@ function addadaptationcosts_sealevel(model::Model)
     adaptationcosts[:automult_autonomouschange] = 0.65
 
     # Sea Level-specific parameters
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :impmax_maximumadaptivecapacity, readpagedata(model, "../data/impmax_sealevel.csv"))
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "../data/sealevel_plateau.csv"))
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :pstart_startdateofadaptpolicy, readpagedata(model, "../data/sealeveladaptstart.csv"))
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :pyears_yearstilfulleffect, readpagedata(model, "../data/sealeveladapttimetoeffect.csv"))
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :impred_eventualpercentreduction, readpagedata(model, "../data/sealevelimpactreduction.csv"))
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :istart_startdate, readpagedata(model, "../data/sealevelimpactstart.csv"))
-    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :iyears_yearstilfulleffect, readpagedata(model, "../data/sealevelimpactyearstoeffect.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :impmax_maximumadaptivecapacity, readpagedata(model, "data/impmax_sealevel.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "data/sealevel_plateau.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :pstart_startdateofadaptpolicy, readpagedata(model, "data/sealeveladaptstart.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :pyears_yearstilfulleffect, readpagedata(model, "data/sealeveladapttimetoeffect.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :impred_eventualpercentreduction, readpagedata(model, "data/sealevelimpactreduction.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :istart_startdate, readpagedata(model, "data/sealevelimpactstart.csv"))
+    setdistinctparameter(model, :AdaptiveCostsSeaLevel, :iyears_yearstilfulleffect, readpagedata(model, "data/sealevelimpactyearstoeffect.csv"))
     setdistinctparameter(model, :AdaptiveCostsSeaLevel, :cp_costplateau_eu, 0.0233333333)
     setdistinctparameter(model, :AdaptiveCostsSeaLevel, :ci_costimpact_eu, 0.0011666667)
 
@@ -101,13 +101,13 @@ function addadaptationcosts_economic(model::Model)
     adaptationcosts[:automult_autonomouschange] = 0.65
 
     # Economic-specific parameters
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :impmax_maximumadaptivecapacity, readpagedata(model, "../data/impmax_economic.csv"))
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "../data/plateau_increaseintolerableplateaufromadaptationM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :pstart_startdateofadaptpolicy, readpagedata(model, "../data/pstart_startdateofadaptpolicyM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :pyears_yearstilfulleffect, readpagedata(model, "../data/pyears_yearstilfulleffectM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :impred_eventualpercentreduction, readpagedata(model, "../data/impred_eventualpercentreductionM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :istart_startdate, readpagedata(model, "../data/istart_startdateM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsEconomic, :iyears_yearstilfulleffect, readpagedata(model, "../data/iyears_yearstilfulleffectM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :impmax_maximumadaptivecapacity, readpagedata(model, "data/impmax_economic.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "data/plateau_increaseintolerableplateaufromadaptationM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :pstart_startdateofadaptpolicy, readpagedata(model, "data/pstart_startdateofadaptpolicyM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :pyears_yearstilfulleffect, readpagedata(model, "data/pyears_yearstilfulleffectM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :impred_eventualpercentreduction, readpagedata(model, "data/impred_eventualpercentreductionM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :istart_startdate, readpagedata(model, "data/istart_startdateM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsEconomic, :iyears_yearstilfulleffect, readpagedata(model, "data/iyears_yearstilfulleffectM.csv"))
     setdistinctparameter(model, :AdaptiveCostsEconomic, :cp_costplateau_eu, 0.0116666667)
     setdistinctparameter(model, :AdaptiveCostsEconomic, :ci_costimpact_eu, 0.0040000000)
 
@@ -119,13 +119,13 @@ function addadaptationcosts_noneconomic(model::Model)
     adaptationcosts[:automult_autonomouschange] = 0.65
 
     # Non-economic-specific parameters
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :impmax_maximumadaptivecapacity, readpagedata(model, "../data/impmax_noneconomic.csv"))
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "../data/plateau_increaseintolerableplateaufromadaptationNM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :pstart_startdateofadaptpolicy, readpagedata(model, "../data/pstart_startdateofadaptpolicyNM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :pyears_yearstilfulleffect, readpagedata(model, "../data/pyears_yearstilfulleffectNM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :impred_eventualpercentreduction, readpagedata(model, "../data/impred_eventualpercentreductionNM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :istart_startdate, readpagedata(model, "../data/istart_startdateNM.csv"))
-    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :iyears_yearstilfulleffect, readpagedata(model, "../data/iyears_yearstilfulleffectNM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :impmax_maximumadaptivecapacity, readpagedata(model, "data/impmax_noneconomic.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "data/plateau_increaseintolerableplateaufromadaptationNM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :pstart_startdateofadaptpolicy, readpagedata(model, "data/pstart_startdateofadaptpolicyNM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :pyears_yearstilfulleffect, readpagedata(model, "data/pyears_yearstilfulleffectNM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :impred_eventualpercentreduction, readpagedata(model, "data/impred_eventualpercentreductionNM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :istart_startdate, readpagedata(model, "data/istart_startdateNM.csv"))
+    setdistinctparameter(model, :AdaptiveCostsNonEconomic, :iyears_yearstilfulleffect, readpagedata(model, "data/iyears_yearstilfulleffectNM.csv"))
     setdistinctparameter(model, :AdaptiveCostsNonEconomic, :cp_costplateau_eu, 0.0233333333)
     setdistinctparameter(model, :AdaptiveCostsNonEconomic, :ci_costimpact_eu, 0.0056666667)
 

@@ -11,15 +11,15 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 nonmarketdamages = addnonmarketdamages(m)
 
-setparameter(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "../test/validationdata/rtl_realizedtemperature.csv"))
+setparameter(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
 setparameter(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,
-"../test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
+"test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
 setparameter(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, readpagedata(m,
-"../test/validationdata/rgdp_per_cap_MarketRemainGDP.csv"))
+"test/validationdata/rgdp_per_cap_MarketRemainGDP.csv"))
 setparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, readpagedata(m,
-"../test/validationdata/atl_adjustedtolerableleveloftemprise_nonmarket.csv"))
+"test/validationdata/atl_adjustedtolerableleveloftemprise_nonmarket.csv"))
 setparameter(m, :NonMarketDamages, :imp_actualreduction, readpagedata(m,
-"../test/validationdata/imp_actualreduction_nonmarket.csv"))
+"test/validationdata/imp_actualreduction_nonmarket.csv"))
 setparameter(m, :NonMarketDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 
 p = load_parameters(m)
@@ -30,9 +30,9 @@ setleftoverparameters(m, p)
 run(m)
 
 rcons_per_cap = m[:NonMarketDamages, :rcons_per_cap_NonMarketRemainConsumption]
-rcons_per_cap_compare = readpagedata(m, "../test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv")
+rcons_per_cap_compare = readpagedata(m, "test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv")
 @test_approx_eq_eps rcons_per_cap  rcons_per_cap_compare 1e-2
 
 rgdp_per_cap = m[:NonMarketDamages, :rgdp_per_cap_NonMarketRemainGDP]
-rgdp_per_cap_compare = readpagedata(m, "../test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv")
+rgdp_per_cap_compare = readpagedata(m, "test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv")
 @test_approx_eq_eps rgdp_per_cap rgdp_per_cap_compare 1e-2

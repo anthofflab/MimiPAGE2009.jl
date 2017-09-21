@@ -40,7 +40,7 @@ damages_compare=readpagedata(m,"test/validationdata/rcons_per_cap_DiscRemainCons
 @test_approx_eq_eps damages damages_compare 10
 #SLR damages
 slrdamages=m[:SLRDamages,:rcons_per_cap_SLRRemainConsumption]
-slrdamages_compare=readpagedata(m, "../test/validationdata/rcons_per_cap_SLRRemainConsumption.csv")
+slrdamages_compare=readpagedata(m, "test/validationdata/rcons_per_cap_SLRRemainConsumption.csv")
 @test_approx_eq_eps slrdamages slrdamages_compare 0.1
 #Market damages
 mdamages=m[:MarketDamages,:rcons_per_cap_MarketRemainConsumption]
