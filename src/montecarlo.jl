@@ -8,7 +8,10 @@ include("getpagefunction.jl")
 m = getpage()
 run(m)
 
+#set number of Monte Carlo runs
 nit=100000;
+
+#create vectors to hold results of Monte Carlo runs
 td=zeros(nit);
 tpc=zeros(nit);
 tac=zeros(nit);
@@ -55,6 +58,7 @@ for i in 1:nit
 
     run(m)
 
+    #save results of Monte Carlo runs
     td[i]=m[:EquityWeighting,:td_totaldiscountedimpacts]
     tpc[i]=m[:EquityWeighting,:tpc_totalaggregatedcosts]
     tac[i]=m[:EquityWeighting,:tac_totaladaptationcosts]
@@ -69,16 +73,6 @@ for i in 1:nit
     rgdppercap_disc[i]=m[:Discontinuity,:rgdp_per_cap_NonMarketRemainGDP][10,8]
 end
 
+#compile results and save output
 df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
-probs=[0.01,0.05,0.1,0.25,0.5,0.75,0.9,0.95,0.99]
-quantiles=DataFrame(quantile=probs,td=quantile(df[1],probs),tpc=quantile(df[2],probs),tac=quantile(df[3],probs),te=quantile(df[4],probs))
-
 writetable("../test/validationdata/mimipagemontecarlooutput.csv",df)
-
-#make plots of output Distributions
-R"x11()"
-R"par(mfrow=c(2,2))"
-for i in 1:4
-    R"hist($df[,$i]/1e9,main=c('Total Damages','Total Abatement Costs','Total Adaptation Costs','Total Effect')[$i],xlab='Billions of Dollars',col=c('darkslategray1','navyblue','deepskyblue3','dodgerblue4')[$i])"
-    R"abline(v=quantile($df[,$i]/1e9,probs=c(0.05,0.95)),lty=2)"
-end
