@@ -26,7 +26,7 @@ julia> Pkg.add("Mimi")
 ```
 You only have to run this command once on your machine.
 
-For more information about the Mimi component framework, you can refer to the [Mimi](https://github.com/anthofflab/Mimi.jl) Github repository, which has a documentation andlinks to various models that are based on Mimi.
+For more information about the Mimi component framework, you can refer to the [Mimi](https://github.com/anthofflab/Mimi.jl) Github repository, which has a documentation and links to various models that are based on Mimi.
 
 ## Installing Mimi-PAGE
 
@@ -36,7 +36,7 @@ Clone or download the Mimi-PAGE repository from the Mimi-PAGE [Github website](h
 
 To run the model, run the `main_model` file in the src folder. This runs the deterministic version of Mimi-PAGE with central parameter estimates. The `getpage` function retrieves the model object. The model `m` returns a list of components and each of their incoming parameters and outgoing variables. Results can be called by running `m[:ComponentName, :VariableName]` for the desired component and variable.
 
-To run the stochastic version of Mimi-PAGE, which uses parameter distributions, since the montecarlo.jl file in the src folder. The current Monte Carlo  process outputs a selection of variables that are important for validation. For more information, see the Technical Guide.
+To run the stochastic version of Mimi-PAGE, which uses parameter distributions, see the montecarlo.jl file in the src folder. The current Monte Carlo  process outputs a selection of variables that are important for validation. For more information, see the Technical Guide.
 
 ## Troubleshooting
 
