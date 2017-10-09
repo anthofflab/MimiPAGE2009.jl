@@ -8,22 +8,19 @@ The folders are organized as follows.
 Here you will find the model components, i.e. the code.
 
 *data*
-Here you will find data that are utilized by the components. This includes initial values, key parameters, so on and so forth.
-
-*calibration*
-This folder contains the data we used to calibrate our model. It comes from PAGE09 Excel output, generously provided by Chris Hope.
+Here you will find data that are utilized by the components. This includes initial values, key parameters, so on and so forth. This folder also contains the data we used to calibrate our model, which came from PAGE09 Excel output, generously provided by Chris Hope.
 
 *docs*
 These are your standard documentation: scientific guide, getting started, and the index.
 
 *test*
-This folder contains files that were and still can be used to make sure a component is fully functional. The tests run each individual component separately so you can figure out which might not be working and why. (They should all work). The tests take in already-specified data, though you may adjust that as well.
+This folder contains files that were and still can be used to make sure a component is fully functional. The tests run each individual component separately so you can figure out which might not be working and why. (They should all work). The tests take in already-specified data "test/validationdata", though you may adjust that as well. There is also a way to test the entire model with "test_mainmodel.jl"
 
 ## Code format
 
-The code is in .jl format in order to run Julia (v0.5).
-The data are in .csv format for easy portability and manipulation.
-The docs are in .md format for readability on github.
+The code is in Julia (v0.5).
+The data are in CSV for easy portability and manipulation.
+The docs are in Markdown format for readability on github.
 
 Each component in the model has the same basic mimi structure. All of the test files do as well.
 
