@@ -22,54 +22,57 @@ The code is in Julia (v0.5).
 The data are in CSV for easy portability and manipulation.
 The docs are in Markdown format for readability on github.
 
-Each component in the model has the same basic mimi structure. All of the test files do as well.
+Each component in the model (and the test files as well) has the same basic mimi structure.
 
-Here is the structure with comments serving to explain.
+Here we show the code for the CO2 Forcing component to provide an example of the mimi structure with comments.
 
 ```
-using Mimi # only on certain components because the rest are connected
+# Initiates the Mimi package. This is only done with certain components, because once it is loaded in the model, it becomes redundant code.
+using Mimi
 
-load("input_component_1.jl") # load in data from other components as per scientific user guide
-load("input_component_2.jl")
+# The CO2 forcing component does not execute this code, however other components will do so in order to load in data. The connections are specified in the scientific user guide as well as in "getpagefunction.jl"
+# load("input_component_1.jl")
 
-# Define component and variables
-@defcomp component_name begin # this defines the component, gives it a name, and starts the code chunk
+```
+Now we will define the component with its variables and parameters.
 
-  region = Index() # Index by region
-
-  y_year = Parameter(index=[time], unit="year") # Sets a parameter which is indexed by time. Parameter is defined elsewhere in the code
-
-  # A parameter may be an external data point or may come from an input component. This interaction will be arranged in the getpagefunction.jl file.
-
-  pop_population = Parameter(index=[time, region], unit="million person") # parameter indexed by time and region
-
-  df_utilitydiscountrate = Variable(index=[time], unit="fraction") # defines a variable that will be evaluated in the component
-
+```
+@defcomp co2forcing begin # this defines the component, gives it a name, and starts the code chunk
+    c_CO2concentration=Parameter(index=[time],unit="ppbv") # Sets a parameter which is indexed by time. Parameter is defined elsewhere in the code, either as a global parameter or is the output of a variable in another component
+    f0_CO2baseforcing=Parameter(unit="W/m2")
+    fslope_CO2forcingslope=Parameter(unit="W/m2")
+    c0_baseCO2conc=Parameter(unit="ppbv")
+    f_CO2forcing=Variable(index=[time],unit="W/m2") # defines a variable that will be evaluated in the component
 end
 
-function run_timestep(s::component_name, tt::Int64) # Initializes component equations
+```
+Next we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.
+
+```
+function run_timestep(s::co2forcing, t::Int64)
     v = s.Variables
     p = s.Parameters
-    d = s.Dimensions
 
-    # Equation is evaluated
-    v.df_utilitydiscountrate[tt] = (1 + p.ptp_timepreference / 100)^(-(p.y_year[tt] - p.y_year_0))
-
+    #eq.13 in Hope 2006
+    v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
 end
+```
+Lastly, we define a function that is used to add the component to the main model. Here we can also set exogenous parameters.
 
-# This defines a function that we use to add the component to main model. Here we can set exogenous parameters.
-function addcomponentname(model::Model)
-    componentnamecomp = addcomponent(model, component_name)
+```
+function addCO2forcing(model::Model)
+    co2forcingcomp = addcomponent(model, co2forcing)
 
-    componentnamecomp[:ptp_timepreference] = 1.0333333333
+    co2forcingcomp[:fslope_CO2forcingslope] = 5.5
+    co2forcingcomp[:f0_CO2baseforcing] = 1.735
+    co2forcingcomp[:c0_baseCO2conc] = 395000.
 
-    return componentnamecomp
+    co2forcingcomp
 end
 ```
 
 In the "getpagefunction.jl" file, you will find code that sends variables between components. For example,
 
 ```
-incoming_component[:var_name] = outgoing_component[:var_name] # var_name will be the same
-
+CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing. In this case, the `c_CO2concentration` is evaluated in the `CO2cycle` component and then sent to the `CO2forcing` component.
 ```
