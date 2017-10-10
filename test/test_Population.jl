@@ -15,7 +15,6 @@ population[:y_year] = m.indices_values[:time]
 p = load_parameters(m)
 
 setleftoverparameters(m, p)
-#setparameter(m,:Population, :y_year_0, 2008.)
 
 run(m)
 

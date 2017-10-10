@@ -1,29 +1,39 @@
 Things confusing about documentation to check with Chris Hope
+
 Abatement Costs
 1.	In equations for BLO there is an extra close parentheses (PAGE 2009 Technical Documentation)
 CH4 Cycle
 1.	Unclear how TEAY in the first time period is calculated, since it depends on TEA from the previous time period. We have assumed it is equal to TEA in the first time period.
-2.	Natural emissions depend on temperature. In PAGE 2002 there is only one temperature (RT) but PAGE 2009 has more complex representation of temperature. Equation in PAGE 2002 says natural emissions depend on “RT”. We have assumed regional emissions depend or regional land temperature (“rtl” in PAGE 2009)
+2.	Natural emissions depend on temperature. In PAGE 2002 there is only one temperature (RT) but PAGE 2009 has more complex representation of temperature. Equation in PAGE 2002 says natural emissions depend on ï¿½RTï¿½. We have assumed regional emissions depend or regional land temperature (ï¿½rtlï¿½ in PAGE 2009)
+
 CO2 Cycle
-1.	The variable “STAY” is described in documentation for PAGE 2002 as “proportion of emissions that stay in the atmosphere” with no units (i.e. not percentage) in the table on page 36, and it is not divided by 100 when used in the equation for remaining emissions. But its value is reported as 35% in the table on page 39 (and as 30% in the equivalent table for PAGE 2009). We have kept the equation the same, but input the parameter value as 0.3 (PAGE 2009) instead of 30.
+1.	The variable ï¿½STAYï¿½ is described in documentation for PAGE 2002 as ï¿½proportion of emissions that stay in the atmosphereï¿½ with no units (i.e. not percentage) in the table on page 36, and it is not divided by 100 when used in the equation for remaining emissions. But its value is reported as 35% in the table on page 39 (and as 30% in the equivalent table for PAGE 2009). We have kept the equation the same, but input the parameter value as 0.3 (PAGE 2009) instead of 30.
 2.	CH4 Cycle question 1 also applies here too
+
 Equity Weighting
-1.	The equation for wct_per_cap depends on “CONS_PER_CAP” (PAGE 2009). Assume this should depend on region and time-period (i.e. be CONS_PER_CAP(i,r)).
+1.	The equation for wct_per_cap depends on ï¿½CONS_PER_CAPï¿½ (PAGE 2009). Assume this should depend on region and time-period (i.e. be CONS_PER_CAP(i,r)).
+
+GDP
+1. gdpcomp[:isat0_initialimpactfxnsaturation] = 33.333333333333336 #pp34 PAGE09 documentation, "impacts saturate beyond." check with Chris Hope -  number give in 33 and units are in percent, but ISAT is never divided by 100 in equations
+
 LG Cycle
 1.	CH4 Cycle question 1 also applies here too
 2.	CH4 Cycle question 2 also applies here too
+
 Market Damages
-1.	ISAT variable is given in documentation as “33.33 % of consumption” but is not divided by 100 in equation for ISATG. We have input as 0.3333 instead.
+1.	ISAT variable is given in documentation as ï¿½33.33 % of consumptionï¿½ but is not divided by 100 in equation for ISATG. We have input as 0.3333 instead.
+
 N2O Cycle
 1.	CH4 Cycle question 1 also applies here too
 2.	CH4 Cycle question 2 also applies here too
+
 Non Market Damages
 1.	Market Damages question 1 also applies here too
-Sea Level Rise Damages
-1.	The equation for “cons_per_cap_after_costs” is given as (PAGE 2009 documentation):
-cons_per_cap_after_costs(i,r)= CONS_PER_CAP(i,r)-(tct_per_cap(i,r)-act_per_cap(i,r)) 
-Since adaptation costs per capita (act_per_cap), like mitigation costs (tct_per_cap) are positive, shouldn’t they be subtracted from consumption (i.e. the second negative sign should be a plus)? We have assumed this is the case and subtracted adaptation and mitigation costs from consumption to get per capita consumption after costs.
 
+Sea Level Rise Damages
+1.	The equation for ï¿½cons_per_cap_after_costsï¿½ is given as (PAGE 2009 documentation):
+cons_per_cap_after_costs(i,r)= CONS_PER_CAP(i,r)-(tct_per_cap(i,r)-act_per_cap(i,r))
+Since adaptation costs per capita (act_per_cap), like mitigation costs (tct_per_cap) are positive, shouldnï¿½t they be subtracted from consumption (i.e. the second negative sign should be a plus)? We have assumed this is the case and subtracted adaptation and mitigation costs from consumption to get per capita consumption after costs.
 2.	Market Damages question 1 also applies here too
 
 Population

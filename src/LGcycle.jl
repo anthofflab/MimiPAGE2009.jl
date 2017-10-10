@@ -33,7 +33,6 @@ function run_timestep(s::LGcycle,t::Int64)
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         tea0=(p.e_0globalLGemissions+nte0)*p.air_LGfractioninatm/100
         v.tea_LGemissionstoatm[t]=(p.e_globalLGemissions[t]+v.nte_natLGemissions[t])*p.air_LGfractioninatm/100
-        #Check with Chris Hope - unclear how calculated in first time period - assume emissions from period 1 are used
         v.teay_LGemissionstoatm[t]=(v.tea_LGemissionstoatm[t]+tea0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcLG=p.c0_LGconcbaseyr-p.pic_preindustconcLG
@@ -43,7 +42,6 @@ function run_timestep(s::LGcycle,t::Int64)
             v.teay_LGemissionstoatm[t]*p.res_LGatmlifetime*(1-exp(-(p.y_year[t]-p.y_year_0)/p.res_LGatmlifetime))/(p.y_year[t]-p.y_year_0)
     else
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
-        #Check with Chris Hope - in Hope 2006, natural emissions depend on area-weighted average regional temperatures. Hope 2009 also has ocean and global temperatures.
         #Here assume still using area-weighted average regional temperatures (i.e. land temperatures) for natural emissions feedback
         v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g_landtemperature[t-1]
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions

@@ -13,7 +13,7 @@ include("mctools.jl")
     re_remainCO2base=Variable(unit="Mtonne")
     renoccf_remainCO2wocc=Variable(index=[time],unit="Mtonne")
     air_CO2fractioninatm=Parameter(unit="%")
-    stay_fractionCO2emissionsinatm=Parameter() #Check with Chris Hope - in input values this number is given as %, but in description this is described as a fraction
+    stay_fractionCO2emissionsinatm=Parameter()
     tea_CO2emissionstoatm=Variable(index=[time],unit="Mtonne/year")
     teay_CO2emissionstoatm=Variable(index=[time],unit="Mtonne/t")
     ccf_CO2feedback=Parameter(unit="%/degreeC")
@@ -87,7 +87,7 @@ function addCO2cycle(model::Model)
 
     co2cycleref[:pic_preindustconcCO2] = 278000.
     co2cycleref[:den_CO2density] = 7.8
-    co2cycleref[:stay_fractionCO2emissionsinatm] = 0.3 #Check with Chris Hope - this is described as a fraction (and is not divided by 100 in the equation) but is given as 30% in the documentation
+    co2cycleref[:stay_fractionCO2emissionsinatm] = 0.3 
     co2cycleref[:c0_CO2concbaseyr] = 395000.
     co2cycleref[:ce_0_basecumCO2emissions] = 2050000.
     co2cycleref[:res_CO2atmlifetime] = 73.3333333333333

@@ -1,6 +1,5 @@
 using Base.Test
 
-# Include the model, in all its completeness
 include("../src/climate_model.jl")
 
 rt_g = m[:ClimateTemperature, :rt_g_globaltemperature]

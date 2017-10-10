@@ -1,6 +1,5 @@
 using Base.Test
 
-# Include the model, in all its completeness
 include("../src/main_model.jl")
 while m[:Discontinuity,:occurdis_occurrencedummy] != [0.,0.,0.,0.,0.,0.,0.,0.,0.,1.]
     run(m)

@@ -34,8 +34,8 @@ include("mctools.jl")
   isat_satdiscimpact=Variable(index=[time,region], unit="%")
 
   isat_per_cap_DiscImpactperCapinclSaturation=Variable(index=[time,region], unit="\$/person")
-  rcons_per_cap_DiscRemainConsumption=Variable(index=[time, region], unit = "\$/person")    # check units - per person?
-  rcons_per_cap_NonMarketRemainConsumption = Parameter(index=[time, region], unit = "\$/person")   # check units - per person?
+  rcons_per_cap_DiscRemainConsumption=Variable(index=[time, region], unit = "\$/person")
+  rcons_per_cap_NonMarketRemainConsumption = Parameter(index=[time, region], unit = "\$/person")   
 
 end
 

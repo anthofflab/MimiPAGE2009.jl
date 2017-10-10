@@ -45,9 +45,6 @@ rgdp_per_cap_SLRRemainGDP = m[:SLRDamages, :rgdp_per_cap_SLRRemainGDP]
 rgdp_per_cap_SLRRemainGDP_compare = readpagedata(m, "test/validationdata/rgdp_per_cap_SLRRemainGDP.csv")
 @test_approx_eq_eps rgdp_per_cap_SLRRemainGDP rgdp_per_cap_SLRRemainGDP_compare .01
 
-
-# The following tests fail
-
 igdp_ImpactatActualGDPperCapSLR = m[:SLRDamages, :igdp_ImpactatActualGDPperCapSLR]
 igdp_ImpactatActualGDPperCapSLR_compare = readpagedata(m, "test/validationdata/igdp_ImpactatActualGDPperCap_sea.csv")
 @test_approx_eq_eps igdp_ImpactatActualGDPperCapSLR igdp_ImpactatActualGDPperCapSLR_compare .01
