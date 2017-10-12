@@ -31,7 +31,7 @@ Here we show the code for the CO2 Forcing component to provide an example of the
 using Mimi
 
 # The CO2 forcing component does not execute this code, however other components will do so in order to load in data. The connections are specified in the scientific user guide as well as in "getpagefunction.jl"
-# load("input_component_1.jl")
+# include("input_component_1.jl")
 
 ```
 Now we will define the component with its variables and parameters.
