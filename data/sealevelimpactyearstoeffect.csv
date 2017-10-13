@@ -1,7 +1,7 @@
 # Index: region
-# Unit: year
+# Unit year
 
-Region,"Years until full impact effect in sea level sector"
+Region,iyears_s_a
 EU,40
 US,40
 OT,40

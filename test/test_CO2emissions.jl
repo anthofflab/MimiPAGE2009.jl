@@ -1,15 +1,24 @@
 using Mimi
+using Base.Test
 
+include("../src/load_parameters.jl")
 include("../src/CO2emissions.jl")
 
 m = Model()
-setindex(m, :time, 10)
-setindex(m, :region, ["Region 1", "Region 2", "Region 3"])
+setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addcomponent(m, co2emissions)
 
-setparameter(m, :co2emissions, :e0_baselineCO2emissions, [3032.,5606.,2292.])
-setparameter(m, :co2emissions, :er_CO2emissionsgrowth, reshape(randn(30),10,3))
+setparameter(m, :co2emissions, :e0_baselineCO2emissions, readpagedata(m,"data/e0_baselineCO2emissions.csv"))
+setparameter(m, :co2emissions, :er_CO2emissionsgrowth, readpagedata(m, "data/er_CO2emissionsgrowth.csv"))
 
 ##running Model
 run(m)
+
+emissions= m[:co2emissions,  :e_regionalCO2emissions]
+
+# Recorded data
+emissions_compare=readpagedata(m, "test/validationdata/e_regionalCO2emissions.csv")
+
+@test_approx_eq_eps emissions emissions_compare 1e-3

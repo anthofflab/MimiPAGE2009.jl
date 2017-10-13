@@ -1,26 +1,45 @@
 using Base.Test
 
 tests = [
-    "ClimateTemperature",
+    "climatemodel",
+    "AbatementCosts",
+    "AdaptationCosts",
     "CH4cycle",
-    "CO2emissions",
     "CH4emissions",
+    "CH4forcing",
+    "ClimateTemperature",
+    "CO2cycle",
+    "CO2emissions",
     "CO2forcing",
+    "Discontinuity",
+    "EquityWeighting",
+    "GDP",
+    "LGcycle",
+    "LGemissions",
+    "LGforcing",
+    "loadparameters",
+    "mainmodel",
+    "MarketDamages",
+    "N2Ocycle",
     "N2Oemissions",
     "N2Oforcing",
-    "N2Ocycle",
-    "CH4forcing",
-    "TotalForcing",
+    "NonMarketDamages",
+    "Population",
+    "radforcing",
+    "SeaLevelRise",
+    "SLRDamages",
     "SulphateForcing",
-    "CO2cycle",
-    # TODO include once these tests work
-    # "AdaptationCosts",
-    "loadparameters",
-    "EquityWeighting",
-    "mainmodel"]
+    "TotalAbatementCosts",
+    "TotalAdaptationCosts",
+    "TotalForcing"
+]
+
+@testset "mimi-page.jl" begin
 
 for t in tests
     fp = joinpath("test_$t.jl")
     println("$fp ...")
     include(fp)
+end
+
 end

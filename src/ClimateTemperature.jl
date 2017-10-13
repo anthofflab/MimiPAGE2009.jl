@@ -1,4 +1,6 @@
 using Mimi
+using Distributions
+include("mctools.jl")
 
 @defcomp ClimateTemperature begin
     region = Index(region)
@@ -36,8 +38,8 @@ using Mimi
     rtl_g_landtemperature = Variable(index=[time], unit="degreeC")
     rto_g_oceantemperature = Variable(index=[time], unit="degreeC")
     rt_g_globaltemperature = Variable(index=[time], unit="degreeC")
-    rt_g0_baseglobaltemp=Variable(index=[1],unit="degreeC") #needed for feedback in CO2 cycle component
-    rtl_g0_baselandtemp=Variable(index=[1],unit="degreeC") #needed for feedback in CH4 and N2O cycles
+    rt_g0_baseglobaltemp=Variable(unit="degreeC") #needed for feedback in CO2 cycle component
+    rtl_g0_baselandtemp=Variable(unit="degreeC") #needed for feedback in CH4 and N2O cycles
 end
 
 function init(s::ClimateTemperature)
@@ -47,15 +49,13 @@ function init(s::ClimateTemperature)
     d = s.Dimensions
 
     ocean_prop_ortion = 1. - sum(p.area) / 510000000.
-    rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs(p.lat_latitude) - p.lat_g_meanlatitude)
-    rt_0_realizedtemperature = (p.rtl_0_realizedtemperature - rt_adj_temperatureadjustment) * (1. + (ocean_prop_ortion / p.rlo_ratiolandocean) - ocean_prop_ortion)
 
     # Equation 21 from Hope (2006): initial global land temperature
-    v.rtl_g0_baselandtemp[1] = sum(rt_0_realizedtemperature' .* p.area) / sum(p.area)
+    v.rtl_g0_baselandtemp = sum(p.rtl_0_realizedtemperature' .* p.area') / sum(p.area)
 
     # initial ocean and global temperatures
-    rto_g0_baseoceantemp = v.rtl_g0_baselandtemp[1]/ p.rlo_ratiolandocean
-    v.rt_g0_baseglobaltemp[1] = ocean_prop_ortion * rto_g0_baseoceantemp + (1. - ocean_prop_ortion) * v.rtl_g0_baselandtemp[1]
+    rto_g0_baseoceantemp = v.rtl_g0_baselandtemp/ p.rlo_ratiolandocean
+    v.rt_g0_baseglobaltemp = ocean_prop_ortion * rto_g0_baseoceantemp + (1. - ocean_prop_ortion) * v.rtl_g0_baselandtemp
 end
 
 function run_timestep(s::ClimateTemperature, tt::Int64)
@@ -101,7 +101,7 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
     end
 
     # Equation 21 from Hope (2006): global realized temperature estimate
-    v.rtl_g_landtemperature[tt] = sum(v.rtl_realizedtemperature[tt, :]' .* p.area) / sum(p.area)
+    v.rtl_g_landtemperature[tt] = sum(v.rtl_realizedtemperature[tt, :]' .* p.area') / sum(p.area)
 
     # Ocean and global average temperature from Hope (2009)
     v.rto_g_oceantemperature[tt] = v.rtl_g_landtemperature[tt] / p.rlo_ratiolandocean
@@ -113,10 +113,17 @@ function addclimatetemperature(model::Model)
 
     climatetemperaturecomp[:rlo_ratiolandocean] = 1.40
     climatetemperaturecomp[:pole_polardifference] = 1.50
-    climatetemperaturecomp[:lat_g_meanlatitude] =  14.4 # James: mean(read.csv("~/data/political/countries-0.25x0.25.pts")$y)
+    climatetemperaturecomp[:lat_g_meanlatitude] =  30.21989459076828
     climatetemperaturecomp[:fslope_CO2forcingslope] = 5.5
     climatetemperaturecomp[:tcr_transientresponse] = 1.70
     climatetemperaturecomp[:frt_warminghalflife] = 35.00
 
     return climatetemperaturecomp
+end
+
+function randomizeclimatetemperature(model::Model)
+    update_external_parameter(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
+    update_external_parameter(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
+    update_external_parameter(model, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
+    update_external_parameter(model, :tcr_transientresponse, rand(TriangularDist(1, 2.8, 1.3)))
 end

@@ -1,7 +1,10 @@
 using Mimi
+using Distributions
+include("mctools.jl")
 
 @defcomp co2cycle begin
     e_globalCO2emissions=Parameter(index=[time],unit="Mtonne/year")
+    e0_globalCO2emissions=Parameter(unit="Mtonne/year")
     c_CO2concentration=Variable(index=[time],unit="ppbv")
     pic_preindustconcCO2=Parameter(unit="ppbv")
     exc_excessconcCO2=Variable(unit="ppbv")
@@ -21,7 +24,7 @@ using Mimi
     y_year_0=Parameter(unit="year")
     res_CO2atmlifetime=Parameter(unit="year")
     den_CO2density=Parameter(unit="Mtonne/ppbv")
-    rt_g0_baseglobaltemp=Parameter(index=[1],unit="degreeC")
+    rt_g0_baseglobaltemp=Parameter(unit="degreeC")
     rt_g_globaltemperature=Parameter(index=[time],unit="degreeC")
 end
 
@@ -31,11 +34,11 @@ function run_timestep(s::co2cycle,t::Int64)
 
     if t==1
         #CO2 emissions gain calculated based on PAGE 2009
-        gain=p.ccf_CO2feedback*p.rt_g0_baseglobaltemp[1]
+        gain=p.ccf_CO2feedback*p.rt_g0_baseglobaltemp
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
+        tea0=p.e0_globalCO2emissions*p.air_CO2fractioninatm/100
         v.tea_CO2emissionstoatm[t]=(p.e_globalCO2emissions[t])*p.air_CO2fractioninatm/100
-        #unclear how calculated in first time period - assume emissions from period 1 are used. Check with Chris Hope.
-        v.teay_CO2emissionstoatm[t]=v.tea_CO2emissionstoatm[t]
+        v.teay_CO2emissionstoatm[t]=(v.tea_CO2emissionstoatm[t]+tea0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcCO2=p.c0_CO2concbaseyr-p.pic_preindustconcCO2
         #Eq. 2 from Hope (2006) - base-year remaining emissions
@@ -87,10 +90,20 @@ function addCO2cycle(model::Model)
     co2cycleref[:stay_fractionCO2emissionsinatm] = 0.3 #Check with Chris Hope - this is described as a fraction (and is not divided by 100 in the equation) but is given as 30% in the documentation
     co2cycleref[:c0_CO2concbaseyr] = 395000.
     co2cycleref[:ce_0_basecumCO2emissions] = 2050000.
-    co2cycleref[:res_CO2atmlifetime] = 73.33
-    co2cycleref[:ccf_CO2feedback] = 9.67
-    co2cycleref[:ccfmax_maxCO2feedback] = 53.33
+    co2cycleref[:res_CO2atmlifetime] = 73.3333333333333
+    co2cycleref[:ccf_CO2feedback] = 9.66666666666666
+    co2cycleref[:ccfmax_maxCO2feedback] = 53.3333333333333
     co2cycleref[:air_CO2fractioninatm] = 62.00
+    co2cycleref[:rt_g0_baseglobaltemp] = 0.735309967925382
+    co2cycleref[:e0_globalCO2emissions] = 38191.0315797948
 
     return co2cycleref
+end
+
+function randomizeCO2cycle(model::Model)
+    update_external_parameter(model, :air_CO2fractioninatm, rand(TriangularDist(57, 67, 62)))
+    update_external_parameter(model, :res_CO2atmlifetime, rand(TriangularDist(50, 100, 70)))
+    update_external_parameter(model, :ccf_CO2feedback, rand(TriangularDist(4, 15, 10)))
+    update_external_parameter(model, :ccfmax_maxCO2feedback, rand(TriangularDist(30, 80, 50)))
+    update_external_parameter(model, :stay_fractionCO2emissionsinatm, rand(TriangularDist(0.25,0.35,0.3)))
 end

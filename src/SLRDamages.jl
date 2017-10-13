@@ -1,5 +1,7 @@
 using Mimi
+using Distributions
 include("load_parameters.jl")
+include("mctools.jl")
 
 @defcomp SLRDamages begin
     region = Index()
@@ -17,7 +19,7 @@ include("load_parameters.jl")
     #component parameters
     impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m")
 
-    SAVE_savingsrate = Parameter(unit= "%")
+    save_savingsrate = Parameter(unit= "%")
     WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_SatCalibrationSLR =Parameter()
     ipow_SLRIncomeFxnExponent =Parameter()
@@ -52,7 +54,7 @@ function run_timestep(s::SLRDamages, t::Int64)
 
     for r in d.region
         v.cons_percap_aftercosts[t, r] = p.cons_percap_consumption[t, r] - p.tct_per_cap_totalcostspercap[t, r] - p.act_percap_adaptationcosts[t, r] # Check with Chris Hope: add or subtract adaptationcosts?
-        v.gdp_percap_aftercosts[t,r]=v.cons_percap_aftercosts[t, r]/(1 - p.SAVE_savingsrate/100)
+        v.gdp_percap_aftercosts[t,r]=v.cons_percap_aftercosts[t, r]/(1 - p.save_savingsrate/100)
 
         if (p.s_sealevel[t]-p.atl_adjustedtolerablelevelofsealevelrise[t,r]) < 0
             v.i_regionalimpactSLR[t,r] = 0
@@ -68,27 +70,23 @@ function run_timestep(s::SLRDamages, t::Int64)
 
         if v.igdp_ImpactatActualGDPperCapSLR[t,r] < p.isatg_impactfxnsaturation
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = v.igdp_ImpactatActualGDPperCapSLR[t,r]
-        elseif v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
-            v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)*
-                ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-p.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCapSLR[t,r]- p.isatg_impactfxnsaturation)))*
-                (1-p.imp_actualreductionSLR[t,r]/100)
-
         else
             v.isat_ImpactinclSaturationandAdaptationSLR[t,r] = p.isatg_impactfxnsaturation+
-                ((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation) *
+                ((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)*
                 ((v.igdp_ImpactatActualGDPperCapSLR[t,r]-p.isatg_impactfxnsaturation)/
-                (((100-p.SAVE_savingsrate)-p.isatg_impactfxnsaturation)+
-                (v.igdp_ImpactatActualGDPperCapSLR[t,r] * p.isatg_impactfxnsaturation))) *
-                (1-(p.imp_actualreductionSLR[t,r]/100)* p.impmax_maxSLRforadaptpolicySLR[r] /
+                (((100-p.save_savingsrate)-p.isatg_impactfxnsaturation)+
+                (v.igdp_ImpactatActualGDPperCapSLR[t,r]- p.isatg_impactfxnsaturation)))
+            end
+        if v.i_regionalimpactSLR[t,r] < p.impmax_maxSLRforadaptpolicySLR[r]
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r]=v.isat_ImpactinclSaturationandAdaptationSLR[t,r]*(1-p.imp_actualreductionSLR[t,r]/100)
+        else
+            v.isat_ImpactinclSaturationandAdaptationSLR[t,r]=v.isat_ImpactinclSaturationandAdaptationSLR[t,r]*(1-(p.imp_actualreductionSLR[t,r]/100)* p.impmax_maxSLRforadaptpolicySLR[r] /
                 v.i_regionalimpactSLR[t,r])
-        end
+            end
 
               v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r] = (v.isat_ImpactinclSaturationandAdaptationSLR[t,r]/100)*v.gdp_percap_aftercosts[t,r]
               v.rcons_per_cap_SLRRemainConsumption[t,r] = v.cons_percap_aftercosts[t,r] - v.isat_per_cap_SLRImpactperCapinclSaturationandAdaptation[t,r]
-              v.rgdp_per_cap_SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.SAVE_savingsrate/100)
+              v.rgdp_per_cap_SLRRemainGDP[t,r] = v.rcons_per_cap_SLRRemainConsumption[t,r]/(1-p.save_savingsrate/100)
 
     end
 
@@ -97,18 +95,37 @@ end
 function addslrdamages(model::Model)
     SLRDamagescomp = addcomponent(model, SLRDamages)
 
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/sealevelmaxrise.csv")
-    SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "../data/wincf_weightsfactor.csv")
-    SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.73
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/sealevelmaxrise.csv")
+    SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
+    SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.7333333333333334
     SLRDamagescomp[:ipow_SLRIncomeFxnExponent] = -0.30
     SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
     SLRDamagescomp[:scal_calibrationSLR] = 0.5
-
+    SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
     SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
-    SLRDamagescomp[:SAVE_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
-    SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU] = (1.3 * 10^7/ 496) #pp31 PAGE 09 documentation, EU GDP divided by population
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "../data/impmax_sealevel.csv")
-
+    SLRDamagescomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
 
     return SLRDamagescomp
+end
+
+function randomizeslrdamages(model::Model)
+    # GDP also randomizes this, but the last randomization will apply to both so it's fine.
+    update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    update_external_parameter(model, :scal_calibrationSLR, rand(TriangularDist(0.45, 0.55, .5)))
+    #update_external_parameter(model, :iben_SLRInitialBenefit, rand(TriangularDist(0, 0, 0))) # only usable if lb <> ub
+    update_external_parameter(model, :W_SatCalibrationSLR, rand(TriangularDist(.5, 1.5, 1)))
+    update_external_parameter(model, :pow_SLRImpactFxnExponent, rand(TriangularDist(.5, 1, .7)))
+    update_external_parameter(model, :ipow_SLRIncomeFxnExponent, rand(TriangularDist(-.4, -.2, -.3)))
+
+    wincf = [1.0,
+             rand(TriangularDist(.6, 1, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.2, .6, .4)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, 1.2, .8)),
+             rand(TriangularDist(.4, .8, .6)),
+             rand(TriangularDist(.4, .8, .6))]
+
+    update_external_parameter(model, :WINCF_weightsfactor, wincf)
 end

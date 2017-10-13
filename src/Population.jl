@@ -27,15 +27,14 @@ function run_timestep(s::Population, tt::Int64)
         else
             v.pop_population[tt, rr] = v.pop_population[tt-1, rr] * (1 + p.popgrw_populationgrowth[tt, rr]/100)^(p.y_year[tt] - p.y_year[tt-1])
         end
-        println([p.pop0_initpopulation[rr], p.popgrw_populationgrowth[tt,rr], p.y_year[tt], p.y_year_0])
     end
 end
 
 function addpopulation(model::Model)
     populationcomp = addcomponent(model, Population)
 
-    populationcomp[:popgrw_populationgrowth]=readpagedata(model,"../data/popgrw_populationgrowth.csv")
-    populationcomp[:pop0_initpopulation]=readpagedata(model,"../data/pop0_initpopulation.csv")
+    populationcomp[:popgrw_populationgrowth]=readpagedata(model, "data/popgrw_populationgrowth.csv")
+    populationcomp[:pop0_initpopulation]=readpagedata(model, "data/pop0_initpopulation.csv")
 
     return populationcomp
 end
