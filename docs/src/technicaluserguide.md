@@ -81,7 +81,9 @@ end
 In the "getpagefunction.jl" file, you will find code that sends variables between components. For example,
 
 ```
-CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing. In this case, the `c_CO2concentration` is evaluated in the `CO2cycle` component and then sent to the `CO2forcing` component.
+CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing.
+# In this case, the `c_CO2concentration` is evaluated in the `CO2cycle` component
+# and then sent to the `CO2forcing` component.
 ```
 
 Once the model has run, you can access variable outputs with this syntax (fyi model_name = `m`):
