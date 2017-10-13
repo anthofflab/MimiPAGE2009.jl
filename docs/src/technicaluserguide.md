@@ -4,16 +4,20 @@
 
 The folders are organized as follows.
 
-*src*
+**src**
+
 Here you will find the model components, i.e. the code.
 
-*data*
+**data**
+
 Here you will find data that are utilized by the components. This includes initial values, key parameters, so on and so forth. This folder also contains the data we used to calibrate our model, which came from PAGE09 Excel output, generously provided by Chris Hope.
 
-*docs*
+**docs**
+
 These are your standard documentation: scientific guide, getting started, and the index.
 
-*test*
+**test**
+
 This folder contains files that were and still can be used to make sure a component is fully functional. The tests run each individual component separately so you can figure out which might not be working and why. (They should all work). The tests take in already-specified data "test/validationdata", though you may adjust that as well. There is also a way to test the entire model with "test_mainmodel.jl"
 
 ## Code format
