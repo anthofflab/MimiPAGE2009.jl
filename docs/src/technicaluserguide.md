@@ -27,24 +27,27 @@ Each component in the model (and the test files as well) has the same basic mimi
 Here we show the code for the CO2 Forcing component to provide an example of the mimi structure with comments.
 
 ```
-# Initiates the Mimi package. This is only done with certain components, because once it is loaded in the model, it becomes redundant code.
+# Initiates the Mimi package. This is only done with certain components,
+# because once it is loaded in the model, it becomes redundant code.
 using Mimi
 
-# The CO2 forcing component does not execute this code, however other components will do so in order to load in data. The connections are specified in the scientific user guide as well as in "getpagefunction.jl"
-# include("input_component_1.jl")
-
+# The CO2 forcing component does not execute this code,
+# however other components will do so in order to load in data.
+# The connections are specified in the scientific user guide as well as in "getpagefunction.jl"
+include("input_component_1.jl")
 ```
 Now we will define the component with its variables and parameters.
 
 ```
 @defcomp co2forcing begin # this defines the component, gives it a name, and starts the code chunk
-    c_CO2concentration=Parameter(index=[time],unit="ppbv") # Sets a parameter which is indexed by time. Parameter is defined elsewhere in the code, either as a global parameter or is the output of a variable in another component
+    c_CO2concentration=Parameter(index=[time],unit="ppbv") # Sets a parameter which is indexed by time.
+    # Parameter is defined elsewhere in the code, either as a global parameter or
+    # is the output of a variable in another component
     f0_CO2baseforcing=Parameter(unit="W/m2")
     fslope_CO2forcingslope=Parameter(unit="W/m2")
     c0_baseCO2conc=Parameter(unit="ppbv")
     f_CO2forcing=Variable(index=[time],unit="W/m2") # defines a variable that will be evaluated in the component
 end
-
 ```
 Next we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.
 
@@ -75,4 +78,10 @@ In the "getpagefunction.jl" file, you will find code that sends variables betwee
 
 ```
 CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing. In this case, the `c_CO2concentration` is evaluated in the `CO2cycle` component and then sent to the `CO2forcing` component.
+```
+
+Once the model has run, you can access variable outputs with this syntax (fyi model_name = `m`):
+
+```
+m[:co2forcing, :f_CO2forcing]
 ```
