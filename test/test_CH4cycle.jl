@@ -15,7 +15,6 @@ setparameter(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validati
 setparameter(m,:ch4cycle,:y_year_0,2008.)
 
 p = load_parameters(m)
-#p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
 setleftoverparameters(m, p)
 

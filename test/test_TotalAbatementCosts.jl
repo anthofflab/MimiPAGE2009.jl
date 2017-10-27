@@ -17,9 +17,6 @@ setparameter(m, :TotalAbatementCosts, :tc_totalcosts_ch4, readpagedata(m, joinpa
 setparameter(m, :TotalAbatementCosts, :tc_totalcosts_n2o, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","tc_totalcosts_n2o.csv")))
 setparameter(m, :TotalAbatementCosts, :tc_totalcosts_linear, readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","tc_totalcosts_linear.csv")))
 
-#p = load_parameters(m)
-#setleftoverparameters(m, p)
-
 run(m)
 
 # Generated data

@@ -11,15 +11,9 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 
 addCO2cycle(m)
 
-#globalemissionsarray=readpagedata(m, "test/validationdata/e_globalCO2emissions.csv")
-#globalemissions=vec(sum(globalemissionsarray,2))
-
 setparameter(m, :co2cycle, :e_globalCO2emissions, readpagedata(m, "test/validationdata/e_globalCO2emissions.csv"))
 setparameter(m, :co2cycle, :y_year,[2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])#real values
 setparameter(m, :co2cycle, :y_year_0,2008.)#real value
-#setparameter(m, :co2cycle, :rt_g0_baseglobaltemp,[0.93]) #value was 0.74
-#temp2=readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv") #average of regional land temperatures
-#globallandtemp=vec(sum(temp2,2)/8)
 setparameter(m, :co2cycle, :rt_g_globaltemperature, readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv"))
 p=load_parameters(m)
 setleftoverparameters(m,p) #important for setting left over component values

@@ -42,7 +42,6 @@ function run_timestep(s::ch4cycle,t::Int64)
             v.teay_CH4emissionstoatm[t]*p.res_CH4atmlifetime*(1-exp(-(p.y_year[t]-p.y_year_0)/p.res_CH4atmlifetime))/(p.y_year[t]-p.y_year_0)
     else
         #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
-        #Check with Chris Hope - in Hope 2006, natural emissions depend on area-weighted average regional temperatures. Hope 2009 also has ocean and global temperatures.
         #Here assume still using area-weighted average regional temperatures (i.e. land temperatures) for natural emissions feedback
         v.nte_natCH4emissions[t]=p.stim_CH4emissionfeedback*p.rtl_g_landtemperature[t-1] #askChrisHope
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions

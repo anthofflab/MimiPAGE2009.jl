@@ -94,7 +94,6 @@ function run_timestep(s::EquityWeighting, tt::Int64)
     v.df_utilitydiscountrate[tt] = (1 + p.ptp_timepreference / 100)^(-(p.y_year[tt] - p.y_year_0))
 
     for rr in d.region
-        # Check wth Chris Hope that CONS_PER_CAP in documentation should be CONS_PER_CAP(i,r)
 
         ## Gas Costs Accounting
         # Weighted costs (Page 23 of Hope 2009)

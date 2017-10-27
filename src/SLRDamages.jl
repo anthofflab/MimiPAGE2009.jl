@@ -36,7 +36,7 @@ include("mctools.jl")
     imp_actualreductionSLR = Parameter(index=[time, region], unit="%")
     i_regionalimpactSLR = Variable(index=[time, region], unit="m")
 
-    iref_ImpactatReferenceGDPperCapSLR = Variable(index=[time, region]) #variable or parameter?
+    iref_ImpactatReferenceGDPperCapSLR = Variable(index=[time, region])
     igdp_ImpactatActualGDPperCapSLR=Variable(index=[time, region])
 
     isatg_impactfxnsaturation = Parameter(unit="unitless")
@@ -44,7 +44,7 @@ include("mctools.jl")
     isat_per_cap_SLRImpactperCapinclSaturationandAdaptation = Variable(index=[time, region], unit="\$/person")
 
     rcons_per_cap_SLRRemainConsumption = Variable(index=[time, region], unit = "\$/person") #include?
-    rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$/person") #include?
+    rgdp_per_cap_SLRRemainGDP = Variable(index=[time, region], unit = "\$/person")
 end
 
 function run_timestep(s::SLRDamages, t::Int64)
@@ -53,7 +53,7 @@ function run_timestep(s::SLRDamages, t::Int64)
     d = s.Dimensions
 
     for r in d.region
-        v.cons_percap_aftercosts[t, r] = p.cons_percap_consumption[t, r] - p.tct_per_cap_totalcostspercap[t, r] - p.act_percap_adaptationcosts[t, r] # Check with Chris Hope: add or subtract adaptationcosts?
+        v.cons_percap_aftercosts[t, r] = p.cons_percap_consumption[t, r] - p.tct_per_cap_totalcostspercap[t, r] - p.act_percap_adaptationcosts[t, r]
         v.gdp_percap_aftercosts[t,r]=v.cons_percap_aftercosts[t, r]/(1 - p.save_savingsrate/100)
 
         if (p.s_sealevel[t]-p.atl_adjustedtolerablelevelofsealevelrise[t,r]) < 0
@@ -110,7 +110,6 @@ function addslrdamages(model::Model)
 end
 
 function randomizeslrdamages(model::Model)
-    # GDP also randomizes this, but the last randomization will apply to both so it's fine.
     update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
     update_external_parameter(model, :scal_calibrationSLR, rand(TriangularDist(0.45, 0.55, .5)))
     #update_external_parameter(model, :iben_SLRInitialBenefit, rand(TriangularDist(0, 0, 0))) # only usable if lb <> ub
