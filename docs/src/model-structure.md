@@ -10,13 +10,15 @@ A schematic of the model, and full listing of components, follows below.
 
 ## Time periods and regions 
 
-The ten uneven timesteps employed in Mimi-PAGE are 2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200. The eight regions included are Europe(EU), the United States (USA), Latin America, the Organisation for Economic Co-operation and Development (OECD), the former Union of Soviet Socialist Republics (USSR), China, Southeast Asia, and Africa.
+The ten uneven timesteps employed in Mimi-PAGE are 2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200. The baseline period used, prior to any modeled results, is 2008.
+
+The eight regions included are Europe(EU), the United States (USA), Latin America, the Organisation for Economic Co-operation and Development (OECD), the former Union of Soviet Socialist Republics (USSR), China, Southeast Asia, and Africa. Mimi-PAGE, like PAGE09, employs the EU as the baseline region. Therefore, several parameters throughout the model are given relative to their EU values. 
 
 ## Sectors and gases
 
 The model is divided into four impact sectors: sea level rise, market (called "economic" in PAGE09), non-market (called "non-economic" in PAGE09), and discontinuities. The six greenhouse gases of the Kyoto Protocol are each included via components that respectively model CO2, CH4, N2O, and a subset of low-concentration gases collectively termed "linear gases." Linear gases include HFCs, PFCs, and SF6. Sulphate forcing is also modelled. 
 
-The four impact sectors in Mimi-PAGE are modelled independently and reflect damages as a proportion of GDP. Sea level rise is a lagged linear function of global mean temperature. Both market and non-market impacts are designed to reflect the particular vulnerabilities of different regions, and use a polynomial function to reflect temperature differences over time. Discontinuity, or the risk of climate change triggering large-scale damages, features a variety of different possible types of disaster each of which are modelled to approximately reflect expected characteristics [SOMEONE PLEASE WORDSMITH THIS DESCRIPTION OF DISCONTINUITY IN PARTICULAR]. 
+The four impact sectors in Mimi-PAGE are modelled independently and reflect damages as a proportion of GDP. Sea level rise is a lagged linear function of global mean temperature. Both market and non-market impacts are designed to reflect the particular vulnerabilities of different regions, and use a polynomial function to reflect temperature differences over time. Discontinuity, or the risk of climate change triggering large-scale damages, features a variety of different possible types of disaster. Each of these are modelled to approximately reflect expected characteristics. 
 
 ## Components 
 
@@ -36,6 +38,7 @@ The components in this portion of Mimi-PAGE include:
 - N2O Cycle
 - N2O Emissions 
 - N2O Forcing
+- Sea Level Rise
 - Sulphate Forcing 
 - Total Forcing 
 
@@ -49,15 +52,14 @@ The components in this portion of Mimi-PAGE include:
 - GDP
 - Market Damages
 - Non-Market Damages
+- Population
 - Sea Level Rise Damages
 - Total Abatement Costs
 - Total Adaptation Costs 
 
-[WHERE SHOULD THE TWO BELOW BE CATEGORIZED?]
-- Population
-- Sea Level Rise
+### Functional Components of Mimi-PAGE 
 
-### Functional parts of Mimi-PAGE [DIFFERENT LABEL/NO LABEL WELCOME TOO]
+The following components assist in the actual running of Mimi-Page, and are further elaborated in the technical user guide.
 - getpagefunction
 - load_parameters
 - main_model
@@ -66,4 +68,4 @@ The components in this portion of Mimi-PAGE include:
 
 ### Schematic 
 
-[Insert corrected image.]
+![page-image](PAGE-image.jpg)
