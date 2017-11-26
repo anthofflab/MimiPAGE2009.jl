@@ -18,7 +18,7 @@ The eight regions included are Europe(EU), the United States (USA), Latin Americ
 
 The model is divided into four impact sectors: sea level rise, market (called "economic" in PAGE09), non-market (called "non-economic" in PAGE09), and discontinuities. The six greenhouse gases of the Kyoto Protocol are each included via components that respectively model CO2, CH4, N2O, and a subset of low-concentration gases collectively termed "linear gases." Linear gases include HFCs, PFCs, and SF6. Sulphate forcing is also modelled. 
 
-The four impact sectors in Mimi-PAGE are modelled independently and reflect damages as a proportion of GDP. Sea level rise is a lagged linear function of global mean temperature. Both market and non-market impacts are designed to reflect the particular vulnerabilities of different regions, and use a polynomial function to reflect temperature differences over time. Discontinuity, or the risk of climate change triggering large-scale damages, features a variety of different possible types of disaster each of which are modelled to approximately reflect expected characteristics [SOMEONE PLEASE WORDSMITH THIS DESCRIPTION OF DISCONTINUITY IN PARTICULAR]. 
+The four impact sectors in Mimi-PAGE are modelled independently and reflect damages as a proportion of GDP. Sea level rise is a lagged linear function of global mean temperature. Both market and non-market impacts are designed to reflect the particular vulnerabilities of different regions, and use a polynomial function to reflect temperature differences over time. Discontinuity, or the risk of climate change triggering large-scale damages, features a variety of different possible types of disaster. Each of these are modelled to approximately reflect expected characteristics. 
 
 ## Components 
 
@@ -68,4 +68,4 @@ The following components assist in the actual running of Mimi-Page, and are furt
 
 ### Schematic 
 
-[Insert corrected image.]
+![page-image](PAGE-image.jpg)
