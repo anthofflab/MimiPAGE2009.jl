@@ -24,7 +24,7 @@ rgdppercap_market=zeros(nit);
 rgdppercap_nonmarket=zeros(nit);
 rgdppercap_disc=zeros(nit);
 
-for i in 1:nit
+@time for i in 1:nit
     # Randomize all components with random parameters
     randomizeCO2cycle(m)
     randomizesulphatecomp(m)
