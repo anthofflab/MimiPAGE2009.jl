@@ -26,7 +26,7 @@ function do_monte_carlo_runs(n=100_000)
     rgdppercap_nonmarket=zeros(nit);
     rgdppercap_disc=zeros(nit);
 
-    @time for i in 1:nit
+    timing = @elapsed for i in 1:nit
         # Randomize all components with random parameters
         randomizeCO2cycle(m)
         randomizesulphatecomp(m)
@@ -77,4 +77,6 @@ function do_monte_carlo_runs(n=100_000)
     #compile results and save output
     df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
     writetable("../test/validationdata/mimipagemontecarlooutput.csv",df)
+
+    return timing
 end
