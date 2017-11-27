@@ -1,6 +1,5 @@
 using Distributions
 using DataFrames
-using RCall
 
 using Mimi.ScalarModelParameter
 
