@@ -43,12 +43,12 @@ slrdamages_compare=readpagedata(m, "test/validationdata/rcons_per_cap_SLRRemainC
 @test_approx_eq_eps slrdamages slrdamages_compare 0.1
 #Market damages
 mdamages=m[:MarketDamages,:rcons_per_cap_MarketRemainConsumption]
-mdamages_comare=readpagedata(m,"test/validationdata/rcons_per_cap_MarketRemainConsumption.csv")
-@test_approx_eq_eps mdamages mdamages_comare 1
+mdamages_compare=readpagedata(m,"test/validationdata/rcons_per_cap_MarketRemainConsumption.csv")
+@test_approx_eq_eps mdamages mdamages_compare 1
 #NonMarket Damages
 nmdamages=m[:NonMarketDamages,:rcons_per_cap_NonMarketRemainConsumption]
-nmdamages_comare=readpagedata(m,"test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv")
-@test_approx_eq_eps nmdamages nmdamages_comare 10
+nmdamages_compare=readpagedata(m,"test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv")
+@test_approx_eq_eps nmdamages nmdamages_compare 10
 
 te = m[:EquityWeighting, :te_totaleffect]
 te_compare = 213208136.69903600
