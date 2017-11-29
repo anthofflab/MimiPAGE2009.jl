@@ -23,7 +23,7 @@ pop=m[:Population,:pop_population]
 pop_compare=readpagedata(m,"test/validationdata/pop_population.csv")
 @test_approx_eq_eps pop pop_compare 0.001
 
-#Abatemet Costs
+#Abatement Costs
 abatement=m[:TotalAbatementCosts,:tct_totalcosts]
 abatement_compare=readpagedata(m,"test/validationdata/tct_totalcosts.csv")
 @test_approx_eq_eps abatement abatement_compare 1e-2
