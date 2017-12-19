@@ -1,5 +1,18 @@
 language: julia
+os:
+  - linux
+  - osx
 julia:
-  - 0.4
+  - 0.5
+notifications:
+  email: false
+branches:
+  only:
+  - master
+  - /release-.*/
 script:
-  - julia test/runtests.jl
+  - julia -e 'Pkg.add("Mimi")'
+  - julia --code-coverage=user test/runtests.jl
+after_success:
+  # push coverage results to Codecov
+  - julia -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
