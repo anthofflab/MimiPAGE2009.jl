@@ -18,4 +18,4 @@ run(m)
 forcing=m[:n2oforcing,:f_N2Oforcing]
 forcing_compare=readpagedata(m,"test/validationdata/f_n2oforcing.csv")
 
-@test forcing ≈ forcing_compare atol=1e-3
+@test forcing ≈ forcing_compare rtol=1e-3

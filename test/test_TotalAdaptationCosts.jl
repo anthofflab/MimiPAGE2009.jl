@@ -26,5 +26,5 @@ adapt_cost_per_cap = m[:TotalAdaptationCosts, :act_percap_adaptationcosts]
 cost_compare = readpagedata(m, "test/validationdata/act_adaptationcosts_tot.csv")
 cost_cap_compare = readpagedata(m, "test/validationdata/act_percap_adaptationcosts.csv")
 
-@test adapt_cost ≈ cost_compare atol=1e-3
-@test adapt_cost_per_cap ≈ cost_cap_compare atol=1e-6
+@test adapt_cost ≈ cost_compare rtol=1e-3
+@test adapt_cost_per_cap ≈ cost_cap_compare rtol=1e-6

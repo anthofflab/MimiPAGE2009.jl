@@ -25,4 +25,4 @@ run(m)
 conc=m[:LGcycle,  :c_LGconcentration]
 conc_compare=readpagedata(m,"test/validationdata/c_LGconcentration.csv")
 
-@test conc ≈ conc_compare atol=1e-4
+@test conc ≈ conc_compare rtol=1e-4

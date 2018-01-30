@@ -31,8 +31,8 @@ run(m)
 
 rcons_per_cap = m[:NonMarketDamages, :rcons_per_cap_NonMarketRemainConsumption]
 rcons_per_cap_compare = readpagedata(m, "test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv")
-@test rcons_per_cap ≈ rcons_per_cap_compare atol=1e-2
+@test rcons_per_cap ≈ rcons_per_cap_compare rtol=1e-2
 
 rgdp_per_cap = m[:NonMarketDamages, :rgdp_per_cap_NonMarketRemainGDP]
 rgdp_per_cap_compare = readpagedata(m, "test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv")
-@test rgdp_per_cap ≈ rgdp_per_cap_compare atol=1e-2
+@test rgdp_per_cap ≈ rgdp_per_cap_compare rtol=1e-2

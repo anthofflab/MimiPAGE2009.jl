@@ -41,11 +41,11 @@ imp_economic_compare = readpagedata(m, "test/validationdata/imp_1.csv")
 acp_economic_compare = readpagedata(m, "test/validationdata/acp_adaptivecostplateau_economic.csv")
 aci_economic_compare = readpagedata(m, "test/validationdata/aci_adaptivecostimpact_economic.csv")
 
-@test autofac ≈ autofac_compare atol=1e-8
-@test atl_economic ≈ atl_economic_compare atol=1e-8
-@test imp_economic ≈ imp_economic_compare atol=1e-8
-@test acp_economic ≈ acp_economic_compare atol=1e-3
-@test aci_economic ≈ aci_economic_compare atol=1e-3
+@test autofac ≈ autofac_compare rtol=1e-8
+@test atl_economic ≈ atl_economic_compare rtol=1e-8
+@test imp_economic ≈ imp_economic_compare rtol=1e-8
+@test acp_economic ≈ acp_economic_compare rtol=1e-3
+@test aci_economic ≈ aci_economic_compare rtol=1e-3
 
 ac_noneconomic = m[:AdaptiveCostsNonEconomic, :ac_adaptivecosts]
 ac_economic = m[:AdaptiveCostsEconomic, :ac_adaptivecosts]
@@ -55,6 +55,6 @@ ac_noneconomic_compare = readpagedata(m, "test/validationdata/ac_adaptationcosts
 ac_economic_compare = readpagedata(m, "test/validationdata/ac_adaptationcosts_economic.csv")
 ac_sealevel_compare = readpagedata(m, "test/validationdata/ac_adaptationcosts_sealevelrise.csv")
 
-@test ac_noneconomic ≈ ac_noneconomic_compare atol=1e-2
-@test ac_economic ≈ ac_economic_compare atol=1e-3
-@test ac_sealevel ≈ ac_sealevel_compare atol=1e-2
+@test ac_noneconomic ≈ ac_noneconomic_compare rtol=1e-2
+@test ac_economic ≈ ac_economic_compare rtol=1e-3
+@test ac_sealevel ≈ ac_sealevel_compare rtol=1e-2

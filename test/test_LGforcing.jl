@@ -17,4 +17,4 @@ run(m)
 forcing=m[:LGforcing,:f_LGforcing]
 forcing_compare=readpagedata(m,"test/validationdata/f_LGforcing.csv")
 
-@test forcing ≈ forcing_compare atol=1e-3
+@test forcing ≈ forcing_compare rtol=1e-3

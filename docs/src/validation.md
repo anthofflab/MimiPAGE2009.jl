@@ -59,7 +59,7 @@ emissions= m[:co2emissions,  :e_regionalCO2emissions]
 # Recorded data
 emissions_compare=readpagedata(m, "test/validationdata/e_regionalCO2emissions.csv")
 
-@test emissions ≈ emissions_compare atol=1e-3
+@test emissions ≈ emissions_compare rtol=1e-3
 
 ```
 The graph below shows the output from both PAGE 2009 and PAGE MIMI.

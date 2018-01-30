@@ -33,4 +33,4 @@ run(m)
 output=m[:Discontinuity,:rcons_per_cap_DiscRemainConsumption]
 validation=readpagedata(m,"test/validationdata/rcons_per_cap_DiscRemainConsumption.csv")
 
-@test output ≈ validation atol=1e-2
+@test output ≈ validation rtol=1e-2

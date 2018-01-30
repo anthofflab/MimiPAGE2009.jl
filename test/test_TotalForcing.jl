@@ -20,4 +20,4 @@ run(m)
 forcing=m[:TotalForcing, :ft_totalforcing]
 forcing_compare=readpagedata(m,"test/validationdata/ft_totalforcing.csv")
 
-@test forcing ≈ forcing_compare atol=1e-3
+@test forcing ≈ forcing_compare rtol=1e-3

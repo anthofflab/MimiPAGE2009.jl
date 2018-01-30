@@ -22,4 +22,4 @@ emissions= m[:n2oemissions,  :e_regionalN2Oemissions]
 # Recorded data
 emissions_compare=readpagedata(m, "test/validationdata/e_regionalN2Oemissions.csv")
 
-@test emissions ≈ emissions_compare atol=1e-3
+@test emissions ≈ emissions_compare rtol=1e-3
