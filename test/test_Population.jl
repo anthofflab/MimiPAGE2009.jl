@@ -24,4 +24,4 @@ pop = m[:Population, :pop_population]
 # Recorded data
 pop_compare = readpagedata(m, "test/validationdata/pop_population.csv")
 
-@test_approx_eq_eps pop pop_compare 1e-3
+@test pop ≈ pop_compare atol=1e-3

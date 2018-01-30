@@ -19,4 +19,4 @@ run(m)
 forcing=m[:SulphateForcing,:fs_sulphateforcing]
 forcing_compare=readpagedata(m,"test/validationdata/fs_sulphateforcing.csv")
 
-@test_approx_eq_eps forcing forcing_compare 1e-3
+@test forcing ≈ forcing_compare atol=1e-3

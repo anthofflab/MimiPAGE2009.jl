@@ -20,4 +20,4 @@ emissions= m[:ch4emissions,  :e_regionalCH4emissions]
 # Recorded data
 emissions_compare=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_regionalCH4emissions.csv"))
 
-@test_approx_eq_eps emissions emissions_compare 1e-3
+@test emissions ≈ emissions_compare atol=1e-3

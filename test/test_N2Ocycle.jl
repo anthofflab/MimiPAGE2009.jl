@@ -21,4 +21,4 @@ run(m)
 conc=m[:n2ocycle,  :c_N2Oconcentration]
 conc_compare=readpagedata(m,"test/validationdata/c_n2oconcentration.csv")
 
-@test_approx_eq_eps conc conc_compare 1e-4
+@test conc ≈ conc_compare atol=1e-4

@@ -19,12 +19,12 @@ run(m)
 
 es_equilibriumSL = m[:SeaLevelRise, :es_equilibriumSL]
 es_equilibriumSL_compare = readpagedata(m, "test/validationdata/es_equilibriumSL.csv")
-@test_approx_eq_eps ones(10) es_equilibriumSL ./ es_equilibriumSL .01
+@test ones(10) ≈ es_equilibriumSL ./ es_equilibriumSL atol=.01
 
 s_sealevel = m[:SeaLevelRise, :s_sealevel]
 s_sealevel_compare = readpagedata(m, "test/validationdata/s_sealevel.csv")
-@test_approx_eq_eps ones(10) s_sealevel ./ s_sealevel_compare .01
+@test ones(10) ≈ s_sealevel ./ s_sealevel_compare atol=.01
 
 expfs_exponential = m[:SeaLevelRise, :expfs_exponential]
 expfs_exponential_compare = readpagedata(m, "test/validationdata/expfs_exponential.csv")
-@test_approx_eq_eps ones(10) expfs_exponential ./ expfs_exponential_compare .01
+@test ones(10) ≈ expfs_exponential ./ expfs_exponential_compare atol=.01

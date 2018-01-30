@@ -21,4 +21,4 @@ run(m)
 emissions= m[:LGemissions,  :e_regionalLGemissions]
 emissions_compare=readpagedata(m, "test/validationdata/e_regionalLGemissions.csv")
 
-@test_approx_eq_eps emissions emissions_compare 1e-3
+@test emissions ≈ emissions_compare atol=1e-3

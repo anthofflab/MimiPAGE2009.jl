@@ -59,20 +59,20 @@ addt_compare = readpagedata(m, "test/validationdata/addt_equityweightedimpact_di
 addt_gt_compare = 204132238.85242900
 te_compare = 213208136.69903600
 
-@test_approx_eq_eps df df_compare 1e-8
-@test_approx_eq_eps wtct_percap wtct_percap_compare 1e-7
-@test_approx_eq_eps pct_percap pct_percap_compare 1e-7
-@test_approx_eq_eps dr dr_compare 1e-5
-@test_approx_eq_eps dfc dfc_compare 1e-7
-@test_approx_eq_eps pct pct_compare 1e-3
-@test_approx_eq_eps pcdt pcdt_compare 1e-3
-@test_approx_eq_eps wacdt wacdt_compare 1e-4
+@test df ≈ df_compare atol=1e-8
+@test wtct_percap ≈ wtct_percap_compare atol=1e-7
+@test pct_percap ≈ pct_percap_compare atol=1e-7
+@test dr ≈ dr_compare atol=1e-5
+@test dfc ≈ dfc_compare atol=1e-7
+@test pct ≈ pct_compare atol=1e-3
+@test pcdt ≈ pcdt_compare atol=1e-3
+@test wacdt ≈ wacdt_compare atol=1e-4
 
-@test_approx_eq_eps aact aact_compare 1e-3
+@test aact ≈ aact_compare atol=1e-3
 
-@test_approx_eq_eps wit wit_compare 1e-3
-@test_approx_eq_eps addt addt_compare 1e-2
-@test_approx_eq_eps addt_gt addt_gt_compare 1e-2
+@test wit ≈ wit_compare atol=1e-3
+@test addt ≈ addt_compare atol=1e-2
+@test addt_gt ≈ addt_gt_compare atol=1e-2
 
-@test_approx_eq_eps te te_compare 1e-2
+@test te ≈ te_compare atol=1e-2
 
