@@ -26,10 +26,10 @@ setleftoverparameters(m, p)
 
 run(m)
 
-@test !isna(m[:AbatementCostsCO2, :tc_totalcost][10, 5])
-@test !isna(m[:AbatementCostsCH4, :tc_totalcost][10, 5])
-@test !isna(m[:AbatementCostsN2O, :tc_totalcost][10, 5])
-@test !isna(m[:AbatementCostsLin, :tc_totalcost][10, 5])
+@test !isnan(m[:AbatementCostsCO2, :tc_totalcost][10, 5])
+@test !isnan(m[:AbatementCostsCH4, :tc_totalcost][10, 5])
+@test !isnan(m[:AbatementCostsN2O, :tc_totalcost][10, 5])
+@test !isnan(m[:AbatementCostsLin, :tc_totalcost][10, 5])
 
 #compare output to validation data
 tc_compare_co2=readpagedata(m, "test/validationdata/tc_totalcosts_co2.csv")

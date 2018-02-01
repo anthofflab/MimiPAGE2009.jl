@@ -18,15 +18,15 @@ setparameter(m, :Discontinuity, :isatg_saturationmodification, 28.33333333333333
 ##running Model
 run(m)
 
-@test !isna(m[:Discontinuity, :irefeqdis_eqdiscimpact][8])
-@test !isna(m[:Discontinuity, :igdpeqdis_eqdiscimpact][10,8])
-@test !isna(m[:Discontinuity, :igdp_realizeddiscimpact][10,8])
-@test !isna(m[:Discontinuity, :occurdis_occurrencedummy][10])
-@test !isna(m[:Discontinuity, :expfdis_discdecay][10])
-@test !isna(m[:Discontinuity, :idis_lossfromdisc][10])
-@test !isna(m[:Discontinuity, :isat_satdiscimpact][10,8])
-@test !isna(m[:Discontinuity, :isat_per_cap_DiscImpactperCapinclSaturation][10,8])
-@test !isna(m[:Discontinuity, :rcons_per_cap_DiscRemainConsumption][10])
+@test !isnan(m[:Discontinuity, :irefeqdis_eqdiscimpact][8])
+@test !isnan(m[:Discontinuity, :igdpeqdis_eqdiscimpact][10,8])
+@test !isnan(m[:Discontinuity, :igdp_realizeddiscimpact][10,8])
+@test !isnan(m[:Discontinuity, :occurdis_occurrencedummy][10])
+@test !isnan(m[:Discontinuity, :expfdis_discdecay][10])
+@test !isnan(m[:Discontinuity, :idis_lossfromdisc][10])
+@test !isnan(m[:Discontinuity, :isat_satdiscimpact][10,8])
+@test !isnan(m[:Discontinuity, :isat_per_cap_DiscImpactperCapinclSaturation][10,8])
+@test !isnan(m[:Discontinuity, :rcons_per_cap_DiscRemainConsumption][10])
 
 #validating - comparison spreadsheet has discontinuity occuring in 2200
 #keep running model until m[:Discontinuity,:occurdis_occurrencedummy] shows discontiuity occuring in 2200
