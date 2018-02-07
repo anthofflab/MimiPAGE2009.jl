@@ -70,7 +70,7 @@ function run_timestep(s::ClimateTemperature, tt::Int64)
 
     ## Adjustment for latitude and land
     ocean_prop_ortion = 1. - (sum(p.area) / 510000000.)
-    rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs(p.lat_latitude) - p.lat_g_meanlatitude)
+    rt_adj_temperatureadjustment = (p.pole_polardifference / 90.) * (abs.(p.lat_latitude) - p.lat_g_meanlatitude)
 
     ## Unadjusted realized temperature
 

@@ -24,4 +24,4 @@ pop=m[:co2cycle,  :c_CO2concentration]
 
 pop_compare=readpagedata(m, "test/validationdata/c_co2concentration.csv")
 
-@test_approx_eq_eps pop pop_compare 1e-4
+@test pop ≈ pop_compare rtol=1e-4
