@@ -22,4 +22,4 @@ run(m)
 forcing=m[:ch4forcing,:f_CH4forcing]
 forcing_compare=readpagedata(m,"test/validationdata/f_ch4forcing.csv")
 
-@test_approx_eq_eps forcing forcing_compare 1e-3
+@test forcing ≈ forcing_compare rtol=1e-3
