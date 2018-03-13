@@ -68,4 +68,4 @@ The following components assist in the actual running of Mimi-Page, and are furt
 
 ### Schematic
 
-![page-image](PAGE-image.png)
+![page-image](assets/PAGE-image.jpg)
