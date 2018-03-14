@@ -1,1 +1,0 @@
-# Scientific User Guide
