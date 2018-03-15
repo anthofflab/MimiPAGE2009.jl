@@ -11,7 +11,7 @@ else
     do_monte_carlo_runs(samplesize)
 end
 
-df = readtable("../output/mimipagemontecarlooutput.csv")
+df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
 
 if regenerate
     for name in names(df)
