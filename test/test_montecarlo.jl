@@ -56,7 +56,7 @@ for ii in 1:nrow(compare)
     transform = information[name][:transform]
     distribution = Normal(information[name][:mu], information[name][:sigma])
     for qval in [.05, .10, .25, .50, .75, .90, .95]
-        estimated = transform(quantile(Missings.skipmissing(df[name]), qval)) # perform transform *after* quantile, so captures effect of all values
+        estimated = transform(quantile(collect(Missings.skipmissing(df[name])), qval)) # perform transform *after* quantile, so captures effect of all values
         stderr = sqrt(qval * (1 - qval) / (samplesize * pdf(distribution, estimated)^2))
 
         expected = transform(compare[ii, Symbol("x$(trunc(Int, qval * 100))_")])
