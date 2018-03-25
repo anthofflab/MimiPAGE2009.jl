@@ -2,50 +2,62 @@ using Base.Test
 
 include("../src/montecarlo.jl")
 
-regenerate = false
-samplesize = 1000
+regenerate = false # do a large MC run, to regenerate information needed for std. errors
+samplesize = 1000 # normal MC sample size (takes ~5 seconds)
+
+# Monte Carlo distribution information
+# Filled in from a run with regenerate = true
+information = Dict(
+    :td => Dict(:transform => x -> log(x), :mu => 19.268649852193303, :sigma => 1.0189429437682878),
+    :tpc => Dict(:transform => x -> log(-x), :mu => 16.723536381185546, :sigma => 0.9100375935397476),
+    :tac => Dict(:transform => x -> log(x), :mu => 17.35110886191308, :sigma => 0.3586397403122257),
+    :te => Dict(:transform => x -> log(x), :mu => 19.30193679432187, :sigma => 1.048364875171592),
+    :c_co2concentration => Dict(:transform => x -> x, :mu => 913073.0003103315, :sigma => 71674.18878428967),
+    :ft => Dict(:transform => x -> x, :mu => 8.637901336461365, :sigma => 0.4315112767385383),
+    :rt_g => Dict(:transform => x -> x, :mu => 5.888175260413073, :sigma => 1.7673873280904946),
+    :sealevel => Dict(:transform => x -> x, :mu => 1.6056649448621665, :sigma => 0.6124270241884567)
+)
+
+compare = readtable(joinpath(@__DIR__, "validationdata/PAGE09montecarloquantiles.csv"))
 
 if regenerate
+    println("Regenerating MC distribution information")
+    # Perform a large MC run and extract statistics
     do_monte_carlo_runs()
+    df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+
+    for ii in 1:nrow(compare)
+        name = Symbol(compare[ii, :Variable_Name])
+        if kurtosis(df[name]) > 2.9 # exponential distribution
+            if name == :tpc # negative across all quantiles
+                print("    :$name => Dict(:transform => x -> log(-x), :mu => $(mean(log(-df[df[name] .< 0, name]))), :sigma => $(std(log(-df[df[name] .< 0, name]))))")
+            else
+                print("    :$name => Dict(:transform => x -> log(x), :mu => $(mean(log(df[df[name] .> 0, name]))), :sigma => $(std(log(df[df[name] .> 0, name]))))")
+            end
+        else
+            print("    :$name => Dict(:transform => x -> x, :mu => $(mean(df[name])), :sigma => $(std(df[name])))")
+        end
+        if ii != nrow(compare)
+            println(",")
+        end
+    end
 else
+    println("Performing MC sample")
+    # Perform a small MC run
     do_monte_carlo_runs(samplesize)
+    df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
 end
 
-df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+for ii in 1:nrow(compare)
+    name = Symbol(compare[ii, :Variable_Name])
+    transform = information[name][:transform]
+    distribution = Normal(information[name][:mu], information[name][:sigma])
+    for qval in [.05, .10, .25, .50, .75, .90, .95]
+        estimated = transform(quantile(df[name], qval)) # perform transform *after* quantile, so captures effect of all values
+        stderr = sqrt(qval * (1 - qval) / (samplesize * pdf(distribution, estimated)^2))
 
-if regenerate
-    for name in names(df)
-        mu = mean(df[name])
-        sigma = std(df[name])
-        mustderr = sigma / sqrt(samplesize)
-        sigmastderr = sigma / sqrt(samplesize - 2)
-        println("@test mean(df[:$name]) ≈ $mu rtol=$(ceil(2.576 * mustderr, -trunc(Int, log10(mustderr))))")
-        println("@test std(df[:$name]) ≈ $sigma rtol=$(ceil(2.576 * mustderr, -trunc(Int, log10(sigmastderr))))")
+        expected = transform(compare[ii, Symbol("x$(trunc(Int, qval * 100))_")])
+
+        @test estimated ≈ expected rtol=ceil(2.576 * stderr, -trunc(Int, log10(stderr)))
     end
 end
-
-@test mean(df[:td]) ≈ 4.0045620307350564e8 rtol=5.0e7
-@test std(df[:td]) ≈ 5.3118074357074183e8 rtol=5.0e7
-@test mean(df[:tpc]) ≈ -2.6595182663207453e7 rtol=1.8999999999999998e6
-@test std(df[:tpc]) ≈ 2.2695053054283816e7 rtol=1.8999999999999998e6
-@test mean(df[:tac]) ≈ 3.663364738169777e7 rtol=1.2e6
-@test std(df[:tac]) ≈ 1.3981586450397965e7 rtol=1.2e6
-@test mean(df[:te]) ≈ 4.1049466779199594e8 rtol=5.0e7
-@test std(df[:te]) ≈ 5.383906204839039e8 rtol=5.0e7
-@test mean(df[:c_co2concentration]) ≈ 913185.0480391708 rtol=6000.0
-@test std(df[:c_co2concentration]) ≈ 71599.16655409422 rtol=6000.0
-@test mean(df[:ft]) ≈ 8.638614796688842 rtol=0.1
-@test std(df[:ft]) ≈ 0.43102824184480093 rtol=0.1
-@test mean(df[:rt_g]) ≈ 5.892286659666864 rtol=0.2
-@test std(df[:rt_g]) ≈ 1.7716819863661326 rtol=0.2
-@test mean(df[:sealevel]) ≈ 1.6077643074430088 rtol=0.1
-@test std(df[:sealevel]) ≈ 0.6153532289526266 rtol=0.1
-@test mean(df[:rgdppercap_slr]) ≈ 1.3467160532051844e6 rtol=240.0
-@test std(df[:rgdppercap_slr]) ≈ 2850.3305973503266 rtol=240.0
-@test mean(df[:rgdppercap_market]) ≈ 1.3202623978236795e6 rtol=3000.0
-@test std(df[:rgdppercap_market]) ≈ 34132.24535263953 rtol=3000.0
-@test mean(df[:rgdppercap_nonmarket]) ≈ 1.265622393634412e6 rtol=7000.0
-@test std(df[:rgdppercap_nonmarket]) ≈ 84472.52874991852 rtol=7000.0
-@test mean(df[:rgdppercap_di]) ≈ 1.265622393634412e6 rtol=7000.0
-@test std(df[:rgdppercap_di]) ≈ 84472.52874991852 rtol=7000.0
-
