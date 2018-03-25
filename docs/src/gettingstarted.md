@@ -36,7 +36,7 @@ Clone or download the Mimi-PAGE repository from the Mimi-PAGE [Github website](h
 
 To run the model, run the `main_model` file in the src folder. This runs the deterministic version of Mimi-PAGE with central parameter estimates. The `getpage` function retrieves the model object. The model `m` returns a list of components and each of their incoming parameters and outgoing variables. Results can be called by running `m[:ComponentName, :VariableName]` for the desired component and variable.
 
-To run the stochastic version of Mimi-PAGE, which uses parameter distributions, see the montecarlo.jl file in the src folder. The current Monte Carlo  process outputs a selection of variables that are important for validation. For more information, see the Technical Guide.
+To run the stochastic version of Mimi-PAGE, which uses parameter distributions, see the montecarlo.jl file in the src folder. The current Monte Carlo  process outputs a selection of variables that are important for validation, but these can be modified by the user if desired. The user can also set the number of Monte Carlo runs in montecarlo.jl.
 
 ## Troubleshooting
 

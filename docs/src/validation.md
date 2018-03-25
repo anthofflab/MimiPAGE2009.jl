@@ -70,21 +70,8 @@ The graph below shows the output from both PAGE 2009 and PAGE MIMI.
 
 ## Probabilistic validation
 
-For the probabilistic version of the model, we graphed and compared distributions of total damages, total preventative costs, total adaptation costs, and total effects.  
-
-The scripts for the PAGE MIMI tests can be found ______.
-
-The graphs below show total abatement costs, as one example.
-
-Total abatement costs, based on PAGE 09
-![abatement_PAGE09](assets/abatement_page09.png)
-
-Total abatement costs, based on PAGE Mimi
-![abatement_MIMI](assets/abatement_mimi.png)
+For the probabilistic version of the model, we graphed and compared distributions of total damages, total preventative costs, total adaptation costs, and total effects.  Differences between quantiles of the distribution for 4 model end-point variables are shown in the graph below. Error bars show the 95% confidence interval associated with sampling uncertainty only for Mimi-PAGE (i.e. they under-estimate the true uncertainty of the difference between PAGE09 and Mimi-PAGE)
 
 
 Distributions matched closely (<1.5% difference) for all outputs, based on ____(10,000?) runs.
-![outputs](assets/probabilistic.png)
-
-
-(Positive values indicate higher results from PAGE MIMI compared to PAGE09)
+![MC-validation.JPG](assets/MC-validation.JPG)
