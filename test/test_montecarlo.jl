@@ -4,6 +4,7 @@ include("../src/montecarlo.jl")
 
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
 samplesize = 1000 # normal MC sample size (takes ~5 seconds)
+confidence = 2.576 # 99% CI by default; use 1.96 to apply a 95% CI, but expect more spurious errors
 
 # Monte Carlo distribution information
 # Filled in from a run with regenerate = true
@@ -48,16 +49,17 @@ else
     df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
 end
 
+# Compare all known quantiles
 for ii in 1:nrow(compare)
     name = Symbol(compare[ii, :Variable_Name])
     transform = information[name][:transform]
     distribution = Normal(information[name][:mu], information[name][:sigma])
     for qval in [.05, .10, .25, .50, .75, .90, .95]
-        estimated = transform(quantile(df[name], qval)) # perform transform *after* quantile, so captures effect of all values
+        estimated = transform(quantile(dropmissing(df[name]), qval)) # perform transform *after* quantile, so captures effect of all values
         stderr = sqrt(qval * (1 - qval) / (samplesize * pdf(distribution, estimated)^2))
 
         expected = transform(compare[ii, Symbol("x$(trunc(Int, qval * 100))_")])
 
-        @test estimated ≈ expected rtol=ceil(2.576 * stderr, -trunc(Int, log10(stderr)))
+        @test estimated ≈ expected rtol=ceil(confidence * stderr, -trunc(Int, log10(stderr)))
     end
 end
