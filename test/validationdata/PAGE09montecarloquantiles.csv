@@ -3,7 +3,7 @@ td,Total Impacts,Million Dollars,4.82E+07,6.52E+07,1.11E+08,2.21E+08,4.72E+08,9.
 tpc,Total Preventative Costs,Million Dollars,-7.10E+07,-5.64E+07,-3.65E+07,-2.01E+07,-9.80E+06,-5.13E+06,-3.70E+06
 tac,Total Adaptation Costs,Million Dollars,1.93E+07,2.18E+07,2.68E+07,3.39E+07,4.33E+07,5.43E+07,6.25E+07
 te,Total Effect,Million Dollars,4.40E+07,6.53E+07,1.17E+08,2.32E+08,4.86E+08,9.34E+08,1.36E+09
-c_co2concentration,CO2 Concentration in 2200,ppm,799,822,863,911,961,1008,1036
+c_co2concentration,CO2 Concentration in 2200,ppb,799000,822000,863000,911000,961000,1008000,1036000
 ft,Total Forcing in 2200,Wperm2,5.61,5.76,6.03,6.33,6.63,6.88,7.04
 rt_g,Global Temperature in 2200,degreesC,3.47,3.82,4.54,5.62,7.00,8.38,9.22
 sealevel,Sea Level Rise in 2200,m,0.85,0.95,1.17,1.49,1.92,2.43,2.80
