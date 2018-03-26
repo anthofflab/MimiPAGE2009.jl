@@ -53,10 +53,6 @@ end
 # Compare all known quantiles
 for ii in 1:nrow(compare)
     name = Symbol(compare[ii, :Variable_Name])
-    if name == :ft
-        continue # @RISK MC records inconsistent with Excel median
-    end
-
     transform = information[name][:transform]
     distribution = Normal(information[name][:mu], information[name][:sigma])
     for qval in [.05, .10, .25, .50, .75, .90, .95]
