@@ -26,6 +26,8 @@ julia> Pkg.add("Mimi")
 ```
 You only have to run this command once on your machine.
 
+Mimi-PAGE also requires the Distributions, DataFrames, and Missings packages.
+
 For more information about the Mimi component framework, you can refer to the [Mimi](https://github.com/anthofflab/Mimi.jl) Github repository, which has a documentation and links to various models that are based on Mimi.
 
 ## Installing Mimi-PAGE
@@ -36,10 +38,17 @@ Clone or download the Mimi-PAGE repository from the Mimi-PAGE [Github website](h
 
 To run the model, run the `main_model.jl` file in the src folder. This
 runs the deterministic version of Mimi-PAGE with central parameter
-estimates. The `getpage` function used in that file retrieves the
-initialized model. You can print the model `m`, which returns a list of components and each of their incoming parameters and outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` for the desired component and variable.
+estimates. The `getpage` function used in that file create the
+initialized PAGE model. You can print the model, by typing `m`, which
+returns a list of components and each of their incoming parameters and
+outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` for the desired component and variable.
 
-To run the stochastic version of Mimi-PAGE, which uses parameter distributions, see the `montecarlo.jl` file in the src folder. The current Monte Carlo process outputs a selection of variables that are important for validation. For more information, see the [Technical Guide](technicaluserguide.md).
+To run the stochastic version of Mimi-PAGE, which uses parameter
+distributions, see the `montecarlo.jl` file in the src folder. The
+current Monte Carlo process outputs a selection of variables that are
+important for validation, but these can be modified by the user if
+desired. The user can also set the number of Monte Carlo runs in
+montecarlo.jl. For more information, see the [Technical Guide](technicaluserguide.md).
 
 ## Troubleshooting
 
