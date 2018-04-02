@@ -12,22 +12,25 @@ Relevant tests and data are saved in the 'test' folder. The folders are organize
 
 Contains seperate unit tests for the deterministic version of each of the individual model components.
 
-**/validationdata**
+**test/validationdata**
 
 We obtained PAGE 2009 values from the Excel version of PAGE 2009, provided by Chris Hope (personal communication).
 
-Running the Excel version of PAGE 2009 requires downloading the @RISK 7.5 Industial software (available at http://go.palisade.com/RISKDownload.html), which facilitates probabilistic modeling in Excel. Free 15-day trials of the software are avaiable.
+Running the Excel version of PAGE 2009 requires the @RISK 7.5 Industial software (available at http://go.palisade.com/RISKDownload.html), which facilitates probabilistic modeling in Excel. Free 15-day trials of the software are avaiable.
 
-In order to perform tests of individual components, known values were extracted from PAGE 09 or the PAGE written documentation. Where they were obtained from PAGE 2009, values were exported with full precision using a custom function. (Key values are saved in the 'validationdata' folder within the 'test' folder.) Truncating precision can lead to compounding errors which will cause Mimi PAGE results to diverge from PAGE 2009.
+In order to perform tests of individual components, known values were
+extracted from PAGE '09 or the PAGE written documentation. Where they
+were obtained from PAGE 2009, values were exported with full precision
+using a separate extraction tool. (Key values are saved in the `validationdata` folder within the `test` folder.) Truncating precision can lead to compounding errors which will cause Mimi PAGE results to diverge from PAGE 2009.
 
 
 ## Deterministic validations
 
 For each individual Mimi PAGE component, we tested the component with known input data and compared output with values from PAGE 2009. Nearly all values matched within 1%.
 
-As an example of how a test file works, consider test_CO2emissions, which serves as a test for the CO2emissions.jl file (within ../src)
+As an example of how a test file works, consider `test_CO2emissions`, which serves as a test for the `CO2emissions.jl` file (within `../src`).
 
-First, we initialize the model and reference the relevant files (load_paramaters.jl and, notably, CO2emissions.jl). Then we add the CO2emissions component to our model m.
+First, we initialize the model and reference the relevant files (`load_paramaters.jl` and, notably, `CO2emissions.jl`). Then we add the `CO2emissions` component to our model `m`.
 
 ```
 using Mimi
@@ -43,35 +46,45 @@ setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatA
 addcomponent(m, co2emissions)
 ```
 
-Then we set the parameters (baseline emissions and CO2 emissions growth) using exogenous values from PAGE 2009, which are saved in the data folder.
+Then we set the component inputs (baseline emissions and CO2 emissions growth) using exogenous values from PAGE 2009, which are saved in the data folder.
 ```
-setparameter(m, :co2emissions, :e0_baselineCO2emissions, readpagedata(m,"data/e0_baselineCO2emissions.csv"))
+setparameter(m, :co2emissions, :e0_baselineCO2emissions, readpagedata(m, "data/e0_baselineCO2emissions.csv"))
 setparameter(m, :co2emissions, :er_CO2emissionsgrowth, readpagedata(m, "data/er_CO2emissionsgrowth.csv"))
 ```
 
-Then we run our model, save the output to "emissions." We then load exogenous PAGE 2009 data on emisions and save this to emissions_compare. We test to see if the output from our model matches that from PAGE within 1e-3 precision (it does).
+Then we run our model, save the output to the `emissions` variable. We
+then load exogenous PAGE 2009 data on emisions into the
+`emissions_compare` variable. We test to see if the output from our model matches that from PAGE within 1e-3 precision (it does).
+
 ```
 ##running Model
 run(m)
 
-emissions= m[:co2emissions,  :e_regionalCO2emissions]
+emissions = m[:co2emissions,  :e_regionalCO2emissions]
 
 # Recorded data
-emissions_compare=readpagedata(m, "test/validationdata/e_regionalCO2emissions.csv")
+emissions_compare = readpagedata(m, "test/validationdata/e_regionalCO2emissions.csv")
 
 @test emissions ≈ emissions_compare rtol=1e-3
 
 ```
-The graph below shows the output from both PAGE 2009 and PAGE MIMI.
+
+The graph below shows the output from both PAGE 2009 and Mimi PAGE.
 
 ![CO2graph](assets/co2graph.png)
 
 
-
 ## Probabilistic validation
 
-For the probabilistic version of the model, we graphed and compared distributions of total damages, total preventative costs, total adaptation costs, and total effects.  Differences between quantiles of the distribution for 4 model end-point variables are shown in the graph below. Error bars show the 95% confidence interval associated with sampling uncertainty only for Mimi-PAGE (i.e. they under-estimate the true uncertainty of the difference between PAGE09 and Mimi-PAGE)
+For the probabilistic version of the model, we graphed and compared
+distributions of total damages, total preventative costs, total
+adaptation costs, and total effects.  Differences between quantiles of
+the distribution for 4 model end-point variables are shown in the
+graph below. Error bars show the 95% confidence interval associated
+with sampling uncertainty only for Mimi PAGE (i.e. they under-estimate
+the true uncertainty of the difference between PAGE09 and Mimi PAGE)
 
+Distributions matched closely (<1.5% difference) for all outputs,
+based on 100,000 runs.
 
-Distributions matched closely (<1.5% difference) for all outputs, based on ____(10,000?) runs.
 ![MC-validation.JPG](assets/MC-validation.JPG)
