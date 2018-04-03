@@ -61,13 +61,18 @@ function readpagedata(model::Model, filepath::AbstractString)
     end
 end
 
-function load_parameters(model::Model)
+function load_parameters(model::Model, policy::String="policy-a")
     parameters = Dict{Any, Any}()
 
     parameter_directory = joinpath(dirname(@__FILE__), "..", "data")
     for file in filter(q->splitext(q)[2]==".csv", readdir(parameter_directory))
         parametername = splitext(file)[1]
-        filepath = joinpath(parameter_directory, file)
+
+        if policy != "policy-a" && isfile(joinpath(parameter_directory, policy, file))
+            filepath = joinpath(parameter_directory, policy, file)
+        else
+            filepath = joinpath(parameter_directory, file)
+        end
 
         parameters[parametername] = readpagedata(model, filepath)
     end
