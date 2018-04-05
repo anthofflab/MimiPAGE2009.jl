@@ -30,6 +30,14 @@ provided by other components, and produce outputs that often would
 otherwise go to other compontents.  Both are stored in
 `test/validationdata`. There is also test for the entire model in "test_mainmodel.jl"
 
+**data/policy-b** and **test/validationdata/policy-b**
+
+PAGE '09 provides a low emissions policy scenario.  The input data for
+that scenario is provided in `data/policy-b` and validation data in
+`test/validationdata/policy-b`.  See `test/test_mainmodel_policyb/jl`
+for an example of its usage.  The code is designed so that other
+policies can be added in the same fashion.
+
 ## Code format
 
  - The code is written in Julia (v0.5 or greater).

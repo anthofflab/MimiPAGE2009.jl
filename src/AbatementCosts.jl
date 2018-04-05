@@ -139,7 +139,7 @@ function run_timestep(s::AbatementCosts, t::Int64)
     end
 end
 
-function addabatementcosts(model::Model, class::Symbol)
+function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCosts$class")
     abatementcostscomp = addcomponent(model, AbatementCosts, componentname)
 
@@ -161,7 +161,11 @@ function addabatementcosts(model::Model, class::Symbol)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 400.)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 150000.)
-        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CO2emissionsgrowth.csv")))
+        if policy == "policy-a"
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CO2emissionsgrowth.csv")))
+        else
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", policy, "er_CO2emissionsgrowth.csv")))
+        end
         setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, joinpath(dirname(@__FILE__),"..", "data","e0_baselineCO2emissions.csv")))
         setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model, joinpath(dirname(@__FILE__),"..","data","bau_co2emissions.csv")))
     elseif class == :CH4
@@ -171,7 +175,11 @@ function addabatementcosts(model::Model, class::Symbol)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 6333.33)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
-        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CH4emissionsgrowth.csv")))
+        if policy == "policy-a"
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_CH4emissionsgrowth.csv")))
+        else
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", policy, "er_CH4emissionsgrowth.csv")))
+        end
         setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","e0_baselineCH4emissions.csv")))
         setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","bau_ch4emissions.csv")))
     elseif class == :N2O
@@ -181,7 +189,11 @@ function addabatementcosts(model::Model, class::Symbol)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 27333.33)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 53.33)
-        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv")))
+        if policy == "policy-a"
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv")))
+        else
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..", "data", policy, "er_N2Oemissionsgrowth.csv")))
+        end
         setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","e0_baselineN2Oemissions.csv")))
         setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","bau_n2oemissions.csv")))
     elseif class == :Lin
@@ -191,7 +203,11 @@ function addabatementcosts(model::Model, class::Symbol)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 333.33)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
-        setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","er_LGemissionsgrowth.csv")))
+        if policy == "policy-a"
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","er_LGemissionsgrowth.csv")))
+        else
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,joinpath(dirname(@__FILE__), "..", "data", policy, "er_LGemissionsgrowth.csv")))
+        end
         setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","e0_baselineLGemissions.csv")))
         setdistinctparameter(model, componentname, :bau_businessasusualemissions, readpagedata(model,joinpath(dirname(@__FILE__), "..","data","bau_linemissions.csv")))
     else

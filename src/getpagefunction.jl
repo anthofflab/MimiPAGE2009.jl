@@ -28,7 +28,7 @@ include("TotalAdaptationCosts.jl")
 include("Population.jl")
 include("EquityWeighting.jl")
 
-function buildpage(m::Model)
+function buildpage(m::Model, policy::String="policy-a")
     #add all the components
     CO2emissions = addcomponent(m,co2emissions)
     CO2cycle = addCO2cycle(m)
@@ -50,10 +50,10 @@ function buildpage(m::Model)
     population = addpopulation(m)
     gdp = addgdp(m)
     #Abatement Costs
-    abatementcosts_CO2 = addabatementcosts(m, :CO2)
-    abatementcosts_CH4 = addabatementcosts(m, :CH4)
-    abatementcosts_N2O = addabatementcosts(m, :N2O)
-    abatementcosts_Lin = addabatementcosts(m, :Lin)
+    abatementcosts_CO2 = addabatementcosts(m, :CO2, policy)
+    abatementcosts_CH4 = addabatementcosts(m, :CH4, policy)
+    abatementcosts_N2O = addabatementcosts(m, :N2O, policy)
+    abatementcosts_Lin = addabatementcosts(m, :Lin, policy)
     totalabatementcosts = addtotalabatementcosts(m)
     #Adaptation Costs
     adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
@@ -168,22 +168,22 @@ function buildpage(m::Model)
     return m
 end
 
-function initpage(m::Model)
-    p = load_parameters(m)
+function initpage(m::Model, policy::String="policy-a")
+    p = load_parameters(m, policy)
     p["y_year_0"] = 2008.
     p["y_year"] = m.indices_values[:time]
     setleftoverparameters(m, p)
 end
 
-function getpage()
+function getpage(policy::String="policy-a")
     m = Model()
     setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-    buildpage(m)
+    buildpage(m, policy)
 
     # next: add vector and panel example
-    initpage(m)
+    initpage(m, policy)
 
     return m
 end
