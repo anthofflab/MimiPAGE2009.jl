@@ -16,5 +16,5 @@ deploydocs(
     make = nothing,
 	target = "build",
     repo = "github.com/anthofflab/mimi-page.jl.git",
-    julia = "0.5"
+    julia = "0.6"
 )
