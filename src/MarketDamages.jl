@@ -3,7 +3,7 @@ using Distributions
 include("mctools.jl")
 
 @defcomp MarketDamages begin
-    region = Index(region)
+    region = Index()
     y_year = Parameter(index=[time], unit="year")
 
     #incoming parameters from Climate

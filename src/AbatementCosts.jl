@@ -1,7 +1,7 @@
 include("mctools.jl")
 
 @defcomp AbatementCosts begin
-    region = Index(region)
+    region = Index()
     y_year = Parameter(index=[time], unit="year")
     y_year_0 = Parameter(unit="year")
 
