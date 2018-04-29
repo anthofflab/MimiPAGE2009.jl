@@ -1,4 +1,4 @@
-# Installation Guide
+# Getting Started
 
 This guide will briefly explain how to install Julia and Mimi-PAGE.
 

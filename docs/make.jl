@@ -7,7 +7,6 @@ makedocs(
 		"Home" => "index.md",
 		"Getting started" => "gettingstarted.md",
 		"Model Structure" => "model-structure.md",
-        "Scientific User Guide" => "scientificuserguide.md",
 		"Technical User Guide" => "technicaluserguide.md",
 		"Model Validation" => "validation.md"]
 )
@@ -17,5 +16,5 @@ deploydocs(
     make = nothing,
 	target = "build",
     repo = "github.com/anthofflab/mimi-page.jl.git",
-    julia = "0.5"
+    julia = "0.6"
 )
