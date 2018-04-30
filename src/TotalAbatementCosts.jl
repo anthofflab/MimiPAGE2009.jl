@@ -1,7 +1,7 @@
 using Mimi
 
 @defcomp TotalAbatementCosts begin
-    region = Index(region)
+    region = Index()
 
     tc_totalcosts_co2 = Parameter(index=[time, region], unit="\$million")
     tc_totalcosts_ch4 = Parameter(index=[time, region], unit="\$million")

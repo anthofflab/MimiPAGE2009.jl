@@ -3,7 +3,7 @@ using Distributions
 include("mctools.jl")
 
 @defcomp NonMarketDamages begin
-    region = Index(region)
+    region = Index()
 
     y_year = Parameter(index=[time], unit="year")
 

@@ -3,7 +3,7 @@ using Distributions
 include("mctools.jl")
 
 @defcomp ClimateTemperature begin
-    region = Index(region)
+    region = Index()
 
     # Basic parameters
     area = Parameter(index=[region], unit="km2")

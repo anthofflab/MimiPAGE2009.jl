@@ -1,7 +1,7 @@
 using Mimi
 
 @defcomp TotalAdaptationCosts begin
-    region = Index(region)
+    region = Index()
     #Total Adaptation Costs
     pop_population = Parameter(index=[time, region], unit= "million person")
     ac_adaptationcosts_economic = Parameter(index=[time, region], unit="\$million")
