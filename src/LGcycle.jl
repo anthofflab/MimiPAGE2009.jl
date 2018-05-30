@@ -33,7 +33,8 @@ function run_timestep(s::LGcycle,t::Int64)
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         tea0=(p.e_0globalLGemissions+nte0)*p.air_LGfractioninatm/100
         v.tea_LGemissionstoatm[t]=(p.e_globalLGemissions[t]+v.nte_natLGemissions[t])*p.air_LGfractioninatm/100
-        v.teay_LGemissionstoatm[t]=(v.tea_LGemissionstoatm[t]+tea0)/2
+        #v.teay_LGemissionstoatm[t]=(v.tea_LGemissionstoatm[t]+tea0)/2
+        v.teay_LGemissionstoatm[t]=(v.tea_LGemissionstoatm[t]+tea0)*(p.y_year[t]-p.y_year_0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcLG=p.c0_LGconcbaseyr-p.pic_preindustconcLG
         #Eq. 2 from Hope (2006) - base-year remaining emissions
