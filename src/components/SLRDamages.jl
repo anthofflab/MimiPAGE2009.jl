@@ -1,7 +1,7 @@
 using Mimi
 using Distributions
-include("load_parameters.jl")
-include("mctools.jl")
+include("../utils/load_parameters.jl")
+include("../utils/mctools.jl")
 
 @defcomp SLRDamages begin
     region = Index()

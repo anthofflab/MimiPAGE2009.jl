@@ -1,8 +1,8 @@
 using Mimi
 using Base.Test
 
-include("../src/CH4forcing.jl")
-include("../src/load_parameters.jl")
+include("../src/components/CH4forcing.jl")
+include("../src/utils/load_parameters.jl")
 
 
 m = Model()

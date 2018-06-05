@@ -1,8 +1,8 @@
 using Mimi
 using Base.Test
 
-include("../src/LGemissions.jl")
-include("../src/load_parameters.jl")
+include("../src/components/LGemissions.jl")
+include("../src/utils/load_parameters.jl")
 
 m = Model()
 

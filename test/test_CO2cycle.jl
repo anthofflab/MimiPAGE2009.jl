@@ -1,8 +1,8 @@
 using Mimi
 using Base.Test
 
-include("../src/load_parameters.jl")
-include("../src/CO2cycle.jl")
+include("../src/utils/load_parameters.jl")
+include("../src/components/CO2cycle.jl")
 
 m = Model()
 

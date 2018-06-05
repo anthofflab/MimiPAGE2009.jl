@@ -3,7 +3,7 @@ using Mimi
 using DataFrames
 using Base.Test
 
-include("../src/SeaLevelRise.jl")
+include("../src/components/SeaLevelRise.jl")
 
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])

@@ -1,6 +1,6 @@
 using Mimi
 using Distributions
-include("mctools.jl")
+include("../utils/mctools.jl")
 
 @defcomp co2cycle begin
     e_globalCO2emissions=Parameter(index=[time],unit="Mtonne/year")

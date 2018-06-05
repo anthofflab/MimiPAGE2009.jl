@@ -1,8 +1,8 @@
 using Mimi
 using Base.Test
 
-include("../src/load_parameters.jl")
-include("../src/N2Ocycle.jl")
+include("../src/utils/load_parameters.jl")
+include("../src/components/N2Ocycle.jl")
 
 m = Model()
 setindex(m, :time, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])

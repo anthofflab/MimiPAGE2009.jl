@@ -1,6 +1,6 @@
 using Mimi
 using Distributions
-include("mctools.jl")
+include("../utils/mctools.jl")
 
 @defcomp GDP begin
 # GDP: Gross domestic product $M

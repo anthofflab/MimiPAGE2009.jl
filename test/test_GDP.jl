@@ -1,8 +1,8 @@
 using Mimi
 using Base.Test
 
-include("../src/load_parameters.jl")
-include("../src/GDP.jl")
+include("../src/utils/load_parameters.jl")
+include("../src/components/GDP.jl")
 
 m = Model()
 
