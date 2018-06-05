@@ -18,6 +18,6 @@ run(m)
 emissions= m[:ch4emissions,  :e_regionalCH4emissions]
 
 # Recorded data
-emissions_compare=readpagedata(m, joinpath(dirname(@__FILE__), "validationdata","e_regionalCH4emissions.csv"))
+emissions_compare=readpagedata(m, "test/validationdata/e_regionalCH4emissions.csv")
 
 @test emissions ≈ emissions_compare rtol=1e-3
