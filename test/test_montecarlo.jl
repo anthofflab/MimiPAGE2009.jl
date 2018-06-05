@@ -1,4 +1,5 @@
 using Base.Test
+using CSVFiles
 using Missings
 
 include("../src/montecarlo.jl")
@@ -20,13 +21,13 @@ information = Dict(
     :sealevel => Dict(:transform => x -> x, :mu => 1.6056649448621665, :sigma => 0.6124270241884567)
 )
 
-compare = readtable(joinpath(@__DIR__, "validationdata/PAGE09montecarloquantiles.csv"))
+compare = DataFrame(load(joinpath(@__DIR__, "validationdata/PAGE09montecarloquantiles.csv")))
 
 if regenerate
     println("Regenerating MC distribution information")
     # Perform a large MC run and extract statistics
     do_monte_carlo_runs()
-    df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+    df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 
     for ii in 1:nrow(compare)
         name = Symbol(compare[ii, :Variable_Name])
@@ -47,7 +48,7 @@ else
     println("Performing MC sample")
     # Perform a small MC run
     do_monte_carlo_runs(samplesize)
-    df = readtable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+    df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 end
 
 # Compare all known quantiles
@@ -59,7 +60,7 @@ for ii in 1:nrow(compare)
         estimated = transform(quantile(collect(Missings.skipmissing(df[name])), qval)) # perform transform *after* quantile, so captures effect of all values
         stderr = sqrt(qval * (1 - qval) / (samplesize * pdf(distribution, estimated)^2))
 
-        expected = transform(compare[ii, Symbol("x$(trunc(Int, qval * 100))_")])
+        expected = transform(compare[ii, Symbol("perc_$(trunc(Int, qval * 100))")])
 
         #println("$name x $qval: $estimated ≈ $expected rtol=$(ceil(confidence * stderr, -trunc(Int, log10(stderr))))")
         @test estimated ≈ expected rtol=ceil(confidence * stderr, -trunc(Int, log10(stderr)))
