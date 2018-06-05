@@ -28,7 +28,7 @@ end
 function readpagedata(model::Model, filepath::AbstractString)
     # Handle relative paths
     if filepath[1] ∉ ['.', '/'] && !isfile(filepath)
-        filepath = joinpath(@__DIR__, "..", filepath)
+        filepath = joinpath(@__DIR__, "..", "..", filepath)
     end
 
     content = readlines(filepath)
@@ -64,7 +64,7 @@ end
 function load_parameters(model::Model, policy::String="policy-a")
     parameters = Dict{Any, Any}()
 
-    parameter_directory = joinpath(dirname(@__FILE__), "..", "data")
+    parameter_directory = joinpath(dirname(@__FILE__), "..", "..", "data")
     for file in filter(q->splitext(q)[2]==".csv", readdir(parameter_directory))
         parametername = splitext(file)[1]
 
