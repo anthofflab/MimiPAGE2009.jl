@@ -12,6 +12,7 @@ branches:
   - /release-.*/
 script:
   - julia -e 'Pkg.add("Mimi")'
+  - julia -e 'Pkg.add("CSVFiles")'
   - julia --code-coverage=user test/runtests.jl
 after_success:
   # push coverage results to Codecov
