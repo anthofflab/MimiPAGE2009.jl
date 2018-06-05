@@ -1,5 +1,3 @@
-using Compat
-
 function checkregionorder(model::Model, regions, file)
     regionaliases = Dict{AbstractString, Vector{AbstractString}}("EU" => [],
                                                                  "USA" => ["US"],
