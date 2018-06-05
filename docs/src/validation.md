@@ -81,10 +81,9 @@ distributions of total damages, total preventative costs, total
 adaptation costs, and total effects.  Differences between quantiles of
 the distribution for 4 model end-point variables are shown in the
 graph below. Error bars show the 95% confidence interval associated
-with sampling uncertainty only for Mimi PAGE (i.e. they under-estimate
-the true uncertainty of the difference between PAGE09 and Mimi PAGE)
+with sampling uncertainty.
 
 Distributions matched closely (<1.5% difference) for all outputs,
 based on 100,000 runs.
 
-![MC-validation.JPG](assets/MC-validation.JPG)
+![MC-validation.JPG](assets/MC-validation.png)
