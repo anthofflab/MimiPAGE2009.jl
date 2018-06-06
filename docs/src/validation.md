@@ -10,13 +10,13 @@ Relevant tests and data are saved in the 'test' folder. The folders are organize
 
 **test**
 
-Contains seperate unit tests for the deterministic version of each of the individual model components.
+Contains separate unit tests for the deterministic version of each of the individual model components.
 
 **test/validationdata**
 
 We obtained PAGE 2009 values from the Excel version of PAGE 2009, provided by Chris Hope (personal communication).
 
-Running the Excel version of PAGE 2009 requires the @RISK 7.5 Industial software (available at http://go.palisade.com/RISKDownload.html), which facilitates probabilistic modeling in Excel. Free 15-day trials of the software are avaiable.
+Running the Excel version of PAGE 2009 requires the @RISK 7.5 Industial software (available at http://go.palisade.com/RISKDownload.html), which facilitates probabilistic modeling in Excel. Free 15-day trials of the software are available
 
 In order to perform tests of individual components, known values were
 extracted from PAGE '09 or the PAGE written documentation. Where they
@@ -28,16 +28,16 @@ using a separate extraction tool. (Key values are saved in the `validationdata` 
 
 For each individual Mimi PAGE component, we tested the component with known input data and compared output with values from PAGE 2009. Nearly all values matched within 1%.
 
-As an example of how a test file works, consider `test_CO2emissions`, which serves as a test for the `CO2emissions.jl` file (within `../src`).
+As an example of how a test file works, consider `test/test_CO2emissions`, which serves as a test for the `src/components/CO2emissions.jl` file.
 
-First, we initialize the model and reference the relevant files (`load_paramaters.jl` and, notably, `CO2emissions.jl`). Then we add the `CO2emissions` component to our model `m`.
+First, we initialize the model and reference the relevant files (`src/utils/load_paramaters.jl` and, notably, `src/components/CO2emissions.jl`). Then we add the `CO2emissions` component to our model `m`.
 
 ```
 using Mimi
 using Base.Test
 
-include("../src/load_parameters.jl")
-include("../src/CO2emissions.jl")
+include("../src/utils/load_parameters.jl")
+include("../src/components/CO2emissions.jl")
 
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -53,7 +53,7 @@ setparameter(m, :co2emissions, :er_CO2emissionsgrowth, readpagedata(m, "data/er_
 ```
 
 Then we run our model, save the output to the `emissions` variable. We
-then load exogenous PAGE 2009 data on emisions into the
+then load exogenous PAGE 2009 data on emissions into the
 `emissions_compare` variable. We test to see if the output from our model matches that from PAGE within 1e-3 precision (it does).
 
 ```
