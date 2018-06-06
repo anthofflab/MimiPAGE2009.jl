@@ -40,7 +40,7 @@ policies can be added in the same fashion.
 
 ## Code format
 
- - The code is written in Julia (v0.5 or greater).
+ - The code is written in Julia (v0.6 or greater).
  - The data are in CSV format for easy portability and manipulation.
  - The docs are in Markdown format for readability on github.
 
@@ -60,7 +60,7 @@ variables (outputs).
 ```
 @defcomp co2forcing begin # this defines the component, gives it a name, and starts the code chunk
     # The value of parameters are specified elsewhere in the code,
-	# either as a external value or the output of a variable in another component
+    # either as a external value or the output of a variable in another component
 
     c_CO2concentration = Parameter(index=[time],unit="ppbv") # Sets a parameter which is indexed by time.
     f0_CO2baseforcing = Parameter(unit="W/m2")
