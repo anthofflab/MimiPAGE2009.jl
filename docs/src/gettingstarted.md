@@ -5,7 +5,7 @@ This guide will briefly explain how to install Julia and Mimi-PAGE.
 ## Installing Julia
 
 Mimi-PAGE requires the programming
-language [Julia](http://julialang.org/), version 0.5 or later, to
+language [Julia](http://julialang.org/), version 0.6 or later, to
 run. Download and install the current release from the Julia [download page](http://julialang.org/downloads/).
 
 ### Julia Editor Support
@@ -26,13 +26,13 @@ julia> Pkg.add("Mimi")
 ```
 You only have to run this command once on your machine.
 
-Mimi-PAGE also requires the Distributions, DataFrames, and Missings packages.
+Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles and Missings packages.
 
 For more information about the Mimi component framework, you can refer to the [Mimi](https://github.com/anthofflab/Mimi.jl) Github repository, which has a documentation and links to various models that are based on Mimi.
 
 ## Installing Mimi-PAGE
 
-Clone or download the Mimi-PAGE repository from the Mimi-PAGE [Github website](https://github.com/anthofflab/mimi-page.jl).
+Clone or download the Mimi-PAGE repository from the Mimi-PAGE [Github website](https://github.com/anthofflab/mimi-page-2009.jl).
 
 ## Using Mimi-PAGE
 
