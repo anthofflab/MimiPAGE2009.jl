@@ -35,7 +35,7 @@ sure a component is fully functional. The tests run each individual
 component separately so you can diagnose which might not be working
 and why. (They should all work). The tests take inputs, normally
 provided by other components, and produce outputs that often would
-otherwise go to other components  Both are stored in
+otherwise go to other components. Both are stored in
 `test/validationdata`. There is also test for the entire model in "test_mainmodel.jl"
 
 **data/policy-b** and **test/validationdata/policy-b**
