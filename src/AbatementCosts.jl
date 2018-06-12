@@ -31,7 +31,7 @@ include("mctools.jl")
     curve_above_curvatureofMACcurveabovezerocost = Parameter(unit="none")
     cross_experiencecrossoverratio = Parameter(unit="none")
     learn_learningrate = Parameter(unit="none")
-    # automult_autonomoustechchange = Parameter(unit="none")
+    automult_autonomoustechchange = Parameter(unit="none")
     equity_prop_equityweightsproportion = Parameter(unit="none")
 
     #Variables
@@ -44,8 +44,7 @@ include("mctools.jl")
     cumcbe_cumulativereductionssincebaseyear = Variable(index=[time, region], unit="Mtonne")
     cumcbe_g_totalreductions = Variable(index=[time], unit="Mtonne")
     learnfac_learning= Variable(index=[time, region], unit= "none")
-    # auto = Variable(unit="% per year")
-    auto = Parameter(unit="% per year")
+    auto = Variable(unit="% per year")
     autofac = Variable(index=[time], unit= "% per year")
     c0g = Variable(unit= "% per year")
     c0 = Variable(index=[time], unit= "\$/ton")
@@ -93,9 +92,8 @@ function run_timestep(s::AbatementCosts, t::Int64)
     end
         v.cumcbe_g_totalreductions[t] = sum(v.cumcbe_cumulativereductionssincebaseyear[t,:])
 
-        # v.auto = (1-p.automult_autonomoustechchange^(1/(p.y_year[end]-p.y_year_0)))*100
-        # v.autofac[t] = (1-v.auto/100)^(p.y_year[t] - p.y_year_0)
-        v.autofac[t] = (1-p.auto/100)^(p.y_year[t] - p.y_year_0)
+        v.auto = (1-p.automult_autonomoustechchange^(1/(p.y_year[end]-p.y_year_0)))*100
+        v.autofac[t] = (1-v.auto/100)^(p.y_year[t] - p.y_year_0)
 
         v.c0g = (p.c0mult_mostnegativecostinfinalyear^(1/(p.y_year[end]-p.y_year_0))-1)*100
         v.c0[t] = p.c0init_MostNegativeCostCutbackinBaseYear* (1+v.c0g/100)^(p.y_year[t]-p.y_year_0)
@@ -152,8 +150,7 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
     abatementcostscomp[:curve_above_curvatureofMACcurveabovezerocost] = .4
     abatementcostscomp[:cross_experiencecrossoverratio] = .2
     abatementcostscomp[:learn_learningrate] = .2
-    # abatementcostscomp[:automult_autonomoustechchange] = .65
-    abatementcostscomp[:auto] = 0.22411458953073282
+    abatementcostscomp[:automult_autonomoustechchange] = .65
     abatementcostscomp[:equity_prop_equityweightsproportion] = 1.
     abatementcostscomp[:y_year_0] = 2008.
 
