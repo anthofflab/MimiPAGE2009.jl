@@ -173,7 +173,6 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
         setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 10.)
         setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -4333.3333333333333)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
-        # setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 6333.33)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 6333.33333333333)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
         if policy == "policy-a"
@@ -188,9 +187,7 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
         setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 10.)
         setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -7333.333333333333)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
-        # setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 27333.33)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 27333.3333333333)
-        # setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 53.33)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 53.3333333333333)
         if policy == "policy-a"
             setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, joinpath(dirname(@__FILE__), "..","data","er_N2Oemissionsgrowth.csv")))
@@ -204,7 +201,6 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
         setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 10.)
         setdistinctparameter(model, componentname, :c0init_MostNegativeCostCutbackinBaseYear, -233.333333333333)
         setdistinctparameter(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
-        # setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 333.33)
         setdistinctparameter(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 333.333333333333)
         setdistinctparameter(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
         if policy == "policy-a"

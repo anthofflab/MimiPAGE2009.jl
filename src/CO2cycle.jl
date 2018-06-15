@@ -38,15 +38,13 @@ function run_timestep(s::co2cycle,t::Int64)
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         tea0=p.e0_globalCO2emissions*p.air_CO2fractioninatm/100
         v.tea_CO2emissionstoatm[t]=(p.e_globalCO2emissions[t])*p.air_CO2fractioninatm/100
-        #v.teay_CO2emissionstoatm[t]=(v.tea_CO2emissionstoatm[t]+tea0)/2
         v.teay_CO2emissionstoatm[t]=(v.tea_CO2emissionstoatm[t]+tea0)*(p.y_year[t]-p.y_year_0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcCO2=p.c0_CO2concbaseyr-p.pic_preindustconcCO2
         #Eq. 2 from Hope (2006) - base-year remaining emissions
         v.re_remainCO2base=v.exc_excessconcCO2*p.den_CO2density
         #PAGE 2009 initial remaining emissions without CO2 feedback
-        #renoccf0_remainCO2wocc=v.re_remainCO2base/(1+gain/100)
-        renoccf0_remainCO2wocc=v.re_remainCO2base/((100+gain)/100)
+        renoccf0_remainCO2wocc=v.re_remainCO2base/(1+gain/100)
         #eq. 8 from Hope (2006) - baseline cumulative emissions to atmosphere
         ceabase=p.ce_0_basecumCO2emissions*p.air_CO2fractioninatm/100
         #eq.9 from Hope(2006) - cumulative emissions in atmosphere
@@ -93,7 +91,6 @@ function addCO2cycle(model::Model)
     co2cycleref[:c0_CO2concbaseyr] = 395000.
     co2cycleref[:ce_0_basecumCO2emissions] = 2050000.
     co2cycleref[:res_CO2atmlifetime] = 73.3333333333333
-    #co2cycleref[:ccf_CO2feedback] = 9.66666666666666
     co2cycleref[:ccf_CO2feedback] = 9.66666666666667
     co2cycleref[:ccfmax_maxCO2feedback] = 53.3333333333333
     co2cycleref[:air_CO2fractioninatm] = 62.00
