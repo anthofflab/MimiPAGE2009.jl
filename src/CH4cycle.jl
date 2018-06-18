@@ -33,7 +33,7 @@ function run_timestep(s::ch4cycle,t::Int64)
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_CH4emissionstoatm[t]=(p.e_globalCH4emissions[t]+v.nte_natCH4emissions[t])*p.air_CH4fractioninatm/100
         tea_0=(p.e_0globalCH4emissions+nte_0)*p.air_CH4fractioninatm/100
-        v.teay_CH4emissionstoatm[t]=(v.tea_CH4emissionstoatm[t]+tea_0)/2
+        v.teay_CH4emissionstoatm[t]=(v.tea_CH4emissionstoatm[t]+tea_0)*(p.y_year[t]-p.y_year_0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcCH4=p.c0_CH4concbaseyr-p.pic_preindustconcCH4
         #Eq. 2 from Hope (2006) - base-year remaining emissions

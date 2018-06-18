@@ -34,7 +34,7 @@ function run_timestep(s::n2ocycle,t::Int64)
         #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions
         v.tea_N2Oemissionstoatm[t]=(p.e_globalN2Oemissions[t]+v.nte_natN2Oemissions[t])*p.air_N2Ofractioninatm/100
         tea_0=(p.e_0globalN2Oemissions+nte_0)*p.air_N2Ofractioninatm/100
-        v.teay_N2Oemissionstoatm[t]=(v.tea_N2Oemissionstoatm[t]+tea_0)/2
+        v.teay_N2Oemissionstoatm[t]=(v.tea_N2Oemissionstoatm[t]+tea_0)*(p.y_year[t]-p.y_year_0)/2
         #adapted from eq.1 in Hope(2006) - calculate excess concentration in base year
         v.exc_excessconcN2O=p.c0_N2Oconcbaseyr-p.pic_preindustconcN2O
         #Eq. 2 from Hope (2006) - base-year remaining emissions
