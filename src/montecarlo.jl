@@ -1,5 +1,6 @@
 using Distributions
 using DataFrames
+using CSVFiles
 
 using Mimi.ScalarModelParameter
 
@@ -76,7 +77,7 @@ function do_monte_carlo_runs(n=100_000)
 
     #compile results and save output
     df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
-    writetable(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"),df)
+    save(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"),df)
 
     return timing
 end

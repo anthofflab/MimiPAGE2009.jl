@@ -1,4 +1,4 @@
-Variable Name,Description,Units,5%,10%,25%,50%,75%,90%,95%
+Variable_Name,Description,Units,perc_5,perc_10,perc_25,perc_50,perc_75,perc_90,perc_95
 td,Total Impacts,Million Dollars,4.82E+07,6.52E+07,1.11E+08,2.21E+08,4.72E+08,9.15E+08,1.33E+09
 tpc,Total Preventative Costs,Million Dollars,-7.10E+07,-5.64E+07,-3.65E+07,-2.01E+07,-9.80E+06,-5.13E+06,-3.70E+06
 tac,Total Adaptation Costs,Million Dollars,1.93E+07,2.18E+07,2.68E+07,3.39E+07,4.33E+07,5.43E+07,6.25E+07

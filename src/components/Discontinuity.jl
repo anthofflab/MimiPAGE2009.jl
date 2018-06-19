@@ -1,6 +1,6 @@
 using Mimi
 using Distributions
-include("mctools.jl")
+include("../utils/mctools.jl")
 
 @defcomp Discontinuity begin
 

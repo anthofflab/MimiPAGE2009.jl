@@ -1,8 +1,8 @@
 using Mimi
 using Base.Test
 
-include("../src/load_parameters.jl")
-include("../src/CO2emissions.jl")
+include("../src/utils/load_parameters.jl")
+include("../src/components/CO2emissions.jl")
 
 m = Model()
 setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])

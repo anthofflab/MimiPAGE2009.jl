@@ -4,9 +4,17 @@
 
 The folders are organized as follows.
 
-**src**
+**src/components**
 
 Here you will find the model components, i.e. the code.
+
+**src/utils**
+
+This folder has a number of lower level helper routines for loading data and running Monte Carlo simulations.
+
+**src**
+
+This folder has the main model composition and run code.
 
 **data**
 
@@ -27,7 +35,7 @@ sure a component is fully functional. The tests run each individual
 component separately so you can diagnose which might not be working
 and why. (They should all work). The tests take inputs, normally
 provided by other components, and produce outputs that often would
-otherwise go to other compontents.  Both are stored in
+otherwise go to other components. Both are stored in
 `test/validationdata`. There is also test for the entire model in "test_mainmodel.jl"
 
 **data/policy-b** and **test/validationdata/policy-b**
@@ -44,9 +52,9 @@ policies can be added in the same fashion.
  - The data are in CSV format for easy portability and manipulation.
  - The docs are in Markdown format for readability on github.
 
-Each component in the model (and the test files as well) has the same basic mimi structure.
+Each component in the model (and the test files as well) has the same basic Mimi structure.
 
-Here we show the code for the CO2 Forcing component to provide an example of the mimi structure with comments.
+Here we show the code for the CO2 Forcing component to provide an example of the Mimi structure with comments.
 
 ```
 # Imports the Mimi package. This is only done with certain components,
@@ -97,7 +105,7 @@ function addCO2forcing(model::Model)
 end
 ```
 
-In the `getpagefunction.jl` file, you will find code that sends variables between components. For example,
+In the `src/getpagefunction.jl` file, you will find code that sends variables between components. For example,
 
 ```
 CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing.

@@ -2,7 +2,7 @@ using Mimi
 using DataFrames
 using Base.Test
 
-include("../src/SLRDamages.jl")
+include("../src/components/SLRDamages.jl")
 
 m = Model()
 setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
