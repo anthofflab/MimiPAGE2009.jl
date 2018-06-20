@@ -103,13 +103,13 @@ function addnonmarketdamages(model::Model)
 end
 
 function randomizenonmarketdamages(model::Model)
-    update_external_parameter(model, :tcal_CalibrationTemp, rand(TriangularDist(2.5, 3.5, 3.)))
-    update_external_parameter(model, :iben_NonMarketInitialBenefit, rand(TriangularDist(0, .2, .05)))
-    update_external_parameter(model, :w_NonImpactsatCalibrationTemp, rand(TriangularDist(.1, 1, .5)))
-    update_external_parameter(model, :pow_NonMarketExponent, rand(TriangularDist(1.5, 3, 2)))
-    update_external_parameter(model, :ipow_NonMarketIncomeFxnExponent, rand(TriangularDist(-.2, .2, 0)))
+    update_external_param(model, :tcal_CalibrationTemp, rand(TriangularDist(2.5, 3.5, 3.)))
+    update_external_param(model, :iben_NonMarketInitialBenefit, rand(TriangularDist(0, .2, .05)))
+    update_external_param(model, :w_NonImpactsatCalibrationTemp, rand(TriangularDist(.1, 1, .5)))
+    update_external_param(model, :pow_NonMarketExponent, rand(TriangularDist(1.5, 3, 2)))
+    update_external_param(model, :ipow_NonMarketIncomeFxnExponent, rand(TriangularDist(-.2, .2, 0)))
     # Also randomized in GDP and SLRDamages and Market Damages
-    update_external_parameter(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
+    update_external_param(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
     wincf = [1.0,
              rand(TriangularDist(.6, 1, .8)),
              rand(TriangularDist(.4, 1.2, .8)),
@@ -118,5 +118,5 @@ function randomizenonmarketdamages(model::Model)
              rand(TriangularDist(.4, 1.2, .8)),
              rand(TriangularDist(.4, .8, .6)),
              rand(TriangularDist(.4, .8, .6))]
-    update_external_parameter(model, :WINCF_weightsfactor, wincf)
+    update_external_param(model, :WINCF_weightsfactor, wincf)
 end

@@ -122,8 +122,8 @@ function addclimatetemperature(model::Model)
 end
 
 function randomizeclimatetemperature(model::Model)
-    update_external_parameter(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
-    update_external_parameter(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
-    update_external_parameter(model, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
-    update_external_parameter(model, :tcr_transientresponse, rand(TriangularDist(1, 2.8, 1.3)))
+    update_external_param(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
+    update_external_param(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
+    update_external_param(model, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
+    update_external_param(model, :tcr_transientresponse, rand(TriangularDist(1, 2.8, 1.3)))
 end

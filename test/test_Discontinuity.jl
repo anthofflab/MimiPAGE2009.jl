@@ -4,17 +4,17 @@ using Base.Test
 include("../src/components/Discontinuity.jl")
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_dimension(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 adddiscontinuity(m)
 
-setparameter(m, :Discontinuity, :rt_g_globaltemperature, [0.75,0.77,0.99,1.27,1.62,1.99,3.07,3.90,5.10,6.03])
-setparameter(m, :Discontinuity, :y_year_0, 2008.)
-setparameter(m, :Discontinuity, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setparameter(m, :Discontinuity, :rgdp_per_cap_NonMarketRemainGDP, readpagedata(m, "test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv"))
-setparameter(m, :Discontinuity, :rcons_per_cap_NonMarketRemainConsumption, readpagedata(m, "test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv"))
-setparameter(m, :Discontinuity, :isatg_saturationmodification, 28.333333333333336)
+set_parameter!(m, :Discontinuity, :rt_g_globaltemperature, [0.75,0.77,0.99,1.27,1.62,1.99,3.07,3.90,5.10,6.03])
+set_parameter!(m, :Discontinuity, :y_year_0, 2008.)
+set_parameter!(m, :Discontinuity, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+set_parameter!(m, :Discontinuity, :rgdp_per_cap_NonMarketRemainGDP, readpagedata(m, "test/validationdata/rgdp_per_cap_NonMarketRemainGDP.csv"))
+set_parameter!(m, :Discontinuity, :rcons_per_cap_NonMarketRemainConsumption, readpagedata(m, "test/validationdata/rcons_per_cap_NonMarketRemainConsumption.csv"))
+set_parameter!(m, :Discontinuity, :isatg_saturationmodification, 28.333333333333336)
 ##running Model
 run(m)
 

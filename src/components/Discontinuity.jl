@@ -104,13 +104,13 @@ function adddiscontinuity(model::Model)
 end
 
 function randomizediscontinuity(model::Model)
-    update_external_parameter(model, :rand_discontinuity, rand(Uniform(0, 1)))
+    update_external_param(model, :rand_discontinuity, rand(Uniform(0, 1)))
 
-    update_external_parameter(model, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
-    update_external_parameter(model, :pdis_probability, rand(TriangularDist(10, 30, 20)))
-    update_external_parameter(model, :wdis_gdplostdisc, rand(TriangularDist(5, 25, 15)))
-    update_external_parameter(model, :ipow_incomeexponent, rand(TriangularDist(-.3, 0, -.1)))
-    update_external_parameter(model, :distau_discontinuityexponent, rand(TriangularDist(20, 200, 50)))
+    update_external_param(model, :tdis_tolerabilitydisc, rand(TriangularDist(2, 4, 3)))
+    update_external_param(model, :pdis_probability, rand(TriangularDist(10, 30, 20)))
+    update_external_param(model, :wdis_gdplostdisc, rand(TriangularDist(5, 25, 15)))
+    update_external_param(model, :ipow_incomeexponent, rand(TriangularDist(-.3, 0, -.1)))
+    update_external_param(model, :distau_discontinuityexponent, rand(TriangularDist(20, 200, 50)))
     wincf = [1.0,
              rand(TriangularDist(.6, 1, .8)),
              rand(TriangularDist(.4, 1.2, .8)),
@@ -120,5 +120,5 @@ function randomizediscontinuity(model::Model)
              rand(TriangularDist(.4, .8, .6)),
              rand(TriangularDist(.4, .8, .6))]
 
-    update_external_parameter(model, :WINCF_weightsfactor, wincf)
+    update_external_param(model, :WINCF_weightsfactor, wincf)
 end

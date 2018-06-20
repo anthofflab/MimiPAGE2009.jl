@@ -6,16 +6,16 @@ include("../src/utils/load_parameters.jl")
 include("../src/components/TotalAbatementCosts.jl")
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_dimension(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addtotalabatementcosts(m)
 
-setparameter(m, :TotalAbatementCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
-setparameter(m, :TotalAbatementCosts, :tc_totalcosts_co2, readpagedata(m, "test/validationdata/tc_totalcosts_co2.csv"))
-setparameter(m, :TotalAbatementCosts, :tc_totalcosts_ch4, readpagedata(m, "test/validationdata/tc_totalcosts_ch4.csv"))
-setparameter(m, :TotalAbatementCosts, :tc_totalcosts_n2o, readpagedata(m, "test/validationdata/tc_totalcosts_n2o.csv"))
-setparameter(m, :TotalAbatementCosts, :tc_totalcosts_linear, readpagedata(m, "test/validationdata/tc_totalcosts_linear.csv"))
+set_parameter!(m, :TotalAbatementCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
+set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_co2, readpagedata(m, "test/validationdata/tc_totalcosts_co2.csv"))
+set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_ch4, readpagedata(m, "test/validationdata/tc_totalcosts_ch4.csv"))
+set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_n2o, readpagedata(m, "test/validationdata/tc_totalcosts_n2o.csv"))
+set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_linear, readpagedata(m, "test/validationdata/tc_totalcosts_linear.csv"))
 
 run(m)
 

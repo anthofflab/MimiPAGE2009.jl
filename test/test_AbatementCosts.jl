@@ -6,23 +6,23 @@ include("../src/utils/load_parameters.jl")
 include("../src/components/AbatementCosts.jl")
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_dimension(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 addabatementcosts(m, :CO2)
 addabatementcosts(m, :CH4)
 addabatementcosts(m, :N2O)
 addabatementcosts(m, :Lin)
 
-setparameter(m, :AbatementCostsCO2, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-setparameter(m, :AbatementCostsCH4, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-setparameter(m, :AbatementCostsN2O, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-setparameter(m, :AbatementCostsLin, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_parameter!(m, :AbatementCostsCO2, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_parameter!(m, :AbatementCostsCH4, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_parameter!(m, :AbatementCostsN2O, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_parameter!(m, :AbatementCostsLin, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
-setleftoverparameters(m, p)
+set_leftover_params!(m, p)
 
 run(m)
 

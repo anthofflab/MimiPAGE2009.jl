@@ -5,8 +5,8 @@ include("../src/utils/load_parameters.jl")
 include("../src/components/ClimateTemperature.jl")
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_dimension(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 climatetemperature = addclimatetemperature(m)
 
@@ -17,7 +17,7 @@ climatetemperature[:ft_totalforcing] = readpagedata(m, "test/validationdata/ft_t
 climatetemperature[:fs_sulfateforcing] = readpagedata(m, "test/validationdata/fs_sulfateforcing.csv")
 
 p = load_parameters(m)
-setleftoverparameters(m, p)
+set_leftover_params!(m, p)
 
 ##running Model
 run(m)

@@ -18,8 +18,8 @@ include("components/ClimateTemperature.jl")
 
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_dimension(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 #add all the components
 CO2emissions = addcomponent(m,co2emissions)
@@ -88,6 +88,6 @@ climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 p = load_parameters(m)
 p["y_year_0"] = 2008.
 p["y_year"] = m.indices_values[:time]
-setleftoverparameters(m, p)
+set_leftover_params!(m, p)
 
 run(m)

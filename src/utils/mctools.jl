@@ -19,10 +19,10 @@ end
 """
 Change the value of an external parameter
 """
-function update_external_parameter(m::Model, name::Symbol, value::Float64)
+function update_external_param(m::Model, name::Symbol, value::Float64)
     m.external_parameters[Symbol(lowercase(string(name)))].value = value
 end
 
-function update_external_parameter(m::Model, name::Symbol, value::AbstractArray)
+function update_external_param(m::Model, name::Symbol, value::AbstractArray)
     m.external_parameters[Symbol(lowercase(string(name)))].values = value
 end
