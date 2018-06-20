@@ -79,12 +79,10 @@ variables (outputs).
 end
 ```
 
-Next we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.
+Next we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.  This function is contained within the `@defcomp` macro.
 
 ```
-function run_timestep(s::co2forcing, t::Int64)
-    v = s.Variables
-    p = s.Parameters
+function run_timestep(p, v, d, t)
 
     # Eq.13 in Hope 2006
     v.f_CO2forcing[t] = p.f0_CO2baseforcing + p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
