@@ -11,19 +11,16 @@ using Mimi
 
     # Variables
     pop_population = Variable(index=[time, region], unit="million person")
-end
+        
+    function run_timestep(p, v, d, t)
 
-function run_timestep(s::Population, tt::Int64)
-    v = s.Variables
-    p = s.Parameters
-    d = s.Dimensions
-
-    for rr in d.region
-        # Eq.28 in Hope 2002 (defined for GDP, but also applies to population)
-        if tt == 1
-            v.pop_population[tt, rr] = p.pop0_initpopulation[rr] * (1 + p.popgrw_populationgrowth[tt, rr]/100)^(p.y_year[tt] - p.y_year_0)
-        else
-            v.pop_population[tt, rr] = v.pop_population[tt-1, rr] * (1 + p.popgrw_populationgrowth[tt, rr]/100)^(p.y_year[tt] - p.y_year[tt-1])
+        for rr in d.region
+            # Eq.28 in Hope 2002 (defined for GDP, but also applies to population)
+            if tt == 1
+                v.pop_population[tt, rr] = p.pop0_initpopulation[rr] * (1 + p.popgrw_populationgrowth[tt, rr]/100)^(p.y_year[tt] - p.y_year_0)
+            else
+                v.pop_population[tt, rr] = v.pop_population[tt-1, rr] * (1 + p.popgrw_populationgrowth[tt, rr]/100)^(p.y_year[tt] - p.y_year[tt-1])
+            end
         end
     end
 end

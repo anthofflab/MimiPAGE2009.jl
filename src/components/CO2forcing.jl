@@ -6,14 +6,12 @@ using Mimi
     fslope_CO2forcingslope=Parameter(unit="W/m2")
     c0_baseCO2conc=Parameter(unit="ppbv")
     f_CO2forcing=Variable(index=[time],unit="W/m2")
-end
 
-function run_timestep(s::co2forcing, t::Int64)
-    v = s.Variables
-    p = s.Parameters
+    function run_timestep(p, v, d, t)
 
-    #eq.13 in Hope 2006
-    v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
+        #eq.13 in Hope 2006
+        v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
+    end
 end
 
 function addCO2forcing(model::Model)

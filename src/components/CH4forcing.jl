@@ -10,21 +10,18 @@ using Mimi
     f_CH4forcing=Variable(index=[time],unit="W/m2")
     over_baseoverlap=Variable(unit="W/m2")
     over=Variable(index=[time],unit="W/m2")
-end
 
+    function run_timestep(p, v, d, t)
 
-function run_timestep(s::ch4forcing, t::Int64)
-    v = s.Variables
-    p = s.Parameters
+        #from p.16 in Hope 2009
+        if t==1
+            #calculate baseline forcing overlap in first time period
+            v.over_baseoverlap=-0.47*log(1+2.0e-5*(p.c0_baseN2Oconc*p.c0_baseCH4conc)^0.75+5.3e-15*p.c0_baseCH4conc*(p.c0_baseCH4conc*p.c0_baseN2Oconc)^1.52)
+        end
 
-    #from p.16 in Hope 2009
-    if t==1
-        #calculate baseline forcing overlap in first time period
-        v.over_baseoverlap=-0.47*log(1+2.0e-5*(p.c0_baseN2Oconc*p.c0_baseCH4conc)^0.75+5.3e-15*p.c0_baseCH4conc*(p.c0_baseCH4conc*p.c0_baseN2Oconc)^1.52)
+        v.over[t]=-0.47*log(1+2.0e-5*(p.c_CH4concentration[t]*p.c0_baseN2Oconc)^0.75+5.3e-15*p.c_CH4concentration[t]*(p.c0_baseN2Oconc*p.c_CH4concentration[t])^1.52)
+        v.f_CH4forcing[t]=p.f0_CH4baseforcing+p.fslope_CH4forcingslope*(sqrt(p.c_CH4concentration[t])-sqrt(p.c0_baseCH4conc))+v.over[t]-v.over_baseoverlap
     end
-
-    v.over[t]=-0.47*log(1+2.0e-5*(p.c_CH4concentration[t]*p.c0_baseN2Oconc)^0.75+5.3e-15*p.c_CH4concentration[t]*(p.c0_baseN2Oconc*p.c_CH4concentration[t])^1.52)
-    v.f_CH4forcing[t]=p.f0_CH4baseforcing+p.fslope_CH4forcingslope*(sqrt(p.c_CH4concentration[t])-sqrt(p.c0_baseCH4conc))+v.over[t]-v.over_baseoverlap
 end
 
 function addCH4forcing(model::Model)

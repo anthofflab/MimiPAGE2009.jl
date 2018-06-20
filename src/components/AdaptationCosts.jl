@@ -32,49 +32,46 @@ include("../utils/mctools.jl")
     aci_adaptivecostimpact = Variable(index=[time, region], unit="\$million")
 
     ac_adaptivecosts = Variable(index=[time, region], unit="\$million")
-end
 
-function run_timestep(s::AdaptationCosts, tt::Int64)
-    v = s.Variables
-    p = s.Parameters
-    d = s.Dimensions
+    function run_timestep(p, v, d, tt)
 
-    # Hope (2009), p. 21, equation -5
-    auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[end] - p.y_year_0)))*100 # % per year
-    v.autofac_autonomouschangefraction[tt] = (1 - auto_autonomouschangepercent/100)^(p.y_year[tt] - p.y_year_0) # Varies by year
+        # Hope (2009), p. 21, equation -5
+        auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[end] - p.y_year_0)))*100 # % per year
+        v.autofac_autonomouschangefraction[tt] = (1 - auto_autonomouschangepercent/100)^(p.y_year[tt] - p.y_year_0) # Varies by year
 
-    for rr in d.region
-        #calculate adjusted tolerable level and max impact based on adaptation policy
-        if (p.y_year[tt] - p.pstart_startdateofadaptpolicy[rr]) < 0
-            v.atl_adjustedtolerablelevel[tt,rr]= 0
-        elseif ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr])<1.
-            v.atl_adjustedtolerablelevel[tt,rr]=
-                ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr]) *
-                p.plateau_increaseintolerableplateaufromadaptation[rr]
-        else
-            v.atl_adjustedtolerablelevel[tt,rr] = p.plateau_increaseintolerableplateaufromadaptation[rr]
+        for rr in d.region
+            #calculate adjusted tolerable level and max impact based on adaptation policy
+            if (p.y_year[tt] - p.pstart_startdateofadaptpolicy[rr]) < 0
+                v.atl_adjustedtolerablelevel[tt,rr]= 0
+            elseif ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr])<1.
+                v.atl_adjustedtolerablelevel[tt,rr]=
+                    ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr]) *
+                    p.plateau_increaseintolerableplateaufromadaptation[rr]
+            else
+                v.atl_adjustedtolerablelevel[tt,rr] = p.plateau_increaseintolerableplateaufromadaptation[rr]
+            end
+
+            if (p.y_year[tt]- p.istart_startdate[rr]) < 0
+                v.imp_adaptedimpacts[tt,rr] = 0
+            elseif ((p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]) < 1
+                v.imp_adaptedimpacts[tt,rr] =
+                    (p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]*
+                    p.impred_eventualpercentreduction[rr]
+            else
+                v.imp_adaptedimpacts[tt,rr] = p.impred_eventualpercentreduction[rr]
+            end
+
+            # Hope (2009), p. 25, equations 1-2
+            cp_costplateau_regional = p.cp_costplateau_eu * p.cf_costregional[rr]
+            ci_costimpact_regional = p.ci_costimpact_eu * p.cf_costregional[rr]
+
+            # Hope (2009), p. 25, equations 3-4
+            v.acp_adaptivecostplateau[tt, rr] = v.atl_adjustedtolerablelevel[tt, rr] * cp_costplateau_regional * p.gdp[tt, rr] * v.autofac_autonomouschangefraction[tt] / 100
+            v.aci_adaptivecostimpact[tt, rr] = v.imp_adaptedimpacts[tt, rr] * ci_costimpact_regional * p.gdp[tt, rr] * p.impmax_maximumadaptivecapacity[rr] * v.autofac_autonomouschangefraction[tt] / 100
+
+            # Hope (2009), p. 25, equation 5
+            v.ac_adaptivecosts[tt, rr] = v.acp_adaptivecostplateau[tt, rr] + v.aci_adaptivecostimpact[tt, rr]
         end
-
-        if (p.y_year[tt]- p.istart_startdate[rr]) < 0
-            v.imp_adaptedimpacts[tt,rr] = 0
-        elseif ((p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]) < 1
-            v.imp_adaptedimpacts[tt,rr] =
-                (p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]*
-                p.impred_eventualpercentreduction[rr]
-        else
-            v.imp_adaptedimpacts[tt,rr] = p.impred_eventualpercentreduction[rr]
-        end
-
-        # Hope (2009), p. 25, equations 1-2
-        cp_costplateau_regional = p.cp_costplateau_eu * p.cf_costregional[rr]
-        ci_costimpact_regional = p.ci_costimpact_eu * p.cf_costregional[rr]
-
-        # Hope (2009), p. 25, equations 3-4
-        v.acp_adaptivecostplateau[tt, rr] = v.atl_adjustedtolerablelevel[tt, rr] * cp_costplateau_regional * p.gdp[tt, rr] * v.autofac_autonomouschangefraction[tt] / 100
-        v.aci_adaptivecostimpact[tt, rr] = v.imp_adaptedimpacts[tt, rr] * ci_costimpact_regional * p.gdp[tt, rr] * p.impmax_maximumadaptivecapacity[rr] * v.autofac_autonomouschangefraction[tt] / 100
-
-        # Hope (2009), p. 25, equation 5
-        v.ac_adaptivecosts[tt, rr] = v.acp_adaptivecostplateau[tt, rr] + v.aci_adaptivecostimpact[tt, rr]
     end
 end
 
