@@ -1,6 +1,7 @@
 using Mimi
 
-#TODO:  TBD make a module?  Then adjust main_model.jl accordingly?
+#TODO:  Should we move this into a module wrapper (and adjust main_model.jl
+#accordingly), or leave it as is? 
 
 include("utils/load_parameters.jl")
 include("components/CO2emissions.jl")
@@ -180,8 +181,8 @@ end
 
 function getpage(policy::String="policy-a")
     m = Model()
-    add_dimension(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-    add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+    set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+    set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
     buildpage(m, policy)
 

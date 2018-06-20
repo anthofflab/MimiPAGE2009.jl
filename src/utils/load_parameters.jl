@@ -1,3 +1,4 @@
+#TODO:  double check that this function operates correctl and efficiently
 function checkregionorder(model::Model, regions, file)
     regionaliases = Dict{AbstractString, Vector{AbstractString}}("EU" => [],
                                                                  "USA" => ["US"],
@@ -17,6 +18,7 @@ function checkregionorder(model::Model, regions, file)
     end
 end
 
+#TODO:  double check that this function operates correctl and efficiently
 function checktimeorder(model::Model, times, file)
     for ii in 1:length(times)
         if Mimi.time_labels(model)[ii] != times[ii]

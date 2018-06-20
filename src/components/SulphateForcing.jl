@@ -18,7 +18,7 @@ include("../utils/mctools.jl")
 
     fs_sulphateforcing = Variable(index=[time, region], unit="W/m2")
 
-    function run_timestep(p, v, d, t)
+    function run_timestep(p, v, d, tt)
         bigSFX0 = p.se0_sulphateemissionsbase ./ p.area
 
         for rr in d.region

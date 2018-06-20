@@ -52,7 +52,7 @@ function do_monte_carlo_runs(n=100_000)
                 param = x.external_param
             end
 
-            #TODO:  setfield! is no longer a function
+            #TODO:  setfield! is no longer a function, need to replace this
             if isa(param, ScalarModelParameter)
                 setfield!(get(m.mi).components[x.comp_name].parameters, x.param_name, param.value)
             else

@@ -26,7 +26,6 @@ include("../utils/mctools.jl")
     den_CO2density=Parameter(unit="Mtonne/ppbv")
     rt_g0_baseglobaltemp=Parameter(unit="degreeC")
     rt_g_globaltemperature=Parameter(index=[time],unit="degreeC")
-end
 
     function run_timestep(p, v, d, t)
 
@@ -80,6 +79,7 @@ end
         v.c_CO2concentration[t]=p.pic_preindustconcCO2+v.exc_excessconcCO2 * v.re_remainCO2[t]/v.re_remainCO2base
     end
 end
+
 function addCO2cycle(model::Model)
     co2cycleref = addcomponent(model, co2cycle)
 

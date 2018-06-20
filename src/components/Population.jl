@@ -12,7 +12,7 @@ using Mimi
     # Variables
     pop_population = Variable(index=[time, region], unit="million person")
         
-    function run_timestep(p, v, d, t)
+    function run_timestep(p, v, d, tt)
 
         for rr in d.region
             # Eq.28 in Hope 2002 (defined for GDP, but also applies to population)

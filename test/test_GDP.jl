@@ -6,8 +6,8 @@ include("../src/components/GDP.jl")
 
 m = Model()
 
-add_dimension(m, :time, convert(Vector{Float64}, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200]))
-add_dimension(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
+set_dimension!(m, :time, convert(Vector{Float64}, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200]))
+set_dimension!(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
 
 gdp = addgdp(m)
 gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
