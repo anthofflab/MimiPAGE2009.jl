@@ -1,4 +1,7 @@
 using Mimi
+
+#TODO:  TBD make a module?  Then adjust main_model.jl accordingly?
+
 include("utils/load_parameters.jl")
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")
@@ -131,21 +134,21 @@ function buildpage(m::Model, policy::String="policy-a")
     slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
     slrdamages[:tct_per_cap_totalcostspercap] = totalabatementcosts[:tct_per_cap_totalcostspercap]
     slrdamages[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
-    connectparameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true)
+    connect_parameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
     slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
     slrdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
     marketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
     marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
     marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
-    connectparameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
+    connect_parameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
     marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
     marketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
     nonmarketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
     nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
     nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
-    connectparameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true)
+    connect_parameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
     nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adaptedimpacts]
     nonmarketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
@@ -171,7 +174,7 @@ end
 function initpage(m::Model, policy::String="policy-a")
     p = load_parameters(m, policy)
     p["y_year_0"] = 2008.
-    p["y_year"] = m.indices_values[:time]
+    p["y_year"] = Mimi.dim_keys(m.md, :time)
     set_leftover_params!(m, p)
 end
 

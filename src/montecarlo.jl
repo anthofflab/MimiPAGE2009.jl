@@ -43,18 +43,20 @@ function do_monte_carlo_runs(n=100_000)
         randomizeadaptationcosts(m)
 
         # Update all parameters
-        for x in m.external_parameter_connections
+        for x in m.external_parameter_conns
             # Look to see if this is a normal parameter, with the local name identical to the external name
-            if Symbol(lowercase(string(x.param_name))) in keys(m.external_parameters)
+            if Symbol(lowercase(string(x.param_name))) in keys(m.external_params)
                 # Guess that this is the intended parameter, and use it instead
-                param = m.external_parameters[Symbol(lowercase(string(x.param_name)))]
+                param = m.external_params[Symbol(lowercase(string(x.param_name)))]
             else
-                param = x.external_parameter
+                param = x.external_param
             end
+
+            #TODO:  setfield! is no longer a function
             if isa(param, ScalarModelParameter)
-                setfield!(get(m.mi).components[x.component_name].Parameters, x.param_name, param.value)
+                setfield!(get(m.mi).components[x.comp_name].parameters, x.param_name, param.value)
             else
-                setfield!(get(m.mi).components[x.component_name].Parameters, x.param_name, param.values)
+                setfield!(get(m.mi).components[x.comp_name].parameters, x.param_name, param.values)
             end
         end
 

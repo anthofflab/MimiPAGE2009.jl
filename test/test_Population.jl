@@ -10,7 +10,7 @@ add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa",
 
 population = addpopulation(m)
 population[:y_year_0] = 2008.
-population[:y_year] = m.indices_values[:time]
+population[:y_year] = Mimi.dim_keys(m.md, :time)
 
 p = load_parameters(m)
 

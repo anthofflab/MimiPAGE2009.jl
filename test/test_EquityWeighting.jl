@@ -20,7 +20,7 @@ equityweighting[:rcons_percap_dis] = readpagedata(m, "test/validationdata/rcons_
 equityweighting[:yagg_periodspan] = readpagedata(m, "test/validationdata/yagg_periodspan.csv")
 equityweighting[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")
 equityweighting[:y_year_0] = 2008.
-equityweighting[:y_year] = m.indices_values[:time]
+equityweighting[:y_year] = Mimi.dim_keys(m.md, :time)
 
 p = load_parameters(m)
 set_leftover_params!(m, p)

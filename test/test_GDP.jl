@@ -12,7 +12,7 @@ add_dimension(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Afri
 gdp = addgdp(m)
 gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
 gdp[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")
-gdp[:y_year] = m.indices_values[:time]
+gdp[:y_year] = Mimi.dim_keys(m.md, :time)
 gdp[:y_year_0] = 2008.
 
 p=load_parameters(m)

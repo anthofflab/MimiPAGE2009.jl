@@ -11,17 +11,17 @@ add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa",
 
 adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
 adaptationcosts_noneconomic[:y_year_0] = 2008.
-adaptationcosts_noneconomic[:y_year] = m.indices_values[:time]
+adaptationcosts_noneconomic[:y_year] = Mimi.dim_keys(m.md, :time)
 adaptationcosts_noneconomic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 adaptationcosts_economic = addadaptationcosts_economic(m)
 adaptationcosts_economic[:y_year_0] = 2008.
-adaptationcosts_economic[:y_year] = m.indices_values[:time]
+adaptationcosts_economic[:y_year] = Mimi.dim_keys(m.md, :time)
 adaptationcosts_economic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
 adaptationcosts_sealevel[:y_year_0] = 2008.
-adaptationcosts_sealevel[:y_year] = m.indices_values[:time]
+adaptationcosts_sealevel[:y_year] = Mimi.dim_keys(m.md, :time)
 adaptationcosts_sealevel[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 p = load_parameters(m)

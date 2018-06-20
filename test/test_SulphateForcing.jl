@@ -11,7 +11,7 @@ addsulphatecomp(m)
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
-p["y_year"] = m.indices_values[:time]
+p["y_year"] = Mimi.dim_keys(m.md, :time)
 set_leftover_params!(m, p)
 
 run(m)

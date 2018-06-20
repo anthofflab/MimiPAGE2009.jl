@@ -1,4 +1,6 @@
 using Mimi
+
+#TODO:  TBD make a module?
 include("utils/load_parameters.jl")
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")
@@ -87,7 +89,7 @@ climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
 # next: add vector and panel example
 p = load_parameters(m)
 p["y_year_0"] = 2008.
-p["y_year"] = m.indices_values[:time]
+p["y_year"] = Mimi.dim_keys(m.md, :time)
 set_leftover_params!(m, p)
 
 run(m)

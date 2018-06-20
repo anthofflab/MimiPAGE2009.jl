@@ -11,7 +11,7 @@ add_dimension(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa",
 climatetemperature = addclimatetemperature(m)
 
 climatetemperature[:y_year_0] = 2008.
-climatetemperature[:y_year] = m.indices_values[:time]
+climatetemperature[:y_year] = Mimi.dim_keys(m.md, :time)
 
 climatetemperature[:ft_totalforcing] = readpagedata(m, "test/validationdata/ft_totalforcing.csv")
 climatetemperature[:fs_sulfateforcing] = readpagedata(m, "test/validationdata/fs_sulfateforcing.csv")
