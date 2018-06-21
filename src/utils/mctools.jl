@@ -7,7 +7,7 @@ and connect parameter `name` within `component` to this distinct global paramete
 #for guidance ... talk this one through. 
 
 function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
-    globalname = Symbol(lowercase(string(component, '_', name)))
+    globalname = Symbol(string(component, '_', name))
     param_dims = Mimi.parameter_dimensions(m, component, name)    
     num_dims = length(size(value))
 
@@ -31,19 +31,30 @@ function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     x = Mimi.ExternalParameterConnection(component, name, globalname)
     push!(m.md.external_param_conns, x)
 
-    #TODO:  don't use Nullable!  modifiing the model instance really isn't part
-    #of the API
-    #m.mi = Nullable{Mimi.ModelInstance}()
     nothing
 end
 
 """
 Change the value of an external parameter
 """
+#TODO:  somewhere we are getting both lowercase and uppercase external param names,
+#where are we enforcing lowercase?  see Mimi connections.jl changes ... but these
+#break things in other places ...
+
 function update_external_param(m::Model, name::Symbol, value::Float64)
-    m.md.external_params[Symbol(lowercase(string(name)))].value = value
+    # try
+        # m.md.external_params[Symbol(lowercase(string(name)))].value = value
+    # catch
+        m.md.external_params[Symbol(string(name))].value = value
+    # end
+    
 end
 
 function update_external_param(m::Model, name::Symbol, value::AbstractArray)
-    m.md.external_params[Symbol(lowercase(string(name)))].values = value
+    # try
+        # m.md.external_params[Symbol(lowercase(string(name)))].values = value
+    # catch
+        m.md.external_params[Symbol(string(name))].values = value
+    # end
+    
 end

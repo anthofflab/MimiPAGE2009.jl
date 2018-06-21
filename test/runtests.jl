@@ -33,6 +33,6 @@ include("test_SulphateForcing.jl")
 include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
-include("test_montecarlo.jl") #ERROR: isn't finding the keys in model's external parameters
+include("test_montecarlo.jl") #ERROR: set_parameter issue
 
 end
