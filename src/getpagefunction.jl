@@ -1,8 +1,5 @@
 using Mimi
 
-#TODO:  Should we move this into a module wrapper (and adjust main_model.jl
-#accordingly), or leave it as is? 
-
 include("utils/load_parameters.jl")
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")

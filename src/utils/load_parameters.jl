@@ -1,4 +1,3 @@
-#TODO:  double check that this function operates correctl and efficiently
 function checkregionorder(model::Model, regions, file)
     regionaliases = Dict{AbstractString, Vector{AbstractString}}("EU" => [],
                                                                  "USA" => ["US"],
@@ -10,19 +9,17 @@ function checkregionorder(model::Model, regions, file)
                                                                  "USSR" => ["EE"])
 
     for ii in 1:length(regions)
-        #TODO:  TBD add @modelgate for dim_keys so don't have to reference model.md?
         region_keys = Mimi.dim_keys(model.md, :region)
         if region_keys[ii] != regions[ii] && !in(regions[ii], regionaliases[region_keys[ii]])
-            error("Region indices in $file do not match expectations: $(model.indices_values[:region][ii]) <> $(regions[ii]).")
+            error("Region indices in $file do not match expectations: $(region_keys[ii]) <> $(regions[ii]).")
         end
     end
 end
 
-#TODO:  double check that this function operates correctl and efficiently
 function checktimeorder(model::Model, times, file)
     for ii in 1:length(times)
         if Mimi.time_labels(model)[ii] != times[ii]
-            error("Time indices in $file do not match expectations: $(model.indices_values[:time][ii]) <> $(times[ii]).")
+            error("Time indices in $file do not match expectations: $(Mimi.time_labels(model)[ii]) <> $(times[ii]).")
         end
     end
 end

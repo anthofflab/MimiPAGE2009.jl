@@ -1,6 +1,5 @@
 using Mimi
 
-#TODO:  Should we add a module wrapper here, or leave it as is?
 include("utils/load_parameters.jl")
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")
