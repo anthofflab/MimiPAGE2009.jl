@@ -3,7 +3,7 @@ include("../utils/mctools.jl")
 @defcomp AbatementCosts begin
     region = Index()
     y_year = Parameter(index=[time], unit="year")
-    y_year_0 = Parameter(unit="year")
+    y_year_0 = Parameter(unit="year", default=2008.)
 
     #gas inputs
     emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear = Parameter(unit="%")
@@ -24,15 +24,15 @@ include("../utils/mctools.jl")
     yagg = Parameter(index=[time], unit="year") # from equity weighting
 
     #inputs with single, uncertain values
-    q0propmult_cutbacksatnegativecostinfinalyear = Parameter(unit="none")
-    qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = Parameter(unit="none")
-    c0mult_mostnegativecostinfinalyear = Parameter(unit="none")
-    curve_below_curvatureofMACcurvebelowzerocost = Parameter(unit="none")
-    curve_above_curvatureofMACcurveabovezerocost = Parameter(unit="none")
-    cross_experiencecrossoverratio = Parameter(unit="none")
-    learn_learningrate = Parameter(unit="none")
-    automult_autonomoustechchange = Parameter(unit="none")
-    equity_prop_equityweightsproportion = Parameter(unit="none")
+    q0propmult_cutbacksatnegativecostinfinalyear = Parameter(unit="none", default=.733333333333333334)
+    qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = Parameter(unit="none", default=1.2666666666666666)
+    c0mult_mostnegativecostinfinalyear = Parameter(unit="none", default=.8333333333333334)
+    curve_below_curvatureofMACcurvebelowzerocost = Parameter(unit="none", default=.5)
+    curve_above_curvatureofMACcurveabovezerocost = Parameter(unit="none", default=.4)
+    cross_experiencecrossoverratio = Parameter(unit="none", default=.2)
+    learn_learningrate = Parameter(unit="none", default=.2)
+    automult_autonomoustechchange = Parameter(unit="none", default=.65)
+    equity_prop_equityweightsproportion = Parameter(unit="none", default=1.)
 
     #Variables
     emit_UncertaintyinBAUEmissFactor = Variable(index=[region], unit = "%")
@@ -140,17 +140,6 @@ end
 function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCosts$class")
     abatementcostscomp = addcomponent(model, AbatementCosts, componentname)
-
-    abatementcostscomp[:q0propmult_cutbacksatnegativecostinfinalyear] = .733333333333333334
-    abatementcostscomp[:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear] = 1.2666666666666666
-    abatementcostscomp[:c0mult_mostnegativecostinfinalyear] = .8333333333333334
-    abatementcostscomp[:curve_below_curvatureofMACcurvebelowzerocost] = .5
-    abatementcostscomp[:curve_above_curvatureofMACcurveabovezerocost] = .4
-    abatementcostscomp[:cross_experiencecrossoverratio] = .2
-    abatementcostscomp[:learn_learningrate] = .2
-    abatementcostscomp[:automult_autonomoustechchange] = .65
-    abatementcostscomp[:equity_prop_equityweightsproportion] = 1.
-    abatementcostscomp[:y_year_0] = 2008.
 
     if class == :CO2
         setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 8.333333333333334)

@@ -9,7 +9,7 @@ m = Model()
 set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-addtotaladaptationcosts(m)
+addcomponent(m, TotalAdaptationCosts)
 
 set_parameter!(m, :TotalAdaptationCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
 set_parameter!(m, :TotalAdaptationCosts, :ac_adaptationcosts_economic, readpagedata(m, "test/validationdata/ac_adaptationcosts_economic.csv"))

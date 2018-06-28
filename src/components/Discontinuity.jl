@@ -8,27 +8,27 @@ include("../utils/mctools.jl")
   y_year=Parameter(index=[time], unit="year")
   y_year_0 = Parameter(unit="year")
 
-  rand_discontinuity = Parameter(unit="unitless")
+  rand_discontinuity = Parameter(unit="unitless", default=.5)
 
   irefeqdis_eqdiscimpact=Variable(index=[region], unit="%")
-  WINCF_weightsfactor=Parameter(index=[region], unit="unitless")
-  wdis_gdplostdisc=Parameter(unit="%")
+  WINCF_weightsfactor=Parameter(index=[region], unit="unitless", default=[1, 0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6])
+  wdis_gdplostdisc=Parameter(unit="%", default=15.)
 
   igdpeqdis_eqdiscimpact=Variable(index=[time,region], unit="%")
   rgdp_per_cap_NonMarketRemainGDP=Parameter(index=[time,region], unit="\$/person")
-  GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="unitless")
-  ipow_incomeexponent=Parameter(unit="unitless")
+  GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="unitless", default=27934.244777382406)
+  ipow_incomeexponent=Parameter(unit="unitless", default=-0.13333333333333333)
 
   igdp_realizeddiscimpact=Variable(index=[time,region], unit="%")
   occurdis_occurrencedummy=Variable(index=[time], unit="unitless")
   expfdis_discdecay=Variable(index=[time], unit="unitless")
 
-  distau_discontinuityexponent=Parameter(unit="unitless")
+  distau_discontinuityexponent=Parameter(unit="unitless", default=90.)
 
   idis_lossfromdisc=Variable(index=[time], unit="degreeC")
-  tdis_tolerabilitydisc=Parameter(unit="degreeC")
+  tdis_tolerabilitydisc=Parameter(unit="degreeC", default=3.)
   rt_g_globaltemperature = Parameter(index=[time], unit="degreeC")
-  pdis_probability=Parameter(unit="%/degreeC")
+  pdis_probability=Parameter(unit="%/degreeC", default=20.)
 
   isatg_saturationmodification = Parameter(unit="unitless")
   isat_satdiscimpact=Variable(index=[time,region], unit="%")
@@ -79,24 +79,6 @@ include("../utils/mctools.jl")
             v.rcons_per_cap_DiscRemainConsumption[t,r] = p.rcons_per_cap_NonMarketRemainConsumption[t,r] - v.isat_per_cap_DiscImpactperCapinclSaturation[t,r]
         end
     end
-end
-
-
-function adddiscontinuity(model::Model)
-
-    discontinuitycomp = addcomponent(model, Discontinuity)
-
-    discontinuitycomp[:rand_discontinuity] = .5
-
-    discontinuitycomp[:WINCF_weightsfactor]=[1, 0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6]
-    discontinuitycomp[:wdis_gdplostdisc]=15.
-    discontinuitycomp[:ipow_incomeexponent]=-0.13333333333333333
-    discontinuitycomp[:distau_discontinuityexponent]=90.
-    discontinuitycomp[:tdis_tolerabilitydisc]=3.
-    discontinuitycomp[:pdis_probability]=20.
-    discontinuitycomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
-
-    return discontinuitycomp
 end
 
 function randomizediscontinuity(model::Model)

@@ -8,7 +8,7 @@ m = Model()
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 
-slrdamages = addslrdamages(m)
+slrdamages = addcomponent(m, SLRDamages)
 
 set_parameter!(m, :SLRDamages, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 set_parameter!(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, readpagedata(m,

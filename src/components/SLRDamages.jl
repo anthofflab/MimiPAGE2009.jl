@@ -17,16 +17,16 @@ include("../utils/mctools.jl")
     act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
 
     #component parameters
-    impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m")
+    impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m", default=readpagedata(model, "data/impmax_sealevel.csv")) #TODO which is the correct Excel file?
 
-    save_savingsrate = Parameter(unit= "%")
-    WINCF_weightsfactor =Parameter(index=[region], unit="")
-    W_SatCalibrationSLR =Parameter()
-    ipow_SLRIncomeFxnExponent =Parameter()
-    pow_SLRImpactFxnExponent=Parameter()
-    iben_SLRInitialBenefit=Parameter()
-    scal_calibrationSLR = Parameter()
-    GDP_per_cap_focus_0_FocusRegionEU = Parameter()
+    save_savingsrate = Parameter(unit= "%", default=15.00) #pp33 PAGE09 documentation, "savings rate".
+    WINCF_weightsfactor =Parameter(index=[region], unit="", default=readpagedata(model, "data/wincf_weightsfactor.csv"))
+    W_SatCalibrationSLR =Parameter(default=1.0) #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
+    ipow_SLRIncomeFxnExponent =Parameter(default=-0.30)
+    pow_SLRImpactFxnExponent=Parameter(default=0.7333333333333334)
+    iben_SLRInitialBenefit=Parameter(default=0.00)
+    scal_calibrationSLR = Parameter(default=0.5)
+    GDP_per_cap_focus_0_FocusRegionEU = Parameter(default=27934.244777382406)
 
     #component variables
     cons_percap_aftercosts = Variable(index=[time, region], unit = "\$/person")
@@ -87,23 +87,6 @@ include("../utils/mctools.jl")
         end
 
     end
-end
-
-function addslrdamages(model::Model)
-    SLRDamagescomp = addcomponent(model, SLRDamages)
-
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/sealevelmaxrise.csv")
-    SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
-    SLRDamagescomp[:pow_SLRImpactFxnExponent] = 0.7333333333333334
-    SLRDamagescomp[:ipow_SLRIncomeFxnExponent] = -0.30
-    SLRDamagescomp[:iben_SLRInitialBenefit] = 0.00
-    SLRDamagescomp[:scal_calibrationSLR] = 0.5
-    SLRDamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
-    SLRDamagescomp[:W_SatCalibrationSLR] = 1.0 #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
-    SLRDamagescomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
-
-    return SLRDamagescomp
 end
 
 function randomizeslrdamages(model::Model)

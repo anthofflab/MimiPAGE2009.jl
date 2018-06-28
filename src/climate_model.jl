@@ -24,20 +24,20 @@ set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa"
 
 #add all the components
 CO2emissions = addcomponent(m,co2emissions)
-CO2cycle = addCO2cycle(m)
-CO2forcing = addCO2forcing(m)
+CO2cycle = addcomponent(m, co2cycle)
+CO2forcing = addcomponent(m, co2forcing)
 CH4emissions = addcomponent(m, ch4emissions)
-CH4cycle = addCH4cycle(m)
-CH4forcing = addCH4forcing(m)
+CH4cycle = addcomponent(m, CH4cycle)
+CH4forcing = addcomponent(m, CH4forcing)
 N2Oemissions = addcomponent(m, n2oemissions)
-N2Ocycle = addN2Ocycle(m)
-N2Oforcing = addN2Oforcing(m)
+N2Ocycle = addcomponent(m, n2ocycle)
+N2Oforcing = addcomponent(m, n2oforcing)
 lgemissions = addcomponent(m, LGemissions)
-lgcycle = addLGcycle(m)
-lgforcing = addLGforcing(m)
-sulphateforcing = addsulphatecomp(m)
+lgcycle = addcomponent(m, LGcycle)
+lgforcing = addcomponent(m, LGforcing)
+sulphateforcing = addcomponent(m, SulphateForcing)
 totalforcing = addcomponent(m, TotalForcing)
-climatetemperature = addclimatetemperature(m)
+climatetemperature = addcomponent(m, ClimateTemperature)
 
 #connect parameters together
 

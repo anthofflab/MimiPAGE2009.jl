@@ -7,7 +7,7 @@ m = Model()
 set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-adddiscontinuity(m)
+addcomponent(m, Discontinuity)
 
 set_parameter!(m, :Discontinuity, :rt_g_globaltemperature, [0.75,0.77,0.99,1.27,1.62,1.99,3.07,3.90,5.10,6.03])
 set_parameter!(m, :Discontinuity, :y_year_0, 2008.)

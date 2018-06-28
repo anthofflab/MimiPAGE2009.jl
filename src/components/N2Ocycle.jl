@@ -2,23 +2,23 @@ using Mimi
 
 @defcomp n2ocycle begin
     e_globalN2Oemissions=Parameter(index=[time],unit="Mtonne/year")
-    e_0globalN2Oemissions=Parameter(unit="Mtonne/year")
+    e_0globalN2Oemissions=Parameter(unit="Mtonne/year", default=11.046520000000001)
     c_N2Oconcentration=Variable(index=[time],unit="ppbv")
-    pic_preindustconcN2O=Parameter(unit="ppbv")
+    pic_preindustconcN2O=Parameter(unit="ppbv", default=270.)
     exc_excessconcN2O=Variable(unit="ppbv")
-    c0_N2Oconcbaseyr=Parameter(unit="ppbv")
+    c0_N2Oconcbaseyr=Parameter(unit="ppbv", default=322.)
     re_remainN2O=Variable(index=[time],unit="Mtonne")
     re_remainN2Obase=Variable(unit="Mtonne")
     nte_natN2Oemissions=Variable(index=[time],unit="Mtonne/year")
-    air_N2Ofractioninatm=Parameter(unit="%")
+    air_N2Ofractioninatm=Parameter(unit="%", default=100.)
     tea_N2Oemissionstoatm=Variable(index=[time],unit="Mtonne/year")
     teay_N2Oemissionstoatm=Variable(index=[time],unit="Mtonne/t")
     y_year=Parameter(index=[time],unit="year")
     y_year_0=Parameter(unit="year")
-    res_N2Oatmlifetime=Parameter(unit="year")
-    den_N2Odensity=Parameter(unit="Mtonne/ppbv")
-    stim_N2Oemissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g0_baselandtemp=Parameter(unit="degreeC")
+    res_N2Oatmlifetime=Parameter(unit="year", default=114.)
+    den_N2Odensity=Parameter(unit="Mtonne/ppbv", default=7.8)
+    stim_N2Oemissionfeedback=Parameter(unit="Mtonne/degreeC", default=0.)
+    rtl_g0_baselandtemp=Parameter(unit="degreeC", default=0.9258270139190647)
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
 
     function run_timestep(p, v, d, t)
@@ -55,19 +55,4 @@ using Mimi
         v.c_N2Oconcentration[t]=p.pic_preindustconcN2O+v.exc_excessconcN2O*v.re_remainN2O[t]/v.re_remainN2Obase
 
     end
-end
-
-function addN2Ocycle(model::Model)
-    n2ocyclecomp = addcomponent(model, n2ocycle)
-
-    n2ocyclecomp[:pic_preindustconcN2O] = 270.
-    n2ocyclecomp[:den_N2Odensity] = 7.8
-    n2ocyclecomp[:stim_N2Oemissionfeedback] = 0.
-    n2ocyclecomp[:air_N2Ofractioninatm] = 100.
-    n2ocyclecomp[:res_N2Oatmlifetime] = 114.
-    n2ocyclecomp[:c0_N2Oconcbaseyr] = 322.
-    n2ocyclecomp[:rtl_g0_baselandtemp] = 0.9258270139190647
-    n2ocyclecomp[:e_0globalN2Oemissions] = 11.046520000000001
-
-    n2ocyclecomp
 end

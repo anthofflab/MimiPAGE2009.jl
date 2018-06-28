@@ -19,9 +19,3 @@ using Mimi
         end
     end
 end
-
-function addtotaladaptationcosts(model::Model)
-    totaladaptationcostscomp = addcomponent(model, TotalAdaptationCosts)
-
-    return totaladaptationcostscomp
-end

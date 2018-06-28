@@ -24,7 +24,7 @@ include("../utils/mctools.jl")
     cons_percap_aftercosts = Parameter(index=[time, region], unit="\$/person")
 
     # Calculation of weighted costs
-    emuc_utilityconvexity = Parameter(unit="none")
+    emuc_utilityconvexity = Parameter(unit="none", default=1.1666666667)
 
     wtct_percap_weightedcosts = Variable(index=[time, region], unit="\$/person")
     eact_percap_weightedadaptationcosts = Variable(index=[time, region], unit="\$/person")
@@ -32,14 +32,14 @@ include("../utils/mctools.jl")
     wact_partiallyweighted = Variable(index=[time, region], unit="\$million")
 
     # Amount of equity weighting variable (0, (0, 1), or 1)
-    equity_proportion = Parameter(unit="fraction")
+    equity_proportion = Parameter(unit="fraction", default=1.0)
 
     pct_percap_partiallyweighted = Variable(index=[time, region], unit="\$/person")
     pct_partiallyweighted = Variable(index=[time, region], unit="\$million")
     pct_g_partiallyweighted_global = Variable(index=[time], unit="\$million")
 
     # Discount rates
-    ptp_timepreference = Parameter(unit="%/year")
+    ptp_timepreference = Parameter(unit="%/year", default=1.0333333333) # <0.1,1, 2>
     grw_gdpgrowthrate = Parameter(index=[time, region], unit="%/year")
     popgrw_populationgrowth = Parameter(index=[time, region], unit="%/year")
 
@@ -69,7 +69,7 @@ include("../utils/mctools.jl")
     addt_equityweightedimpact_discountedaggregated = Variable(index=[time, region], unit="\$million")
     addt_gt_equityweightedimpact_discountedglobal = Variable(unit="\$million")
 
-    civvalue_civilizationvalue = Parameter(unit="\$million") # Called "CIV_VALUE"
+    civvalue_civilizationvalue = Parameter(unit="\$million", default=5.3e10) # Called "CIV_VALUE"
     td_totaldiscountedimpacts = Variable(unit="\$million")
 
     aact_equityweightedadaptation_discountedaggregated = Variable(index=[time, region], unit="\$million")
@@ -156,17 +156,6 @@ include("../utils/mctools.jl")
         # Total effect of climate change
         v.te_totaleffect = min(v.td_totaldiscountedimpacts + v.tpc_totalaggregatedcosts + v.tac_totaladaptationcosts, p.civvalue_civilizationvalue)
     end
-end
-
-function addequityweighting(model::Model)
-    equityweightingcomp = addcomponent(model, EquityWeighting)
-
-    equityweightingcomp[:ptp_timepreference] = 1.0333333333 # <0.1,1, 2>
-    equityweightingcomp[:equity_proportion] = 1.0
-    equityweightingcomp[:emuc_utilityconvexity] = 1.1666666667
-    equityweightingcomp[:civvalue_civilizationvalue] = 5.3e10
-
-    return equityweightingcomp
 end
 
 function randomizeequityweighting(model::Model)

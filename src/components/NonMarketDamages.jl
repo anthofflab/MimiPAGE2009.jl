@@ -11,7 +11,7 @@ include("../utils/mctools.jl")
     rtl_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
 
     #tolerability parameters
-    impmax_maxtempriseforadaptpolicyNM = Parameter(index=[region], unit= "degreeC")
+    impmax_maxtempriseforadaptpolicyNM = Parameter(index=[region], unit= "degreeC", default=readpagedata(model, "data/impmax_noneconomic.csv"))
     atl_adjustedtolerableleveloftemprise = Parameter(index=[time,region], unit="degreeC")
     imp_actualreduction = Parameter(index=[time, region], unit= "%")
 
@@ -22,14 +22,14 @@ include("../utils/mctools.jl")
     rcons_per_cap_MarketRemainConsumption = Parameter(index=[time, region], unit = "\$/person")
     rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
-    save_savingsrate = Parameter(unit= "%")
+    save_savingsrate = Parameter(unit= "%", default=15.)
     WINCF_weightsfactor =Parameter(index=[region], unit="unitless")
-    w_NonImpactsatCalibrationTemp =Parameter(unit="%GDP")
-    ipow_NonMarketIncomeFxnExponent =Parameter(unit="unitless")
-    iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC")
-    tcal_CalibrationTemp = Parameter(unit="degreeC")
-    GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person")
-    pow_NonMarketExponent = Parameter(unit="")
+    w_NonImpactsatCalibrationTemp =Parameter(unit="%GDP", default=0.5333333333333333)
+    ipow_NonMarketIncomeFxnExponent =Parameter(unit="unitless", default=0.)
+    iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC", default=0.08333333333333333)
+    tcal_CalibrationTemp = Parameter(unit="degreeC", default=3.)
+    GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person", default=27934.244777382406)
+    pow_NonMarketExponent = Parameter(unit="", default=2.1666666666666665)
 
     #impact variables
     isatg_impactfxnsaturation = Parameter(unit="unitless")
@@ -81,21 +81,6 @@ include("../utils/mctools.jl")
             v.rgdp_per_cap_NonMarketRemainGDP[t,r] = v.rcons_per_cap_NonMarketRemainConsumption[t,r]/(1-p.save_savingsrate/100)
         end
     end
-end
-
-function addnonmarketdamages(model::Model)
-    nonmarketdamagescomp = addcomponent(model, NonMarketDamages)
-
-    nonmarketdamagescomp[:tcal_CalibrationTemp]= 3.
-    nonmarketdamagescomp[:w_NonImpactsatCalibrationTemp] = 0.5333333333333333
-    nonmarketdamagescomp[:iben_NonMarketInitialBenefit] = 0.08333333333333333
-    nonmarketdamagescomp[:ipow_NonMarketIncomeFxnExponent] = 0.
-    nonmarketdamagescomp[:save_savingsrate]= 15.
-    nonmarketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
-    nonmarketdamagescomp[:pow_NonMarketExponent] = 2.1666666666666665
-    nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "data/impmax_noneconomic.csv")
-
-    return nonmarketdamagescomp
 end
 
 function randomizenonmarketdamages(model::Model)

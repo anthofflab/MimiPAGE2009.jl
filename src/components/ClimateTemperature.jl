@@ -11,13 +11,13 @@ include("../utils/mctools.jl")
     y_year = Parameter(index=[time], unit="year")
 
     # Climate sensitivity calculations
-    tcr_transientresponse = Parameter(unit="degreeC")
-    frt_warminghalflife = Parameter(unit="year")
+    tcr_transientresponse = Parameter(unit="degreeC", default=1.70)
+    frt_warminghalflife = Parameter(unit="year", default=35.00)
 
     sens_climatesensitivity = Variable(unit="degreeC")
 
     # Unadjusted temperature calculations
-    fslope_CO2forcingslope = Parameter(unit="W/m2")
+    fslope_CO2forcingslope = Parameter(unit="W/m2", default=5.5)
 
     ft_totalforcing = Parameter(index=[time], unit="W/m2")
     fs_sulfateforcing = Parameter(index=[time, region], unit="W/m2")
@@ -26,10 +26,10 @@ include("../utils/mctools.jl")
     rt_realizedtemperature = Variable(index=[time, region], unit="degreeC") # unadjusted temperature
 
     # Adjusted temperature calculations
-    pole_polardifference = Parameter(unit="degreeC") # near 1 degC, the temperature increase difference between equator and pole
+    pole_polardifference = Parameter(unit="degreeC", default=1.50) # near 1 degC, the temperature increase difference between equator and pole
     lat_latitude = Parameter(index=[region], unit="degreeLatitude")
-    lat_g_meanlatitude = Parameter(unit="degreeLatitude") # Area-weighted average latitude
-    rlo_ratiolandocean = Parameter(unit="unitless") # near 1.4, the ratio between mean land and ocean temperature increases
+    lat_g_meanlatitude = Parameter(unit="degreeLatitude", default=30.21989459076828) # Area-weighted average latitude
+    rlo_ratiolandocean = Parameter(unit="unitless", default=1.40) # near 1.4, the ratio between mean land and ocean temperature increases
 
     rtl_0_realizedtemperature = Parameter(index=[region], unit="degreeC")
     rtl_realizedtemperature = Variable(index=[time, region], unit="degreeC")
@@ -101,19 +101,6 @@ include("../utils/mctools.jl")
         v.rto_g_oceantemperature[tt] = v.rtl_g_landtemperature[tt] / p.rlo_ratiolandocean
         v.rt_g_globaltemperature[tt] = ocean_prop_ortion * v.rto_g_oceantemperature[tt] + (1. - ocean_prop_ortion) * v.rtl_g_landtemperature[tt]
     end
-end
-
-function addclimatetemperature(model::Model)
-    climatetemperaturecomp = addcomponent(model, ClimateTemperature)
-
-    climatetemperaturecomp[:rlo_ratiolandocean] = 1.40
-    climatetemperaturecomp[:pole_polardifference] = 1.50
-    climatetemperaturecomp[:lat_g_meanlatitude] =  30.21989459076828
-    climatetemperaturecomp[:fslope_CO2forcingslope] = 5.5
-    climatetemperaturecomp[:tcr_transientresponse] = 1.70
-    climatetemperaturecomp[:frt_warminghalflife] = 35.00
-
-    return climatetemperaturecomp
 end
 
 function randomizeclimatetemperature(model::Model)

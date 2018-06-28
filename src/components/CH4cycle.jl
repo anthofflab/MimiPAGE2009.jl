@@ -2,23 +2,23 @@ using Mimi
 
 @defcomp ch4cycle begin
     e_globalCH4emissions=Parameter(index=[time],unit="Mtonne/year")
-    e_0globalCH4emissions=Parameter(unit="Mtonne/year")
+    e_0globalCH4emissions=Parameter(unit="Mtonne/year", default=363.00000000000006)
     c_CH4concentration=Variable(index=[time],unit="ppbv")
-    pic_preindustconcCH4=Parameter(unit="ppbv")
+    pic_preindustconcCH4=Parameter(unit="ppbv", default=700.)
     exc_excessconcCH4=Variable(unit="ppbv")
-    c0_CH4concbaseyr=Parameter(unit="ppbv")
+    c0_CH4concbaseyr=Parameter(unit="ppbv", default=1860.)
     re_remainCH4=Variable(index=[time],unit="ppbv")
     re_remainCH4base=Variable(unit="ppbv")
     nte_natCH4emissions=Variable(index=[time],unit="Mtonne/year")
-    air_CH4fractioninatm=Parameter(unit="%")
+    air_CH4fractioninatm=Parameter(unit="%", default=100.)
     tea_CH4emissionstoatm=Variable(index=[time],unit="Mtonne/year")
     teay_CH4emissionstoatm=Variable(index=[time],unit="Mtonne/t")
     y_year=Parameter(index=[time],unit="year")
     y_year_0=Parameter(unit="year")
-    res_CH4atmlifetime=Parameter(unit="year")
-    den_CH4density=Parameter(unit="Mtonne/ppbv")
-    stim_CH4emissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g0_baselandtemp=Parameter(unit="degreeC")
+    res_CH4atmlifetime=Parameter(unit="year", default=10.5)
+    den_CH4density=Parameter(unit="Mtonne/ppbv", default=2.78)
+    stim_CH4emissionfeedback=Parameter(unit="Mtonne/degreeC", default=0.)
+    rtl_g0_baselandtemp=Parameter(unit="degreeC", default=0.9258270139190647)
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
 
     function run_timestep(p, v, d, t)
@@ -53,19 +53,4 @@ using Mimi
         #eq.11 from Hope(2006) - CH4 concentration
         v.c_CH4concentration[t]=p.pic_preindustconcCH4+v.exc_excessconcCH4*v.re_remainCH4[t]/v.re_remainCH4base
     end
-end
-
-function addCH4cycle(model::Model)
-    ch4cyclecomp = addcomponent(model, ch4cycle)
-
-    ch4cyclecomp[:pic_preindustconcCH4] = 700.
-    ch4cyclecomp[:den_CH4density] = 2.78
-    ch4cyclecomp[:stim_CH4emissionfeedback] = 0.
-    ch4cyclecomp[:air_CH4fractioninatm] = 100.
-    ch4cyclecomp[:res_CH4atmlifetime] = 10.5
-    ch4cyclecomp[:c0_CH4concbaseyr] = 1860.
-    ch4cyclecomp[:rtl_g0_baselandtemp] = 0.9258270139190647
-    ch4cyclecomp[:e_0globalCH4emissions] = 363.00000000000006
-
-    ch4cyclecomp
 end

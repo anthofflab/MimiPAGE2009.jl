@@ -9,7 +9,8 @@ m = Model()
 set_dimension!(m, :time, convert(Vector{Float64}, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200]))
 set_dimension!(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
 
-gdp = addgdp(m)
+gdp = addcomponent(m, GDP)
+
 gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
 gdp[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")
 gdp[:y_year] = Mimi.dim_keys(m.md, :time)

@@ -19,12 +19,12 @@ include("../utils/mctools.jl")
     y_year            = Parameter(index=[time], unit="year")
     grw_gdpgrowthrate = Parameter(index=[time, region], unit="%/year") #From p.32 of Hope 2009
     gdp_0             = Parameter(index=[region], unit="\$M") #GDP in y_year_0
-    save_savingsrate  = Parameter(unit="%")
+    save_savingsrate  = Parameter(unit="%", default=15.00) #pp33 PAGE09 documentation, "savings rate".
     pop0_initpopulation = Parameter(index=[region], unit="million person")
     pop_population    = Parameter(index=[time,region],unit="million person")
 
     # Saturation, used in impacts
-    isat0_initialimpactfxnsaturation = Parameter(unit="unitless")
+    isat0_initialimpactfxnsaturation = Parameter(unit="unitless", default=33.333333333333336) #pp34 PAGE09 documentation
     isatg_impactfxnsaturation = Variable(unit="unitless")
 
     function init(p, v, d)
@@ -63,15 +63,6 @@ include("../utils/mctools.jl")
             v.cons_percap_consumption[t, r] = v.cons_consumption[t, r] / p.pop_population[t, r]
         end
     end
-end
-
-function addgdp(model::Model)
-    gdpcomp = addcomponent(model, GDP)
-
-    gdpcomp[:save_savingsrate] = 15.00 #pp33 PAGE09 documentation, "savings rate".
-    gdpcomp[:isat0_initialimpactfxnsaturation] = 33.333333333333336 #pp34 PAGE09 documentation
-
-    return gdpcomp
 end
 
 function randomizegdp(model::Model)

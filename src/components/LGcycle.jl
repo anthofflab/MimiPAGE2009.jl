@@ -2,22 +2,22 @@ using Mimi
 
 @defcomp LGcycle begin
     e_globalLGemissions=Parameter(index=[time],unit="Mtonne/year")
-    e_0globalLGemissions=Parameter(unit="Mtonne/year")
+    e_0globalLGemissions=Parameter(unit="Mtonne/year", default=557.2112715473608)
     c_LGconcentration=Variable(index=[time],unit="ppbv")
-    pic_preindustconcLG=Parameter(unit="ppbv")
+    pic_preindustconcLG=Parameter(unit="ppbv", default=0.)
     exc_excessconcLG=Variable(unit="ppbv")
-    c0_LGconcbaseyr=Parameter(unit="ppbv")
+    c0_LGconcbaseyr=Parameter(unit="ppbv", default=0.11)
     re_remainLG=Variable(index=[time],unit="Mtonne")
     nte_natLGemissions=Variable(index=[time],unit="Mtonne/year")
-    air_LGfractioninatm=Parameter(unit="%")
+    air_LGfractioninatm=Parameter(unit="%", default=100.)
     tea_LGemissionstoatm=Variable(index=[time],unit="Mtonne/year")
     teay_LGemissionstoatm=Variable(index=[time],unit="Mtonne/t")
     y_year=Parameter(index=[time],unit="year")
     y_year_0=Parameter(unit="year")
-    res_LGatmlifetime=Parameter(unit="year")
-    den_LGdensity=Parameter(unit="Mtonne/ppbv")
-    stim_LGemissionfeedback=Parameter(unit="Mtonne/degreeC")
-    rtl_g0_baselandtemp=Parameter(unit="degreeC")
+    res_LGatmlifetime=Parameter(unit="year", default=1000.)
+    den_LGdensity=Parameter(unit="Mtonne/ppbv", default=100000.)
+    stim_LGemissionfeedback=Parameter(unit="Mtonne/degreeC", default=0.)
+    rtl_g0_baselandtemp=Parameter(unit="degreeC", default=0.9258270139190647)
     rtl_g_landtemperature=Parameter(index=[time],unit="degreeC")
     re_remainLGbase=Variable(unit="Mtonne")
 
@@ -53,19 +53,4 @@ using Mimi
         v.c_LGconcentration[t]=p.pic_preindustconcLG+v.exc_excessconcLG*v.re_remainLG[t]/v.re_remainLGbase
 
     end
-end
-
-function addLGcycle(model::Model)
-    lgcyclecomp = addcomponent(model, LGcycle)
-
-    lgcyclecomp[:pic_preindustconcLG] = 0.
-    lgcyclecomp[:den_LGdensity] = 100000.
-    lgcyclecomp[:stim_LGemissionfeedback] = 0.
-    lgcyclecomp[:air_LGfractioninatm] = 100.
-    lgcyclecomp[:res_LGatmlifetime] = 1000.
-    lgcyclecomp[:c0_LGconcbaseyr] = 0.11
-    lgcyclecomp[:rtl_g0_baselandtemp] = 0.9258270139190647
-    lgcyclecomp[:e_0globalLGemissions] = 557.2112715473608
-
-    return lgcyclecomp
 end

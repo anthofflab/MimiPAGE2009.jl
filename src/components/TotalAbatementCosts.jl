@@ -20,9 +20,3 @@ using Mimi
         end
     end
 end
-
-function addtotalabatementcosts(model::Model)
-    totalabatementcostscomp = addcomponent(model, TotalAbatementCosts)
-
-    return totalabatementcostscomp
-end

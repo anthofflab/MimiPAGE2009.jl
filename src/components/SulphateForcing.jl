@@ -12,8 +12,8 @@ include("../utils/mctools.jl")
 
     sfx_sulphateflux = Variable(index=[time, region], unit="TgS/km^2/yr")
 
-    d_sulphateforcingbase = Parameter(unit="W/m2")
-    ind_slopeSEforcing_indirect = Parameter(unit="W/m2")
+    d_sulphateforcingbase = Parameter(unit="W/m2", default=-0.46666666666666673)
+    ind_slopeSEforcing_indirect = Parameter(unit="W/m2", default=-0.4000000000000001)
     nf_naturalsfx = Parameter(index=[region], unit="TgS/km^2/yr")
 
     fs_sulphateforcing = Variable(index=[time, region], unit="W/m2")
@@ -34,15 +34,6 @@ include("../utils/mctools.jl")
             v.fs_sulphateforcing[tt, rr] = fsd_term + fsi_term
         end
     end
-end
-
-function addsulphatecomp(model::Model)
-    sulphatecomp = addcomponent(model, SulphateForcing)
-
-    sulphatecomp[:d_sulphateforcingbase] = -0.46666666666666673
-    sulphatecomp[:ind_slopeSEforcing_indirect] = -0.4000000000000001
-
-    return sulphatecomp
 end
 
 function randomizesulphatecomp(model::Model)

@@ -18,13 +18,13 @@ include("../utils/mctools.jl")
     rcons_per_cap_SLRRemainConsumption = Parameter(index=[time, region], unit = "\$/person")
     rgdp_per_cap_SLRRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
-    save_savingsrate = Parameter(unit= "%")
+    save_savingsrate = Parameter(unit= "%", default=15.)
     WINCF_weightsfactor =Parameter(index=[region], unit="")
-    W_MarketImpactsatCalibrationTemp =Parameter(unit="%GDP")
-    ipow_MarketIncomeFxnExponent =Parameter()
-    iben_MarketInitialBenefit=Parameter()
-    tcal_CalibrationTemp = Parameter()
-    GDP_per_cap_focus_0_FocusRegionEU = Parameter()
+    W_MarketImpactsatCalibrationTemp =Parameter(unit="%GDP", default=0.5)
+    ipow_MarketIncomeFxnExponent =Parameter(default=-0.13333333333333333)
+    iben_MarketInitialBenefit=Parameter(default=.1333333333333)
+    tcal_CalibrationTemp = Parameter(default=3.)
+    GDP_per_cap_focus_0_FocusRegionEU = Parameter(default=27934.244777382406)
 
     #impact variables
     isatg_impactfxnsaturation = Parameter(unit="unitless")
@@ -32,11 +32,11 @@ include("../utils/mctools.jl")
     rgdp_per_cap_MarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
     iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
     igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
-    impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC")
+    impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC", default=readpagedata(model, "data/impmax_economic.csv"))
 
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
     isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
-    pow_MarketImpactExponent=Parameter(unit="")
+    pow_MarketImpactExponent=Parameter(unit="", default=2.16666666666665)
 
     function run_timestep(p, v, d, t)
 
@@ -79,21 +79,6 @@ include("../utils/mctools.jl")
         end
 
     end
-end
-
-function addmarketdamages(model::Model)
-    marketdamagescomp = addcomponent(model, MarketDamages)
-
-    marketdamagescomp[:tcal_CalibrationTemp]= 3.
-    marketdamagescomp[:iben_MarketInitialBenefit] = .1333333333333
-    marketdamagescomp[:ipow_MarketIncomeFxnExponent] = -0.13333333333333333
-    marketdamagescomp[:save_savingsrate]= 15.
-    marketdamagescomp[:GDP_per_cap_focus_0_FocusRegionEU]= 27934.244777382406
-    marketdamagescomp[:pow_MarketImpactExponent]=2.16666666666665
-    marketdamagescomp[:W_MarketImpactsatCalibrationTemp] = 0.5
-    marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "data/impmax_economic.csv")
-
-    return marketdamagescomp
 end
 
 function randomizemarketdamages(model::Model)

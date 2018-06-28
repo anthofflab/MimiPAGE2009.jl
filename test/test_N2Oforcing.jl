@@ -7,7 +7,7 @@ m = Model()
 set_dimension!(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-addN2Oforcing(m)
+addcomponent(m, n2oforcing)
 
 set_parameter!(m, :n2oforcing, :c_N2Oconcentration, readpagedata(m,"test/validationdata/c_n2oconcentration.csv"))
 set_parameter!(m, :n2oforcing, :c_CH4concentration, readpagedata(m,"test/validationdata/c_ch4concentration.csv"))

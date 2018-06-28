@@ -4,17 +4,17 @@ include("../utils/mctools.jl")
 
 @defcomp SeaLevelRise begin
 
-# Parameters
+  # Parameters
 
   rt_g_globaltemperature = Parameter(index=[time], unit="degreeC")
-  sltemp_SLtemprise=Parameter(unit = "m-degreeC")
-  sla_SLbaselinerise=Parameter(unit = "m")
-  sltau_SLresponsetime=Parameter(unit = "years")
-  s0_initialSL=Parameter(unit = "m")
+  sltemp_SLtemprise=Parameter(unit = "m-degreeC", default=1.7333333333333334)
+  sla_SLbaselinerise=Parameter(unit = "m", default=1.00)
+  sltau_SLresponsetime=Parameter(unit = "years", default=1000.)
+  s0_initialSL=Parameter(unit = "m", default=0.15)
   y_year=Parameter(index=[time], unit="year")
   y_year_0=Parameter(unit="year")
 
-# Variables
+  # Variables
 
   es_equilibriumSL=Variable(index=[time], unit = "m")
   s_sealevel=Variable(index=[time], unit = "m")
@@ -22,8 +22,7 @@ include("../utils/mctools.jl")
   yp_timestep=Variable(index=[time], unit = "years")
 
 
-function run_timestep(p, v, d, t)
-
+  function run_timestep(p, v, d, t)
     if t == 1
       v.yp_timestep[t]=p.y_year[1] - p.y_year_0
       v.es_equilibriumSL[t]=p.sltemp_SLtemprise*p.rt_g_globaltemperature[t] + p.sla_SLbaselinerise
@@ -37,19 +36,7 @@ function run_timestep(p, v, d, t)
       v.s_sealevel[t]=v.s_sealevel[t-1] + (v.es_equilibriumSL[t] - v.s_sealevel[t-1])*(1-v.expfs_exponential[t])
 
     end
-
   end
-end
-
-function addSLR(model::Model)
-    slrcomp = addcomponent(model, SeaLevelRise)
-
-    slrcomp[:sltemp_SLtemprise] = 1.7333333333333334
-    slrcomp[:sla_SLbaselinerise] = 1.00
-    slrcomp[:sltau_SLresponsetime] = 1000.
-    slrcomp[:s0_initialSL] = 0.15
-
-    return slrcomp
 end
 
 function randomizeSLR(model::Model)

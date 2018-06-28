@@ -9,7 +9,7 @@ m = Model()
 set_dimension!(m, :time, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-addLGcycle(m)
+addcomponent(m, LGcycle)
 
 set_parameter!(m, :LGcycle, :e_globalLGemissions, readpagedata(m,"test/validationdata/e_globalLGemissions.csv"))
 set_parameter!(m, :LGcycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]) #real value
