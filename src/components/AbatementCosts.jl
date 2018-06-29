@@ -135,8 +135,6 @@ include("../utils/mctools.jl")
     end
 end
 
-#TODO: Move this into a more generic function and make the default value a Parameter
-#argument?  This would be done for all components with a randomize function
 function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCosts$class")
     abatementcostscomp = addcomponent(model, AbatementCosts, componentname)
@@ -204,8 +202,8 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
     return abatementcostscomp
 end
 
-#TODO: Move this into a more generic function and make the distribution a Parameter
-#argument?  This would be done for all components with a randomize function
+#TODO:  Replace these functions with the new mcs framework functionality (and do
+#so for all of the randomize component functions)
 function randomizeabatementcosts(model::Model)
     update_external_param(model,:AbatementCostsCO2_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,75,0)))
     update_external_param(model,:AbatementCostsCH4_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-25,100,0)))
