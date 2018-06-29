@@ -101,6 +101,7 @@ pdis_probability = TriangularDist(10, 30, 20)
 wdis_gdplostdisc = TriangularDist(5, 25, 15)
 ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
 distau_discontinuityexponent = TriangularDist(20, 200, 50)
+
 #TODO:  can we not set these since they are named the same and already set above?
 # WINCF_weightsfactor = [1.0,
 #         TriangularDist(.6, 1, .8),

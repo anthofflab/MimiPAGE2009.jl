@@ -2,7 +2,7 @@ using Mimi
 using Distributions
 
 include("getpagefunction.jl")
-m = getpage() #defined in getpagefunciton
+m = getpage() 
 run(m)
 
 mcs = @defmcs begin
@@ -23,8 +23,8 @@ mcs = @defmcs begin
         SeaLevelRise.s_sealevel[10],
         SLRDamages.rgdp_per_cap_SLRRemainGDP[10,8],
         MarketDamages.rgdp_per_cap_MarketRemainGDP[10,8],
-        [:NonMarketDamages.rgdp_per_cap_NonMarketRemainGDP[10,8],
-        :Discontinuity.rgdp_per_cap_NonMarketRemainGDP[10,8])
+        NonMarketDamages.rgdp_per_cap_NonMarketRemainGDP[10,8],
+        Discontinuity.rgdp_per_cap_NonMarketRemainGDP[10,8])
 
 end 
 
