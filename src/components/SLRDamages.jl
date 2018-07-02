@@ -17,7 +17,10 @@ include("../utils/mctools.jl")
     act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
 
     #component parameters
-    impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m", default=readpagedata(model, "data/impmax_sealevel.csv")) #TODO pick the correct Excel file, see Github issue w/jrising
+    # TODO in the original code this parameter is set twice with two different 
+    # Excel files, see issue conversation with jrising for the decision on which 
+    # file will be used
+    impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m", default=readpagedata(model, "data/impmax_sealevel.csv")) 
 
     save_savingsrate = Parameter(unit= "%", default=15.00) #pp33 PAGE09 documentation, "savings rate".
     WINCF_weightsfactor =Parameter(index=[region], unit="", default=readpagedata(model, "data/wincf_weightsfactor.csv"))

@@ -202,7 +202,7 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
     return abatementcostscomp
 end
 
-#TODO:  Replace these functions with the new mcs framework functionality (and do
+#TODO:  Replace this randomize function with the new mcs framework functionality (and do
 #so for all of the randomize component functions)
 function randomizeabatementcosts(model::Model)
     update_external_param(model,:AbatementCostsCO2_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear,rand(TriangularDist(-50,75,0)))

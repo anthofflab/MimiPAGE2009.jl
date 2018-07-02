@@ -61,7 +61,10 @@ w_NonImpactsatCalibrationTemp = TriangularDist(.1, 1, .5)
 pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
 ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
 
-#TODO:  can we not set these since they are named the same and already set above?
+# TODO:  can we leave out these lines since they are named the same and already 
+# set above?  We should leave a note, however, that these do need to be randomized
+# in case things change in the future.  Alternatively we could just leave the
+# repetition.  This ocurrs several times in the code below.
 #
 # Also randomized in GDP and SLRDamages and Market Damages
 # save_savingsrate = TriangularDist(10, 20, 15)
@@ -83,7 +86,7 @@ W_SatCalibrationSLR = TriangularDist(.5, 1.5, 1)
 pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
 ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
 
-#TODO:  can we not set these since they are named the same and already set above?
+#TODO: can we leave out these lines (see full comment line ~64)
 # WINCF_weightsfactor = [1.0,
 #         TriangularDist(.6, 1, .8),
 #         TriangularDist(.4, 1.2, .8),
@@ -102,7 +105,7 @@ wdis_gdplostdisc = TriangularDist(5, 25, 15)
 ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
 distau_discontinuityexponent = TriangularDist(20, 200, 50)
 
-#TODO:  can we not set these since they are named the same and already set above?
+#TODO: can we leave out these lines (see full comment line ~64)
 # WINCF_weightsfactor = [1.0,
 #         TriangularDist(.6, 1, .8),
 #         TriangularDist(.4, 1.2, .8),
@@ -213,5 +216,5 @@ cf_costregional =
     TriangularDist(0.4, 0.8, 0.6),
     TriangularDist(0.4, 0.8, 0.6)]
 
-#TODO:  can we not set these since they are named the same and already set above?
+#TODO: can we leave out these lines (see full comment line ~64)
 # automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65) # Note - this parameter also randomized in Abatement Costs

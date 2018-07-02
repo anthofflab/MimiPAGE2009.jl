@@ -3,8 +3,9 @@ Create a parameter `component`_`name` with the given value,
 and connect parameter `name` within `component` to this distinct global parameter.
 """
 
-#TODO: This function has been altered quite a bit, pulling from set_leftover_params!
-#for guidance  ... double check if use it after monte carlo is updated
+# TODO: This function has been altered quite a bit, pulling from set_leftover_params!
+# for guidance  ... so we should double check it for correctness and consider 
+# alternatives that don't dive quite so deeply into the internals
 function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     globalname = Symbol(string(component, '_', name))
     param_dims = Mimi.parameter_dimensions(m, component, name)    
@@ -27,7 +28,8 @@ function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
         Mimi.set_external_array_param!(m, globalname, values, param_dims)
     end
 
-    #TODO:  the bug mentioned below was pointed out by previous authors pre-new-Mimi... still an issue?
+    # TODO:  the bug mentioned below was pointed out by previous authors before
+    # conversion to the new Mimi framework... still an issue?
     #connect_parameter(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
     Mimi.disconnect!(m.md, component, name)
     x = Mimi.ExternalParameterConnection(component, name, globalname)
