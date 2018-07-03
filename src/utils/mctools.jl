@@ -5,7 +5,9 @@ and connect parameter `name` within `component` to this distinct global paramete
 
 # TODO: This function has been altered quite a bit, pulling from set_leftover_params!
 # for guidance  ... so we should double check it for correctness and consider 
-# alternatives that don't dive quite so deeply into the internals
+# alternatives that don't dive quite so deeply into the internals.  We also may 
+# want to rearrange the files if this is the only function in this file ... combine
+# with mcs_RVs?
 function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     globalname = Symbol(string(component, '_', name))
     param_dims = Mimi.parameter_dimensions(m, component, name)    

@@ -4,6 +4,11 @@ using Distributions
 # component parameters to have distinct names (seems smart to enforce this
 # in general)
 
+# TODO:  In a few places, a parameter is randomized twice with the same values, 
+# once in each component.  Organization wise for PAGE, it may make sense to
+# keep them this way, however we should consider if this repetition is the right
+# approach within this MCS framework.  
+
 # CO2cycle
 air_CO2fractioninatm = TriangularDist(57, 67, 62)
 res_CO2atmlifetime = TriangularDist(50, 100, 70)
@@ -61,21 +66,16 @@ w_NonImpactsatCalibrationTemp = TriangularDist(.1, 1, .5)
 pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
 ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
 
-# TODO:  can we leave out these lines since they are named the same and already 
-# set above?  We should leave a note, however, that these do need to be randomized
-# in case things change in the future.  Alternatively we could just leave the
-# repetition.  This ocurrs several times in the code below.
-#
-# Also randomized in GDP and SLRDamages and Market Damages
-# save_savingsrate = TriangularDist(10, 20, 15)
-# WINCF_weightsfactor = [1.0,
-#         TriangularDist(.6, 1, .8),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.2, .6, .4),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.4, .8, .6),
-#         TriangularDist(.4, .8, .6)]
+#repeat randomization: Also randomized in GDP and SLRDamages and Market Damages
+save_savingsrate = TriangularDist(10, 20, 15)
+WINCF_weightsfactor = [1.0,
+        TriangularDist(.6, 1, .8),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.2, .6, .4),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.4, .8, .6),
+        TriangularDist(.4, .8, .6)]
 
 
 # SLRDamages
@@ -86,15 +86,15 @@ W_SatCalibrationSLR = TriangularDist(.5, 1.5, 1)
 pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
 ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
 
-#TODO: can we leave out these lines (see full comment line ~64)
-# WINCF_weightsfactor = [1.0,
-#         TriangularDist(.6, 1, .8),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.2, .6, .4),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.4, .8, .6),
-#         TriangularDist(.4, .8, .6)]
+# repeat randomization
+WINCF_weightsfactor = [1.0,
+        TriangularDist(.6, 1, .8),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.2, .6, .4),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.4, .8, .6),
+        TriangularDist(.4, .8, .6)]
 
 
 # Discountinuity
@@ -105,16 +105,15 @@ wdis_gdplostdisc = TriangularDist(5, 25, 15)
 ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
 distau_discontinuityexponent = TriangularDist(20, 200, 50)
 
-#TODO: can we leave out these lines (see full comment line ~64)
-# WINCF_weightsfactor = [1.0,
-#         TriangularDist(.6, 1, .8),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.2, .6, .4),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.4, 1.2, .8),
-#         TriangularDist(.4, .8, .6),
-#         TriangularDist(.4, .8, .6)]
-
+# repeat randomization
+WINCF_weightsfactor = [1.0,
+        TriangularDist(.6, 1, .8),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.2, .6, .4),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.4, 1.2, .8),
+        TriangularDist(.4, .8, .6),
+        TriangularDist(.4, .8, .6)]
 
 
 # EquityWeighting
@@ -167,7 +166,7 @@ emitf_uncertaintyinBAUemissfactor =
         TriangularDist(0.5,1.5,1.0),
         TriangularDist(0.5,1.5,1.0)]
 
-upq0f_negativecostpercentagefactor =
+q0f_negativecostpercentagefactor =
         [1,
         TriangularDist(0.75,1.5,1.0),
         TriangularDist(0.75,1.25,1.0),
@@ -216,5 +215,5 @@ cf_costregional =
     TriangularDist(0.4, 0.8, 0.6),
     TriangularDist(0.4, 0.8, 0.6)]
 
-#TODO: can we leave out these lines (see full comment line ~64)
-# automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65) # Note - this parameter also randomized in Abatement Costs
+# repeat randomization: Note - this parameter also randomized in Abatement Costs
+automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65) 

@@ -8,7 +8,7 @@ run(m)
 mcs = @defmcs begin
     
     #Define random variables (RVs)
-    include("mcs_RVs.jl")
+    include(@joinpath(@_DIR_, "utils/mcs_RVs.jl"))    
 
     # indicate which parameters to save for each model run
     # TODO:  are data slices supported yet?  If not we can do the data slicing
