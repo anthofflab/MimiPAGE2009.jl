@@ -41,7 +41,8 @@ end
 """
 Change the value of an external parameter
 """
-#TODO:  wont' need these functions anymore after conversion to new mcs framework
+#TODO:  We wont' need these functions anymore after conversion to new mcs framework,
+#and we also now have the Mimi function Mimi.update_external_param.
 function update_external_param(m::Model, name::Symbol, value::Float64)
     m.md.external_params[Symbol(string(name))].value = value 
 end

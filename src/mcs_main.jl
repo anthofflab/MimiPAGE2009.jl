@@ -32,4 +32,6 @@ end
 # TODO:  see montecarlo.jl for how outputs were formatted, including a dataframe
 # and renaming the parameters ... do we want to do that here?  If so, look at best
 # way to do so
-generate_trials!(mcs, 100_000, joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+function do_montecarlo_runs(samplesize::Int)
+    generate_trials!(mcs, samplesize, joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+end
