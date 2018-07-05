@@ -11,7 +11,7 @@ include("../utils/mctools.jl")
   rand_discontinuity = Parameter(unit="unitless", default=.5)
 
   irefeqdis_eqdiscimpact=Variable(index=[region], unit="%")
-  WINCF_weightsfactor=Parameter(index=[region], unit="unitless", default=[1, 0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6])
+  wincf_weightsfactor=Parameter(index=[region], unit="unitless", default=[1, 0.8, 0.8, 0.4, 0.8, 0.8, 0.6, 0.6])
   wdis_gdplostdisc=Parameter(unit="%", default=15.)
 
   igdpeqdis_eqdiscimpact=Variable(index=[time,region], unit="%")
@@ -60,7 +60,7 @@ include("../utils/mctools.jl")
         end
 
         for r in d.region
-            v.irefeqdis_eqdiscimpact[r] = p.WINCF_weightsfactor[r]*p.wdis_gdplostdisc
+            v.irefeqdis_eqdiscimpact[r] = p.wincf_weightsfactor[r]*p.wdis_gdplostdisc
 
             v.igdpeqdis_eqdiscimpact[t,r] = v.irefeqdis_eqdiscimpact[r] * (p.rgdp_per_cap_NonMarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_incomeexponent
 
@@ -98,5 +98,5 @@ function randomizediscontinuity(model::Model)
              rand(TriangularDist(.4, .8, .6)),
              rand(TriangularDist(.4, .8, .6))]
 
-    update_external_param(model, :WINCF_weightsfactor, wincf)
+    update_external_param(model, :wincf_weightsfactor, wincf)
 end

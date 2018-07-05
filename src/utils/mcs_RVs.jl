@@ -49,7 +49,7 @@ pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
 ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
 save_savingsrate = TriangularDist(10, 20, 15)
 #TODO is this the right way to set the array?
-WINCF_weightsfactor = [1.0,
+wincf_weightsfactor = [1.0,
          TriangularDist(.6, 1, .8),
          TriangularDist(.4, 1.2, .8),
          TriangularDist(.2, .6, .4),
@@ -68,7 +68,7 @@ ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
 
 #repeat randomization: Also randomized in GDP and SLRDamages and Market Damages
 save_savingsrate = TriangularDist(10, 20, 15)
-WINCF_weightsfactor = [1.0,
+wincf_weightsfactor = [1.0,
         TriangularDist(.6, 1, .8),
         TriangularDist(.4, 1.2, .8),
         TriangularDist(.2, .6, .4),
@@ -87,7 +87,7 @@ pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
 ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
 
 # repeat randomization
-WINCF_weightsfactor = [1.0,
+wincf_weightsfactor = [1.0,
         TriangularDist(.6, 1, .8),
         TriangularDist(.4, 1.2, .8),
         TriangularDist(.2, .6, .4),
@@ -106,7 +106,7 @@ ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
 distau_discontinuityexponent = TriangularDist(20, 200, 50)
 
 # repeat randomization
-WINCF_weightsfactor = [1.0,
+wincf_weightsfactor = [1.0,
         TriangularDist(.6, 1, .8),
         TriangularDist(.4, 1.2, .8),
         TriangularDist(.2, .6, .4),

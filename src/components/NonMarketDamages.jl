@@ -23,7 +23,7 @@ include("../utils/mctools.jl")
     rgdp_per_cap_MarketRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
     save_savingsrate = Parameter(unit= "%", default=15.)
-    WINCF_weightsfactor =Parameter(index=[region], unit="unitless")
+    wincf_weightsfactor =Parameter(index=[region], unit="unitless")
     w_NonImpactsatCalibrationTemp =Parameter(unit="%GDP", default=0.5333333333333333)
     ipow_NonMarketIncomeFxnExponent =Parameter(unit="unitless", default=0.)
     iben_NonMarketInitialBenefit=Parameter(unit="%GDP/degreeC", default=0.08333333333333333)
@@ -50,7 +50,7 @@ include("../utils/mctools.jl")
                 v.i_regionalimpact[t,r] = p.rtl_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
             end
 
-            v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*
+            v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*
                 ((p.w_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit *p.tcal_CalibrationTemp)*
                     (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_NonMarketExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
 
@@ -110,5 +110,5 @@ function randomizenonmarketdamages(model::Model)
              rand(TriangularDist(.4, 1.2, .8)),
              rand(TriangularDist(.4, .8, .6)),
              rand(TriangularDist(.4, .8, .6))]
-    update_external_param(model, :WINCF_weightsfactor, wincf)
+    update_external_param(model, :wincf_weightsfactor, wincf)
 end
