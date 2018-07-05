@@ -48,7 +48,7 @@ function buildpage(m::Model, policy::String="policy-a")
     climatetemperature = addcomponent(m, ClimateTemperature)
     sealevelrise = addcomponent(m, SeaLevelRise)
     #Socio-Economics
-    population = addcomponent(m, Population)
+    population = addpopulation(m)
     gdp = addcomponent(m, GDP)
     #Abatement Costs
     abatementcosts_CO2 = addabatementcosts(m, :CO2, policy)
@@ -62,9 +62,9 @@ function buildpage(m::Model, policy::String="policy-a")
     adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
     totaladaptationcosts = addcomponent(m, TotalAdaptationCosts)
     # Impacts
-    slrdamages = addcomponent(m, SLRDamages)
-    marketdamages = addcomponent(m, MarketDamages)
-    nonmarketdamages= addcomponent(m, NonMarketDamages)
+    slrdamages = addslrdamages(m)
+    marketdamages = addmarketdamages(m)
+    nonmarketdamages= addnonmarketdamages(m)
     discontinuity= addcomponent(m, Discontinuity)
     #Equity weighting and Total Costs
     equityweighting= addcomponent(m, EquityWeighting)

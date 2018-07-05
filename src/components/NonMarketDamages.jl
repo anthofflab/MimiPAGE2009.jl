@@ -11,7 +11,7 @@ include("../utils/mctools.jl")
     rtl_realizedtemperature = Parameter(index=[time, region], unit="degreeC")
 
     #tolerability parameters
-    impmax_maxtempriseforadaptpolicyNM = Parameter(index=[region], unit= "degreeC", default=readpagedata(model, "data/impmax_noneconomic.csv"))
+    impmax_maxtempriseforadaptpolicyNM = Parameter(index=[region], unit= "degreeC")
     atl_adjustedtolerableleveloftemprise = Parameter(index=[time,region], unit="degreeC")
     imp_actualreduction = Parameter(index=[time, region], unit= "%")
 
@@ -81,6 +81,17 @@ include("../utils/mctools.jl")
             v.rgdp_per_cap_NonMarketRemainGDP[t,r] = v.rcons_per_cap_NonMarketRemainConsumption[t,r]/(1-p.save_savingsrate/100)
         end
     end
+end
+
+
+# Still need this function in order to set the parameters than depend on 
+# readpagedata, which takes model as an input. These cannot be set using 
+# the default keyword arg for now.
+function addnonmarketdamages(model::Model)
+    nonmarketdamagescomp = addcomponent(model, NonMarketDamages)
+    nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "data/impmax_noneconomic.csv")
+
+    return nonmarketdamagescomp
 end
 
 function randomizenonmarketdamages(model::Model)

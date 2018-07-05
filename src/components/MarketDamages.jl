@@ -32,7 +32,7 @@ include("../utils/mctools.jl")
     rgdp_per_cap_MarketRemainGDP = Variable(index=[time, region], unit = "\$/person")
     iref_ImpactatReferenceGDPperCap=Variable(index=[time, region])
     igdp_ImpactatActualGDPperCap=Variable(index=[time, region])
-    impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC", default=readpagedata(model, "data/impmax_economic.csv"))
+    impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC")
 
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
     isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
@@ -79,6 +79,17 @@ include("../utils/mctools.jl")
         end
 
     end
+end
+
+# Still need this function in order to set the parameters than depend on 
+# readpagedata, which takes model as an input. These cannot be set using 
+# the default keyword arg for now.
+
+function addmarketdamages(model::Model)
+    marketdamagescomp = addcomponent(model, MarketDamages)
+    marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "data/impmax_economic.csv")
+
+    return marketdamagescomp
 end
 
 function randomizemarketdamages(model::Model)

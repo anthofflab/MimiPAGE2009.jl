@@ -19,21 +19,21 @@ include("test_LGcycle.jl")
 include("test_LGemissions.jl")
 include("test_LGforcing.jl")
 include("test_loadparameters.jl")
-include("test_mainmodel.jl")
-include("test_mainmodel_policyb.jl") 
-include("test_MarketDamages.jl")
+include("test_mainmodel.jl") #fail
+include("test_mainmodel_policyb.jl") #fail
+include("test_MarketDamages.jl") #debugging error:  key "WINCF_weightsfactor" not found
 include("test_N2Ocycle.jl")
 include("test_N2Oemissions.jl")
 include("test_N2Oforcing.jl")
-include("test_NonMarketDamages.jl")
+include("test_NonMarketDamages.jl") #debugging error:  key "WINCF_weightsfactor" not found
 include("test_Population.jl")
 include("test_SeaLevelRise.jl")
 include("test_SLRDamages.jl")
-include("test_SulphateForcing.jl")
+include("test_SulphateForcing.jl") 
 include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
-include("test_montecarlo.jl") #ERROR: set_parameter issue
-include("test_mcs.jl") #new mcs framework
+include("test_montecarlo.jl") #ERROR: set_parameter issue, can disregard once new mcs framework is in place
+#include("test_mcs.jl") #new mcs framework, not finished yet
 
 end

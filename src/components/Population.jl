@@ -6,8 +6,8 @@ using Mimi
     # Parameters
     y_year_0 = Parameter(unit="year")
     y_year = Parameter(index=[time], unit="year")
-    popgrw_populationgrowth = Parameter(index=[time, region], unit="%/year", default=readpagedata(model, "data/popgrw_populationgrowth.csv")) # From p.32 of Hope 2009
-    pop0_initpopulation = Parameter(index=[region], unit="million person", default=readpagedata(model, "data/pop0_initpopulation.csv")) # Population in y_year_0
+    popgrw_populationgrowth = Parameter(index=[time, region], unit="%/year") # From p.32 of Hope 2009
+    pop0_initpopulation = Parameter(index=[region], unit="million person") # Population in y_year_0
 
     # Variables
     pop_population = Variable(index=[time, region], unit="million person")
@@ -23,4 +23,16 @@ using Mimi
             end
         end
     end
+end
+
+# Still need this function in order to set the parameters than depend on 
+# readpagedata, which takes model as an input. These cannot be set using 
+# the default keyword arg for now.
+function addpopulation(model::Model)
+    populationcomp = addcomponent(model, Population)
+
+    populationcomp[:popgrw_populationgrowth]=readpagedata(model, "data/popgrw_populationgrowth.csv")
+    populationcomp[:pop0_initpopulation]=readpagedata(model, "data/pop0_initpopulation.csv")
+
+    return populationcomp
 end

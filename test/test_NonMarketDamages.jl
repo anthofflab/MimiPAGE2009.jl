@@ -9,7 +9,7 @@ m = Model()
 set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-nonmarketdamages = addcomponent(m, NonMarketDamages)
+nonmarketdamages = addnonmarketdamages(m)
 
 set_parameter!(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
 set_parameter!(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,

@@ -20,10 +20,10 @@ include("../utils/mctools.jl")
     # TODO in the original code this parameter is set twice with two different 
     # Excel files, see issue conversation with jrising for the decision on which 
     # file will be used
-    impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m", default=readpagedata(model, "data/impmax_sealevel.csv")) 
+    impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m") 
 
     save_savingsrate = Parameter(unit= "%", default=15.00) #pp33 PAGE09 documentation, "savings rate".
-    WINCF_weightsfactor =Parameter(index=[region], unit="", default=readpagedata(model, "data/wincf_weightsfactor.csv"))
+    WINCF_weightsfactor =Parameter(index=[region], unit="")
     W_SatCalibrationSLR =Parameter(default=1.0) #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
     ipow_SLRIncomeFxnExponent =Parameter(default=-0.30)
     pow_SLRImpactFxnExponent=Parameter(default=0.7333333333333334)
@@ -90,6 +90,21 @@ include("../utils/mctools.jl")
         end
 
     end
+end
+
+
+# Still need this function in order to set the parameters than depend on 
+# readpagedata, which takes model as an input. These cannot be set using 
+# the default keyword arg for now.
+function addslrdamages(model::Model)
+    SLRDamagescomp = addcomponent(model, SLRDamages)
+
+    #TODO:  impmax_... is set twice, talking to jrsing about which is correct
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/sealevelmaxrise.csv")
+    SLRDamagescomp[:WINCF_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
+    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
+
+    return SLRDamagescomp
 end
 
 function randomizeslrdamages(model::Model)

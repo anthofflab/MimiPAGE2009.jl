@@ -8,7 +8,7 @@ m = Model()
 set_dimension!(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075.,2100.,2150.,2200.])
 set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-addcomponenet(m, CH4cycle, :ch4cycle)
+addcomponent(m, ch4cycle, :ch4cycle)
 
 set_parameter!(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
 set_parameter!(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
