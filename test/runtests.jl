@@ -1,4 +1,5 @@
 using Base.Test
+using Mimi
 
 function page_model()
     include("../src/utils/load_parameters.jl")
