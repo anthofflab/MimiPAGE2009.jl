@@ -2,7 +2,6 @@ using Base.Test
 using CSVFiles
 using Missings
 
-include("../src/mcs_RVs.jl")
 include("../src/mcs_main.jl")
 
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
