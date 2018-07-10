@@ -2,7 +2,7 @@ using Base.Test
 using CSVFiles
 using Missings
 
-include("../src/mcs_main.jl")
+include("../src/mcs.jl")
 
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
 samplesize = 1000 # normal MC sample size (takes ~5 seconds)
@@ -27,12 +27,9 @@ if regenerate
     println("Regenerating MC distribution information")
 
     # Perform a large MC run and extract statistics
-    do_montecarlo_runs(100_000)
+    do_monte_carlo_runs(100_000)
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 
-    # TODO: copied from test_montecarlo.jl, this section is going to depend on 
-    # the format of the csv output from the do_montecarlo_runs function
-    #=
      for ii in 1:nrow(compare)
         name = Symbol(compare[ii, :Variable_Name])
         if kurtosis(df[name]) > 2.9 # exponential distribution
@@ -47,7 +44,7 @@ if regenerate
         if ii != nrow(compare)
             println(",")
         end
-    end =#
+    end 
 
 else
     println("Performing MC sample")
@@ -56,10 +53,6 @@ else
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 end
 
-
-# TODO: copied from test_montecarlo.jl, this section is going to depend on 
-# the format of the csv output from the do_montecarlo_runs function
-#=
 # Compare all known quantiles
 for ii in 1:nrow(compare)
     name = Symbol(compare[ii, :Variable_Name])
@@ -74,4 +67,4 @@ for ii in 1:nrow(compare)
         #println("$name x $qval: $estimated ≈ $expected rtol=$(ceil(confidence * stderr, -trunc(Int, log10(stderr))))")
         @test estimated ≈ expected rtol=ceil(confidence * stderr, -trunc(Int, log10(stderr)))
     end
-end =#
+end

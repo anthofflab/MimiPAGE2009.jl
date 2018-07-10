@@ -1,24 +1,21 @@
 using Mimi
 using Distributions
+using CSVFiles
+using Query
 
 include("getpagefunction.jl")
 m = getpage() 
 run(m)
 
+#TODO: handle arrays
+#TODO: add args for filenames
+
 mcs = @defmcs begin
-    
-    #Define random variables (RVs)
-    using Distributions
-    
-    #TODO:  is there a way to specificy parameters by component, or do we need all
-    # component parameters to have distinct names (seems smart to enforce this
-    # in general)
-    
-    # TODO:  In a few places, a parameter is randomized twice with the same values, 
-    # once in each component.  Organization wise for PAGE, it may make sense to
-    # keep them this way, however we should consider if this repetition is the right
-    # approach within this MCS framework.  
-    
+        
+    ############################################################################
+    # Define random variables (RVs) 
+    ############################################################################
+
     # CO2cycle
     air_CO2fractioninatm = TriangularDist(57, 67, 62)
     res_CO2atmlifetime = TriangularDist(50, 100, 70)
@@ -58,16 +55,15 @@ mcs = @defmcs begin
     pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
     ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
     save_savingsrate = TriangularDist(10, 20, 15)
-    #TODO is this the right way to set the array?
-    wincf_weightsfactor = [1.0,
-             TriangularDist(.6, 1, .8),
-             TriangularDist(.4, 1.2, .8),
-             TriangularDist(.2, .6, .4),
-             TriangularDist(.4, 1.2, .8),
-             TriangularDist(.4, 1.2, .8),
-             TriangularDist(.4, .8, .6),
-             TriangularDist(.4, .8, .6)] 
-    
+
+#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
+#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
+#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
+#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
+
     
     # NonMarketDamages
     tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
@@ -76,16 +72,15 @@ mcs = @defmcs begin
     pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
     ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
     
-    #repeat randomization: Also randomized in GDP and SLRDamages and Market Damages
-    save_savingsrate = TriangularDist(10, 20, 15)
-    wincf_weightsfactor = [1.0,
-            TriangularDist(.6, 1, .8),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.2, .6, .4),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.4, .8, .6),
-            TriangularDist(.4, .8, .6)]
+#     #repeat reset: Also randomized in GDP and SLRDamages and Market Damages
+#     save_savingsrate = TriangularDist(10, 20, 15)
+#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
+#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
+#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
+#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
     
     
     # SLRDamages
@@ -96,15 +91,14 @@ mcs = @defmcs begin
     pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
     ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
     
-    # repeat randomization
-    wincf_weightsfactor = [1.0,
-            TriangularDist(.6, 1, .8),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.2, .6, .4),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.4, .8, .6),
-            TriangularDist(.4, .8, .6)]
+#     # repeat reset
+#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
+#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
+#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
+#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
     
     
     # Discountinuity
@@ -115,15 +109,14 @@ mcs = @defmcs begin
     ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
     distau_discontinuityexponent = TriangularDist(20, 200, 50)
     
-    # repeat randomization
-    wincf_weightsfactor = [1.0,
-            TriangularDist(.6, 1, .8),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.2, .6, .4),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.4, 1.2, .8),
-            TriangularDist(.4, .8, .6),
-            TriangularDist(.4, .8, .6)]
+#     # repeat reset
+#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
+#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
+#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
+#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
+#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
     
     
     # EquityWeighting
@@ -165,36 +158,29 @@ mcs = @defmcs begin
     
     #the following variables need to be randomized, but set the same in all 4 abatement cost components
     #note that for these regional variables, the first region is the focus region (EU), which is randomized in the preceding code, and so is always one for these variables
-    #TODO:  is this the right way to be creating arrays?
-    emitf_uncertaintyinBAUemissfactor = 
-            [1,
-            TriangularDist(0.8,1.2,1.0),
-            TriangularDist(0.8,1.2,1.0),
-            TriangularDist(0.65,1.35,1.0),
-            TriangularDist(0.5,1.5,1.0),
-            TriangularDist(0.5,1.5,1.0),
-            TriangularDist(0.5,1.5,1.0),
-            TriangularDist(0.5,1.5,1.0)]
+#     emitf_uncertaintyinBAUemissfactor[2] = TriangularDist(0.8,1.2,1.0)
+#     emitf_uncertaintyinBAUemissfactor[3] = TriangularDist(0.8,1.2,1.0)
+#     emitf_uncertaintyinBAUemissfactor[4] = TriangularDist(0.65,1.35,1.0)
+#     emitf_uncertaintyinBAUemissfactor[5] = TriangularDist(0.5,1.5,1.0)
+#     emitf_uncertaintyinBAUemissfactor[6] = TriangularDist(0.5,1.5,1.0)
+#     emitf_uncertaintyinBAUemissfactor[7] = TriangularDist(0.5,1.5,1.0)
+#     emitf_uncertaintyinBAUemissfactor[8] = TriangularDist(0.5,1.5,1.0)
     
-    q0f_negativecostpercentagefactor =
-            [1,
-            TriangularDist(0.75,1.5,1.0),
-            TriangularDist(0.75,1.25,1.0),
-            TriangularDist(0.4,1.0,0.7),       
-            TriangularDist(0.4,1.0,0.7),
-            TriangularDist(0.4,1.0,0.7),
-            TriangularDist(0.4,1.0,0.7),
-            TriangularDist(0.4,1.0,0.7)]
+#     q0f_negativecostpercentagefactor[2] = TriangularDist(0.75,1.5,1.0)
+#     q0f_negativecostpercentagefactor[3] = TriangularDist(0.75,1.25,1.0)
+#     q0f_negativecostpercentagefactor[4] = TriangularDist(0.4,1.0,0.7)      
+#     q0f_negativecostpercentagefactor[5] = TriangularDist(0.4,1.0,0.7)
+#     q0f_negativecostpercentagefactor[6] = TriangularDist(0.4,1.0,0.7)
+#     q0f_negativecostpercentagefactor[7] = TriangularDist(0.4,1.0,0.7)
+#     q0f_negativecostpercentagefactor[8] = TriangularDist(0.4,1.0,0.7)
     
-    cmaxf_maxcostfactor = 
-            [1,
-            TriangularDist(0.8,1.2,1.0),
-            TriangularDist(1.0,1.5,1.2),
-            TriangularDist(0.4,1.0,0.7),
-            TriangularDist(0.8,1.2,1.0),
-            TriangularDist(1,1.5,1.2),
-            TriangularDist(1,1.5,1.2),
-            TriangularDist(0.4,1.0,0.7)]
+#     cmaxf_maxcostfactor[2] = TriangularDist(0.8,1.2,1.0)
+#     cmaxf_maxcostfactor[3] = TriangularDist(1.0,1.5,1.2)
+#     cmaxf_maxcostfactor[4] = TriangularDist(0.4,1.0,0.7)
+#     cmaxf_maxcostfactor[5] = TriangularDist(0.8,1.2,1.0)
+#     cmaxf_maxcostfactor[6] = TriangularDist(1,1.5,1.2)
+#     cmaxf_maxcostfactor[7] = TriangularDist(1,1.5,1.2)
+#     cmaxf_maxcostfactor[8] = TriangularDist(0.4,1.0,0.7)
     
     q0propmult_cutbacksatnegativecostinfinalyear = TriangularDist(0.3,1.2,0.7)
     qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = TriangularDist(1,1.5,1.3)
@@ -214,42 +200,147 @@ mcs = @defmcs begin
     AdaptiveCostsNonEconomic_cp_costplateau_eu = TriangularDist(0.01, 0.04, 0.02)
     AdaptiveCostsNonEconomic_ci_costimpact_eu = TriangularDist(0.002, 0.01, 0.005)
     
-    #TODO is this the right way to set the array?
-    cf_costregional = 
-        [1., 
-        TriangularDist(0.6, 1, 0.8),
-        TriangularDist(0.4, 1.2, 0.8),
-        TriangularDist(0.2, 0.6, 0.4),
-        TriangularDist(0.4, 1.2, 0.8),
-        TriangularDist(0.4, 1.2, 0.8),
-        TriangularDist(0.4, 0.8, 0.6),
-        TriangularDist(0.4, 0.8, 0.6)]
+#     cf_costregional[2] = TriangularDist(0.6, 1, 0.8)
+#     cf_costregional[3] = TriangularDist(0.4, 1.2, 0.8)
+#     cf_costregional[4] = TriangularDist(0.2, 0.6, 0.4)
+#     cf_costregional[5] = TriangularDist(0.4, 1.2, 0.8)
+#     cf_costregional[6] = TriangularDist(0.4, 1.2, 0.8)
+#     cf_costregional[7] = TriangularDist(0.4, 0.8, 0.6)
+#     cf_costregional[8] = TriangularDist(0.4, 0.8, 0.6)
     
-    # repeat randomization: Note - this parameter also randomized in Abatement Costs
+    # repeat reset: Note - this parameter also randomized in Abatement Costs
     automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)    
 
-    # indicate which parameters to save for each model run
-    # TODO:  are data slices supported yet?  If not we can do the data slicing
-    # afterwards
+    ############################################################################
+    # Indicate which parameters to save for each model run
+    ############################################################################
+    
     save(EquityWeighting.td_totaldiscountedimpacts,
         EquityWeighting.tpc_totalaggregatedcosts, 
         EquityWeighting.tac_totaladaptationcosts,
         EquityWeighting.te_totaleffect,
-        co2cycle.c_CO2concentration[10], 
-        TotalForcing.ft_totalforcing[10],
-        ClimateTemperature.rt_g_globaltemperature[10],
-        SeaLevelRise.s_sealevel[10],
-        SLRDamages.rgdp_per_cap_SLRRemainGDP[10,8],
-        MarketDamages.rgdp_per_cap_MarketRemainGDP[10,8],
-        NonMarketDamages.rgdp_per_cap_NonMarketRemainGDP[10,8],
-        Discontinuity.rgdp_per_cap_NonMarketRemainGDP[10,8])
+        co2cycle.c_CO2concentration, 
+        TotalForcing.ft_totalforcing,
+        ClimateTemperature.rt_g_globaltemperature,
+        SeaLevelRise.s_sealevel,
+        SLRDamages.rgdp_per_cap_SLRRemainGDP,
+        MarketDamages.rgdp_per_cap_MarketRemainGDP,
+        NonMarketDamages.rgdp_per_cap_NonMarketRemainGDP,
+        Discontinuity.rgdp_per_cap_NonMarketRemainGDP)
 
-end 
+# end #defmcs
 
-# Generate trial data for all RVs and save to a file
-# TODO:  see montecarlo.jl for how outputs were formatted, including a dataframe
-# and renaming the parameters ... do we want to do that here?  If so, look at best
-# way to do so
-function do_montecarlo_runs(samplesize::Int)
-    generate_trials!(mcs, samplesize, joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"))
+# Function to reformat the results into the format used for testing
+#TODO:  make a function for loading dataframes with filters
+function reformat_RV_outputs(samplesize::Int)
+
+        #create vectors to hold results of Monte Carlo runs
+        td=zeros(samplesize);
+        tpc=zeros(samplesize);
+        tac=zeros(samplesize);
+        te=zeros(samplesize);
+        ft=zeros(samplesize);
+        rt_g=zeros(samplesize);
+        s=zeros(samplesize);
+        c_co2concentration=zeros(samplesize);
+        rgdppercap_slr=zeros(samplesize);
+        rgdppercap_market=zeros(samplesize);
+        rgdppercap_nonmarket=zeros(samplesize);
+        rgdppercap_disc=zeros(samplesize);
+
+        #load raw data
+        output_path = joinpath(@__DIR__, "../output/")
+        td = DataFrame(load(joinpath(output_path, "td_totaldiscountedimpacts.csv")))[:td_totaldiscountedimpacts]
+        tpc = DataFrame(load(joinpath(output_path, "tpc_totalaggregatedcosts.csv")))[:tpc_totalaggregatedcosts]
+        tac = DataFrame(load(joinpath(output_path, "tac_totaladaptationcosts.csv")))[:tac_totaladaptationcosts]
+        te = DataFrame(load(joinpath(output_path, "te_totaleffect.csv")))[:te_totaleffect]
+
+        #Query time index
+        df = DataFrame(load(joinpath(output_path, "c_CO2concentration.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @select {i.c_CO2concentration}
+                end) |> DataFrame
+        c_co2concentration = tmp[:c_CO2concentration]
+
+        df = DataFrame(load(joinpath(output_path, "ft_totalforcing.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @select {i.ft_totalforcing}
+                end) |> DataFrame
+        ft = tmp[:ft_totalforcing]
+
+        df = DataFrame(load(joinpath(output_path, "rt_g_globaltemperature.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @select {i.rt_g_globaltemperature}
+                end) |> DataFrame
+        rt_g = tmp[:rt_g_globaltemperature]
+
+        df = DataFrame(load(joinpath(output_path, "s_sealevel.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @select {i.s_sealevel}
+                end) |> DataFrame
+        s = tmp[:s_sealevel]
+
+        ## Query region and time indices
+        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_SLRRemainGDP.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @where i.region == "LatAmerica"
+                @select {i.rgdp_per_cap_SLRRemainGDP}
+                end) |> DataFrame
+        rgdppercap_slr = tmp[:rgdp_per_cap_SLRRemainGDP]
+
+        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_SLRRemainGDP.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @where i.region == "LatAmerica"
+                @select {i.rgdp_per_cap_SLRRemainGDP}
+                end) |> DataFrame
+        rgdppercap_slr = tmp[:rgdp_per_cap_SLRRemainGDP]
+
+        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_MarketRemainGDP.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @where i.region == "LatAmerica"
+                @select {i.rgdp_per_cap_MarketRemainGDP}
+                end) |> DataFrame
+                rgdppercap_market = tmp[:rgdp_per_cap_MarketRemainGDP]
+
+        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_NonMarketRemainGDP.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @where i.region == "LatAmerica"
+                @select {i.rgdp_per_cap_NonMarketRemainGDP}
+                end) |> DataFrame
+        rgdppercap_nonmarket = tmp[:rgdp_per_cap_NonMarketRemainGDP]
+
+        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_NonMarketRemainGDP.csv")))
+        tmp = df |> @query(i, begin
+                @where i.time == 2200
+                @where i.region == "LatAmerica"
+                @select {i.rgdp_per_cap_NonMarketRemainGDP}
+                end) |> DataFrame
+                rgdppercap_disc = tmp[:rgdp_per_cap_NonMarketRemainGDP]
+
+        #resave data
+        df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
+        save(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"),df)
+end
+
+function do_monte_carlo_runs(samplesize::Int)
+
+        # Generate trial data for all RVs and save to a file
+        generate_trials!(mcs, samplesize, filename = joinpath(@__DIR__, "../output/trialdata.csv"))
+
+        # set model TODO: is this needed when we have just one model?
+        Mimi.set_model!(mcs, m)
+
+        # Run trials 1:samplesize, and save results to the indicated directory, one CSV file per RV
+        run_mcs(mcs, samplesize, output_dir = joinpath(@__DIR__, "../output/"))
+
+        # reformat outputs for testing and analysis
+        # reformat_RV_outputs(samplesize)
 end

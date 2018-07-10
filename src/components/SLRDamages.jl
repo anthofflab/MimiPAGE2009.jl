@@ -17,9 +17,6 @@ include("../utils/mctools.jl")
     act_percap_adaptationcosts = Parameter(index=[time, region], unit="\$/person")
 
     #component parameters
-    # TODO in the original code this parameter is set twice with two different 
-    # Excel files, see issue conversation with jrising for the decision on which 
-    # file will be used
     impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m") 
 
     save_savingsrate = Parameter(unit= "%", default=15.00) #pp33 PAGE09 documentation, "savings rate".
@@ -99,7 +96,6 @@ end
 function addslrdamages(model::Model)
     SLRDamagescomp = addcomponent(model, SLRDamages)
 
-    #TODO:  impmax_... is set twice, talking to jrsing about which is correct
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/sealevelmaxrise.csv")
     SLRDamagescomp[:wincf_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
