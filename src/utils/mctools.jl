@@ -21,7 +21,7 @@ function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
             values = value
         end
         #TODO:  this causes an error because we cannot setproperty! with a 
-        #non-scalar 
+        #non-scalar
         Mimi.set_external_array_param!(m, globalname, values, param_dims)
     end
 
@@ -47,4 +47,43 @@ end
 
 function update_external_param(m::Model, name::Symbol, value::AbstractArray)
     m.md.external_params[Symbol(string(name))].values = value
+end
+
+"""
+Load raw RV output into reformat_RV_outputs 
+"""
+
+function load_RV(name::String; 
+                    output_path::String = joinpath(@__DIR__, "../../output/"), 
+                    time_filter::Int = 2200,
+                    region_filter::String = "LatAmerica")
+    
+    df = DataFrame(load(joinpath(output_path, "$name.csv")))
+    cols = names(df)
+    
+    #apply filters if necessary, currently the function supports a time filter 
+    #of a single time value and a region filter of a single region
+    if in(:time, cols)
+
+        if in(:region, cols) 
+            filtered_df = df |> @query(i, begin
+                @where i.time == time_filter
+                @where i.region == region_filter
+                @select i
+                end) |> DataFrame
+
+        else
+            filtered_df = df |> @query(i, begin
+                @where i.time == time_filter
+                @select i
+                end) |> DataFrame
+        end
+
+        return filtered_df[convert(Symbol, name)]
+          
+    #no filters applied
+    else
+        return df[convert(Symbol, name)]
+    end
+
 end

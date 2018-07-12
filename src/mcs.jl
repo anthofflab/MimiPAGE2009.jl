@@ -4,12 +4,12 @@ using CSVFiles
 using Query
 
 include("getpagefunction.jl")
+include("utils/mctools.jl")
+
 m = getpage() 
 run(m)
 
 #TODO: handle arrays
-#TODO: add args for filenames
-
 mcs = @defmcs begin
         
     ############################################################################
@@ -228,106 +228,49 @@ mcs = @defmcs begin
         NonMarketDamages.rgdp_per_cap_NonMarketRemainGDP,
         Discontinuity.rgdp_per_cap_NonMarketRemainGDP)
 
-# end #defmcs
+end #defmcs
 
-# Function to reformat the results into the format used for testing
-#TODO:  make a function for loading dataframes with filters
-function reformat_RV_outputs(samplesize::Int)
 
-        #create vectors to hold results of Monte Carlo runs
-        td=zeros(samplesize);
-        tpc=zeros(samplesize);
-        tac=zeros(samplesize);
-        te=zeros(samplesize);
-        ft=zeros(samplesize);
-        rt_g=zeros(samplesize);
-        s=zeros(samplesize);
-        c_co2concentration=zeros(samplesize);
-        rgdppercap_slr=zeros(samplesize);
-        rgdppercap_market=zeros(samplesize);
-        rgdppercap_nonmarket=zeros(samplesize);
-        rgdppercap_disc=zeros(samplesize);
+#Reformat the RV results into the format used for testing
+function reformat_RV_outputs(samplesize::Int; outputpath::String = joinpath(@__DIR__, "../../output/"))         
 
-        #load raw data
-        output_path = joinpath(@__DIR__, "../output/")
-        td = DataFrame(load(joinpath(output_path, "td_totaldiscountedimpacts.csv")))[:td_totaldiscountedimpacts]
-        tpc = DataFrame(load(joinpath(output_path, "tpc_totalaggregatedcosts.csv")))[:tpc_totalaggregatedcosts]
-        tac = DataFrame(load(joinpath(output_path, "tac_totaladaptationcosts.csv")))[:tac_totaladaptationcosts]
-        te = DataFrame(load(joinpath(output_path, "te_totaleffect.csv")))[:te_totaleffect]
+    #create vectors to hold results of Monte Carlo runs
+    td=zeros(samplesize);
+    tpc=zeros(samplesize);
+    tac=zeros(samplesize);
+    te=zeros(samplesize);
+    ft=zeros(samplesize);
+    rt_g=zeros(samplesize);
+    s=zeros(samplesize);
+    c_co2concentration=zeros(samplesize);
+    rgdppercap_slr=zeros(samplesize);
+    rgdppercap_market=zeros(samplesize);
+    rgdppercap_nonmarket=zeros(samplesize);
+    rgdppercap_disc=zeros(samplesize);
 
-        #Query time index
-        df = DataFrame(load(joinpath(output_path, "c_CO2concentration.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @select {i.c_CO2concentration}
-                end) |> DataFrame
-        c_co2concentration = tmp[:c_CO2concentration]
+    #load raw data
+    #no filter
+    td      = load_RV("td_totaldiscountedimpacts")
+    tpc     = load_RV("tpc_totalaggregatedcosts")
+    tac     = load_RV("tac_totaladaptationcosts")
+    te      = load_RV("te_totaleffect")
 
-        df = DataFrame(load(joinpath(output_path, "ft_totalforcing.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @select {i.ft_totalforcing}
-                end) |> DataFrame
-        ft = tmp[:ft_totalforcing]
+    #time index
+    c_co2concentration = load_RV("c_CO2concentration")
+    ft      = load_RV("ft_totalforcing")
+    rt_g    = load_RV("rt_g_globaltemperature")
+    s       = load_RV("s_sealevel")
 
-        df = DataFrame(load(joinpath(output_path, "rt_g_globaltemperature.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @select {i.rt_g_globaltemperature}
-                end) |> DataFrame
-        rt_g = tmp[:rt_g_globaltemperature]
+    #region index
+    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP")
+    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP")
+    rgdppercap_market       = load_RV("rgdp_per_cap_MarketRemainGDP")
+    rgdppercap_nonmarket    =load_RV("rgdp_per_cap_NonMarketRemainGDP")
+    rgdppercap_disc         = load_RV("rgdp_per_cap_NonMarketRemainGDP")
 
-        df = DataFrame(load(joinpath(output_path, "s_sealevel.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @select {i.s_sealevel}
-                end) |> DataFrame
-        s = tmp[:s_sealevel]
-
-        ## Query region and time indices
-        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_SLRRemainGDP.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @where i.region == "LatAmerica"
-                @select {i.rgdp_per_cap_SLRRemainGDP}
-                end) |> DataFrame
-        rgdppercap_slr = tmp[:rgdp_per_cap_SLRRemainGDP]
-
-        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_SLRRemainGDP.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @where i.region == "LatAmerica"
-                @select {i.rgdp_per_cap_SLRRemainGDP}
-                end) |> DataFrame
-        rgdppercap_slr = tmp[:rgdp_per_cap_SLRRemainGDP]
-
-        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_MarketRemainGDP.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @where i.region == "LatAmerica"
-                @select {i.rgdp_per_cap_MarketRemainGDP}
-                end) |> DataFrame
-                rgdppercap_market = tmp[:rgdp_per_cap_MarketRemainGDP]
-
-        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_NonMarketRemainGDP.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @where i.region == "LatAmerica"
-                @select {i.rgdp_per_cap_NonMarketRemainGDP}
-                end) |> DataFrame
-        rgdppercap_nonmarket = tmp[:rgdp_per_cap_NonMarketRemainGDP]
-
-        df = DataFrame(load(joinpath(output_path, "rgdp_per_cap_NonMarketRemainGDP.csv")))
-        tmp = df |> @query(i, begin
-                @where i.time == 2200
-                @where i.region == "LatAmerica"
-                @select {i.rgdp_per_cap_NonMarketRemainGDP}
-                end) |> DataFrame
-                rgdppercap_disc = tmp[:rgdp_per_cap_NonMarketRemainGDP]
-
-        #resave data
-        df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
-        save(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"),df)
+    #resave data
+    df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
+    save(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"),df)
 end
 
 function do_monte_carlo_runs(samplesize::Int)
@@ -335,12 +278,12 @@ function do_monte_carlo_runs(samplesize::Int)
         # Generate trial data for all RVs and save to a file
         generate_trials!(mcs, samplesize, filename = joinpath(@__DIR__, "../output/trialdata.csv"))
 
-        # set model TODO: is this needed when we have just one model?
+        # set model
         Mimi.set_model!(mcs, m)
 
         # Run trials 1:samplesize, and save results to the indicated directory, one CSV file per RV
         run_mcs(mcs, samplesize, output_dir = joinpath(@__DIR__, "../output/"))
 
         # reformat outputs for testing and analysis
-        # reformat_RV_outputs(samplesize)
+        reformat_RV_outputs(samplesize)
 end
