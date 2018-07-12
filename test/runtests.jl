@@ -42,7 +42,6 @@ include("test_SulphateForcing.jl")
 include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
-include("test_montecarlo.jl") #ERROR: set_parameter issue, can disregard once new mcs framework is in place
 #include("test_mcs.jl") #new mcs framework, not finished yet
 
 end

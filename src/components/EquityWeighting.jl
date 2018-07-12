@@ -157,9 +157,3 @@ include("../utils/mctools.jl")
         v.te_totaleffect = min(v.td_totaldiscountedimpacts + v.tpc_totalaggregatedcosts + v.tac_totaladaptationcosts, p.civvalue_civilizationvalue)
     end
 end
-
-function randomizeequityweighting(model::Model)
-    update_external_param(model, :civvalue_civilizationvalue, rand(TriangularDist(1e10, 1e11, 5e10)))
-    update_external_param(model, :ptp_timepreference, rand(TriangularDist(0.1,2,1)))
-    update_external_param(model, :emuc_utilityconvexity, rand(TriangularDist(0.5,2,1)))
-end

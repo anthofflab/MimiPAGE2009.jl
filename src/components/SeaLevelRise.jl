@@ -39,9 +39,3 @@ include("../utils/mctools.jl")
   end
 end
 
-function randomizeSLR(model::Model)
-    update_external_param(model, :s0_initialSL, rand(TriangularDist(0.1, 0.2, 0.15)))
-    update_external_param(model, :sltemp_SLtemprise, rand(TriangularDist(0.7, 3., 1.5)))
-    update_external_param(model, :sla_SLbaselinerise, rand(TriangularDist(0.5, 1.5, 1.)))
-    update_external_param(model, :sltau_SLresponsetime, rand(TriangularDist(500, 1500, 1000)))
-end

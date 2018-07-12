@@ -91,21 +91,3 @@ function addmarketdamages(model::Model)
 
     return marketdamagescomp
 end
-
-function randomizemarketdamages(model::Model)
-    update_external_param(model, :tcal_CalibrationTemp, rand(TriangularDist(2.5, 3.5, 3.)))
-    update_external_param(model, :iben_MarketInitialBenefit, rand(TriangularDist(0, .3, .1)))
-    update_external_param(model, :W_MarketImpactsatCalibrationTemp, rand(TriangularDist(.2, .8, .5)))
-    update_external_param(model, :pow_MarketImpactExponent, rand(TriangularDist(1.5, 3, 2)))
-    update_external_param(model, :ipow_MarketIncomeFxnExponent, rand(TriangularDist(-.3, 0, -.1)))
-    update_external_param(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
-    wincf = [1.0,
-             rand(TriangularDist(.6, 1, .8)),
-             rand(TriangularDist(.4, 1.2, .8)),
-             rand(TriangularDist(.2, .6, .4)),
-             rand(TriangularDist(.4, 1.2, .8)),
-             rand(TriangularDist(.4, 1.2, .8)),
-             rand(TriangularDist(.4, .8, .6)),
-             rand(TriangularDist(.4, .8, .6))]
-    update_external_param(model, :wincf_weightsfactor, wincf)
-end

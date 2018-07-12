@@ -72,7 +72,7 @@ mcs = @defmcs begin
     pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
     ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
     
-#     #repeat reset: Also randomized in GDP and SLRDamages and Market Damages
+#     #repeat reset: Also set in GDP and SLRDamages and Market Damages
 #     save_savingsrate = TriangularDist(10, 20, 15)
 #     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
 #     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
@@ -156,8 +156,8 @@ mcs = @defmcs begin
     AbatementCostsN2O_ies_InitialExperienceStockofCutbacks = TriangularDist(30,80,50)
     AbatementCostsLin_ies_InitialExperienceStockofCutbacks = TriangularDist(1500,2500,2000)
     
-    #the following variables need to be randomized, but set the same in all 4 abatement cost components
-    #note that for these regional variables, the first region is the focus region (EU), which is randomized in the preceding code, and so is always one for these variables
+    #the following variables need to be set, but set the same in all 4 abatement cost components
+    #note that for these regional variables, the first region is the focus region (EU), which is set in the preceding code, and so is always one for these variables
 #     emitf_uncertaintyinBAUemissfactor[2] = TriangularDist(0.8,1.2,1.0)
 #     emitf_uncertaintyinBAUemissfactor[3] = TriangularDist(0.8,1.2,1.0)
 #     emitf_uncertaintyinBAUemissfactor[4] = TriangularDist(0.65,1.35,1.0)
@@ -208,7 +208,7 @@ mcs = @defmcs begin
 #     cf_costregional[7] = TriangularDist(0.4, 0.8, 0.6)
 #     cf_costregional[8] = TriangularDist(0.4, 0.8, 0.6)
     
-    # repeat reset: Note - this parameter also randomized in Abatement Costs
+    # repeat reset: Note - this parameter also set in Abatement Costs
     automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)    
 
     ############################################################################
