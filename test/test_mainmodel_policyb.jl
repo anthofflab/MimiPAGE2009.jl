@@ -1,5 +1,7 @@
 using Base.Test
 
+Mimi.reset_compdefs()
+
 include("../src/getpagefunction.jl")
 
 m = getpage("policy-b")

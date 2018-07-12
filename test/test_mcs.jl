@@ -2,6 +2,8 @@ using Base.Test
 using CSVFiles
 using Missings
 
+Mimi.reset_compdefs()
+
 include("../src/mcs.jl")
 
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
