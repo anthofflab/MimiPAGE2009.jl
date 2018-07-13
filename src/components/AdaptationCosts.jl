@@ -1,6 +1,4 @@
 using Mimi
-include("../utils/load_parameters.jl")
-include("../utils/mctools.jl")
 
 @defcomp AdaptationCosts begin
     region = Index()

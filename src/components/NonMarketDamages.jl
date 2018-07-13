@@ -1,6 +1,4 @@
-using DataFrames
-using Distributions
-include("../utils/mctools.jl")
+using Mimi
 
 @defcomp NonMarketDamages begin
     region = Index()

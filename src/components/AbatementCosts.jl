@@ -1,4 +1,4 @@
-include("../utils/mctools.jl")
+using Mimi
 
 @defcomp AbatementCosts begin
     region = Index()

@@ -1,6 +1,4 @@
 using Mimi
-using Distributions
-include("../utils/mctools.jl")
 
 @defcomp ClimateTemperature begin
     region = Index()
