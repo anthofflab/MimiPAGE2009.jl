@@ -1,7 +1,6 @@
 using Mimi
 using Distributions
 using CSVFiles
-using Query
 
 include("getpagefunction.jl")
 include("utils/mctools.jl")

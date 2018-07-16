@@ -1,3 +1,5 @@
+using Query
+
 """
 Create a parameter `component`_`name` with the given value,
 and connect parameter `name` within `component` to this distinct global parameter.
@@ -7,9 +9,8 @@ function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     globalname = Symbol(string(component, '_', name))
 
     param_dims = Mimi.parameter_dimensions(m, component, name)    
-    num_dims = length(size(value))
 
-    Mimi.set_external_param!(m, globalname, value; param_dims = param_dims, num_dims = num_dims)
+    Mimi.set_external_param!(m, globalname, value; param_dims = param_dims)
     
     #connect_parameter(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
     Mimi.disconnect!(m.md, component, name)
