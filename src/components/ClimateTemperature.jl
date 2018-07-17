@@ -1,6 +1,4 @@
 using Mimi
-using Distributions
-include("../utils/mctools.jl")
 
 @defcomp ClimateTemperature begin
     region = Index()
@@ -101,11 +99,4 @@ include("../utils/mctools.jl")
         v.rto_g_oceantemperature[tt] = v.rtl_g_landtemperature[tt] / p.rlo_ratiolandocean
         v.rt_g_globaltemperature[tt] = ocean_prop_ortion * v.rto_g_oceantemperature[tt] + (1. - ocean_prop_ortion) * v.rtl_g_landtemperature[tt]
     end
-end
-
-function randomizeclimatetemperature(model::Model)
-    update_external_param(model, :rlo_ratiolandocean, rand(TriangularDist(1.2, 1.6, 1.4)))
-    update_external_param(model, :pole_polardifference, rand(TriangularDist(1, 2, 1.5)))
-    update_external_param(model, :frt_warminghalflife, rand(TriangularDist(10, 65, 30)))
-    update_external_param(model, :tcr_transientresponse, rand(TriangularDist(1, 2.8, 1.3)))
 end

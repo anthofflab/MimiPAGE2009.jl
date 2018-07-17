@@ -1,6 +1,4 @@
 using Mimi
-using Distributions
-include("../utils/mctools.jl")
 
 @defcomp GDP begin
 # GDP: Gross domestic product $M
@@ -63,9 +61,4 @@ include("../utils/mctools.jl")
             v.cons_percap_consumption[t, r] = v.cons_consumption[t, r] / p.pop_population[t, r]
         end
     end
-end
-
-function randomizegdp(model::Model)
-    update_external_param(model, :save_savingsrate, rand(TriangularDist(10, 20, 15)))
-    update_external_param(model, :isat0_initialimpactfxnsaturation, rand(TriangularDist(20, 50, 30)))
 end

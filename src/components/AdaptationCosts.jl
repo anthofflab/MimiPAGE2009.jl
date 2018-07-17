@@ -1,6 +1,4 @@
 using Mimi
-include("../utils/load_parameters.jl")
-include("../utils/mctools.jl")
 
 @defcomp AdaptationCosts begin
     region = Index()
@@ -127,16 +125,4 @@ function addadaptationcosts_noneconomic(model::Model)
     setdistinctparameter(model, :AdaptiveCostsNonEconomic, :ci_costimpact_eu, 0.00566666666666667)
 
     return adaptationcosts
-end
-
-function randomizeadaptationcosts(model::Model)
-    update_external_param(model, :AdaptiveCostsSeaLevel_cp_costplateau_eu, rand(TriangularDist(0.01, 0.04, 0.02)))
-    update_external_param(model, :AdaptiveCostsSeaLevel_ci_costimpact_eu, rand(TriangularDist(0.0005, 0.002, 0.001)))
-    update_external_param(model, :AdaptiveCostsEconomic_cp_costplateau_eu, rand(TriangularDist(0.005, 0.02, 0.01)))
-    update_external_param(model, :AdaptiveCostsEconomic_ci_costimpact_eu, rand(TriangularDist(0.001, 0.008, 0.003)))
-    update_external_param(model, :AdaptiveCostsNonEconomic_cp_costplateau_eu, rand(TriangularDist(0.01, 0.04, 0.02)))
-    update_external_param(model, :AdaptiveCostsNonEconomic_ci_costimpact_eu, rand(TriangularDist(0.002, 0.01, 0.005)))
-
-    update_external_param(model, :cf_costregional, [1., rand(TriangularDist(0.6, 1, 0.8)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.2, 0.6, 0.4)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.4, 1.2, 0.8)), rand(TriangularDist(0.4, 0.8, 0.6)), rand(TriangularDist(0.4, 0.8, 0.6))])
-    update_external_param(model, :automult_autonomouschange, rand(TriangularDist(0.5, 0.8, 0.65))) # Note - this parameter also randomized in Abatement Costs
 end
