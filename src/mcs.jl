@@ -14,6 +14,24 @@ mcs = @defmcs begin
     ############################################################################
     # Define random variables (RVs) 
     ############################################################################
+    
+    #The folllowing RVs are in more than one component.  For clarity they are 
+    #set here as opposed to below within the blocks of RVs separated by component
+    #so that they are not set more than once.
+
+    #     save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages. GDP, SLRDamages
+
+    #     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, , SLRDamages, Discountinuity
+    #     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
+    #     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
+    #     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
+    #     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
+    #     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
+    #     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
+
+    automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)  #components: AdaptationCosts, AbatementCosts
+    
+    #The following RVs are divided into blocks by component
 
     # CO2cycle
     air_CO2fractioninatm = TriangularDist(57, 67, 62)
@@ -22,11 +40,9 @@ mcs = @defmcs begin
     ccfmax_maxCO2feedback = TriangularDist(30, 80, 50)
     stay_fractionCO2emissionsinatm = TriangularDist(0.25,0.35,0.3)
     
-    
     # SulphateForcing
     d_sulphateforcingbase = TriangularDist(-0.8, -0.2, -0.4)
     ind_slopeSEforcing_indirect = TriangularDist(-0.8, 0, -0.4)
-    
     
     # ClimateTemperature
     rlo_ratiolandocean = TriangularDist(1.2, 1.6, 1.4)
@@ -34,18 +50,14 @@ mcs = @defmcs begin
     frt_warminghalflife = TriangularDist(10, 65, 30)
     tcr_transientresponse = TriangularDist(1, 2.8, 1.3)
     
-    
     # SeaLevelRise
     s0_initialSL = TriangularDist(0.1, 0.2, 0.15)
     sltemp_SLtemprise = TriangularDist(0.7, 3., 1.5)
     sla_SLbaselinerise = TriangularDist(0.5, 1.5, 1.)
     sltau_SLresponsetime = TriangularDist(500, 1500, 1000)
     
-    
     # GDP
-    save_savingsrate = TriangularDist(10, 20, 15)
-    isat0_initialimpactfxnsaturation = TriangularDist(20, 50, 30)
-    
+    isat0_initialimpactfxnsaturation = TriangularDist(20, 50, 30) 
     
     # MarketDamages
     tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
@@ -53,17 +65,7 @@ mcs = @defmcs begin
     W_MarketImpactsatCalibrationTemp = TriangularDist(.2, .8, .5)
     pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
     ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
-    save_savingsrate = TriangularDist(10, 20, 15)
 
-#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
-#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
-#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
-#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
-
-    
     # NonMarketDamages
     tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
     iben_NonMarketInitialBenefit = TriangularDist(0, .2, .05)
@@ -71,34 +73,12 @@ mcs = @defmcs begin
     pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
     ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
     
-#     #repeat reset: Also set in GDP and SLRDamages and Market Damages
-#     save_savingsrate = TriangularDist(10, 20, 15)
-#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
-#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
-#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
-#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
-    
-    
     # SLRDamages
-    save_savingsrate = TriangularDist(10, 20, 15)
     scal_calibrationSLR = TriangularDist(0.45, 0.55, .5)
     #iben_SLRInitialBenefit = TriangularDist(0, 0, 0) # only usable if lb <> ub
     W_SatCalibrationSLR = TriangularDist(.5, 1.5, 1)
     pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
     ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
-    
-#     # repeat reset
-#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
-#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
-#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
-#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
-    
     
     # Discountinuity
     rand_discontinuity = Uniform(0, 1)
@@ -108,21 +88,10 @@ mcs = @defmcs begin
     ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
     distau_discontinuityexponent = TriangularDist(20, 200, 50)
     
-#     # repeat reset
-#     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8)     
-#     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
-#     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
-#     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
-#     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
-    
-    
     # EquityWeighting
     civvalue_civilizationvalue = TriangularDist(1e10, 1e11, 5e10)
     ptp_timepreference = TriangularDist(0.1,2,1)
     emuc_utilityconvexity = TriangularDist(0.5,2,1)
-    
     
     # AbatementCosts
     AbatementCostsCO2_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear = TriangularDist(-50,75,0)
@@ -188,8 +157,6 @@ mcs = @defmcs begin
     curve_above_curvatureofMACcurveabovezerocost = TriangularDist(0.1,0.7,0.4)
     cross_experiencecrossoverratio = TriangularDist(0.1,0.3,0.2)
     learn_learningrate = TriangularDist(0.05,0.35,0.2)
-    automult_autonomoustechchange = TriangularDist(0.5,0.8,0.65)
-    
     
     # AdaptationCosts
     AdaptiveCostsSeaLevel_cp_costplateau_eu = TriangularDist(0.01, 0.04, 0.02)
@@ -206,9 +173,6 @@ mcs = @defmcs begin
 #     cf_costregional[6] = TriangularDist(0.4, 1.2, 0.8)
 #     cf_costregional[7] = TriangularDist(0.4, 0.8, 0.6)
 #     cf_costregional[8] = TriangularDist(0.4, 0.8, 0.6)
-    
-    # repeat reset: Note - this parameter also set in Abatement Costs
-    automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)    
 
     ############################################################################
     # Indicate which parameters to save for each model run
@@ -228,7 +192,6 @@ mcs = @defmcs begin
         Discontinuity.rgdp_per_cap_NonMarketRemainGDP)
 
 end #defmcs
-
 
 #Reformat the RV results into the format used for testing
 function reformat_RV_outputs(samplesize::Int; outputpath::String = joinpath(@__DIR__, "../../output/"))         
