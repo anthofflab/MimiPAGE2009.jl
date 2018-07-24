@@ -93,10 +93,8 @@ end
 function addslrdamages(model::Model)
     SLRDamagescomp = addcomponent(model, SLRDamages)
 
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/sealevelmaxrise.csv")
     SLRDamagescomp[:wincf_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
 
     return SLRDamagescomp
 end
-
