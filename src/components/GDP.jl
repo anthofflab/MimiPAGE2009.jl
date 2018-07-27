@@ -36,13 +36,13 @@ using Mimi
     function run_timestep(p, v, d, t)
 
         # Analysis period ranges - required for abatemnt costs and equity weighting, from Hope (2006)
-        if t == 1
+        if is_first(t)
             ylo_periodstart = p.y_year_0
         else
             ylo_periodstart = (p.y_year[t] + p.y_year[t-1]) / 2
         end
 
-        if t == length(p.y_year)
+        if t.t == length(p.y_year)
             yhi_periodend = p.y_year[t]
         else
             yhi_periodend = (p.y_year[t] + p.y_year[t+1]) / 2
@@ -52,7 +52,7 @@ using Mimi
 
         for r in d.region
             #eq.28 in Hope 2002
-            if t == 1
+            if is_first(t)
                 v.gdp[t, r] = p.gdp_0[r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_year_0)
             else
                 v.gdp[t, r] = v.gdp[t-1, r] * (1 + (p.grw_gdpgrowthrate[t,r]/100))^(p.y_year[t] - p.y_year[t-1])

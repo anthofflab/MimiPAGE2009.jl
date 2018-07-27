@@ -56,7 +56,7 @@ using Mimi
     function run_timestep(p, v, d, tt)
 
         # Inclusion of transient climate response from Hope (2009)
-        if tt == 1 # only calculate once
+        if is_first(tt) # only calculate once
             v.sens_climatesensitivity = p.tcr_transientresponse / (1. - (p.frt_warminghalflife / 70.) * (1. - exp(-70. / p.frt_warminghalflife)))
         end
 
@@ -73,7 +73,7 @@ using Mimi
 
         # Equation 20 from Hope (2006): realized temperature estimate
         # Hope (2009) replaced OCEAN with FRT
-        if tt == 1
+        if is_first(tt)
             # Calculate baseline realized temperature by subtracting off adjustment
             rt_0_realizedtemperature = (p.rtl_0_realizedtemperature - rt_adj_temperatureadjustment) * (1. + (ocean_prop_ortion / p.rlo_ratiolandocean) - ocean_prop_ortion)
             for rr in d.region

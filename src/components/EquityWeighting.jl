@@ -76,7 +76,7 @@ using Mimi
     te_totaleffect = Variable(unit="\$million")
 
     function run_timestep(p, v, d, tt)
-        if tt == 1
+        if is_first(tt)
             v.tpc_totalaggregatedcosts = 0
             v.addt_gt_equityweightedimpact_discountedglobal = 0
             v.tac_totaladaptationcosts = 0
@@ -108,13 +108,13 @@ using Mimi
 
             # Discount rate calculations
             v.dr_discountrate[tt, rr] = p.ptp_timepreference + p.emuc_utilityconvexity * (p.grw_gdpgrowthrate[tt, rr] - p.popgrw_populationgrowth[tt, rr])
-            if tt == 1
+            if is_first(tt)
                 v.yp_yearsperiod[1] = p.y_year[1] - p.y_year_0
             else
                 v.yp_yearsperiod[tt] = p.y_year[tt] - p.y_year[tt-1]
             end
 
-            if tt == 1
+            if is_first(tt)
                 v.dfc_consumptiondiscountrate[1, rr] = (1 + v.dr_discountrate[1, rr] / 100)^(-v.yp_yearsperiod[1])
             else
                 v.dfc_consumptiondiscountrate[tt, rr] = v.dfc_consumptiondiscountrate[tt - 1, rr] * (1 + v.dr_discountrate[tt, rr] / 100)^(-v.yp_yearsperiod[tt])
