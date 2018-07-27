@@ -22,7 +22,7 @@ using Mimi
     re_remainLGbase=Variable(unit="Mtonne")
 
     function run_timestep(p, v, d, t)
-        if t==1
+        if is_first(t)
             #eq.3 from Hope (2006) - natural emissions (carbon cycle) feedback, using global temperatures calculated in ClimateTemperature component
             nte0=p.stim_LGemissionfeedback*p.rtl_g0_baselandtemp
             v.nte_natLGemissions[t]=p.stim_LGemissionfeedback*p.rtl_g0_baselandtemp

@@ -79,7 +79,7 @@ using Mimi
 
             v.cbe_absoluteemissionreductions[t,r] = v.cb_reductionsfromzerocostemissions[t,r]* p.e0_baselineemissions[r]/100
 
-            if t==1
+            if is_first(t)
                 v.cumcbe_cumulativereductionssincebaseyear[t,r] = 0.
             else
                 v.cumcbe_cumulativereductionssincebaseyear[t,r] = v.cumcbe_cumulativereductionssincebaseyear[t-1, r] + v.cbe_absoluteemissionreductions[t-1, r] * p.yagg[t-1]

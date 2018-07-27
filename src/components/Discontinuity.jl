@@ -39,7 +39,7 @@ using Mimi
 
         v.idis_lossfromdisc[t] = max(0, p.rt_g_globaltemperature[t] - p.tdis_tolerabilitydisc)
 
-        if t == 1
+        if is_first(t)
             if v.idis_lossfromdisc[t]*(p.pdis_probability/100) > p.rand_discontinuity
                 v.occurdis_occurrencedummy[t] = 1
             else
@@ -62,7 +62,7 @@ using Mimi
 
             v.igdpeqdis_eqdiscimpact[t,r] = v.irefeqdis_eqdiscimpact[r] * (p.rgdp_per_cap_NonMarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_incomeexponent
 
-            if t==1
+            if is_first(t)
                 v.igdp_realizeddiscimpact[t,r]=v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*v.igdpeqdis_eqdiscimpact[t,r]
             else
                 v.igdp_realizeddiscimpact[t,r]=v.igdp_realizeddiscimpact[t-1,r]+v.occurdis_occurrencedummy[t]*(1-v.expfdis_discdecay[t])*(v.igdpeqdis_eqdiscimpact[t,r]-v.igdp_realizeddiscimpact[t-1,r])
