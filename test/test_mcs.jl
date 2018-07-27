@@ -1,6 +1,7 @@
 using Base.Test
 using CSVFiles
 using Missings
+using DataFrames
 
 Mimi.reset_compdefs()
 
