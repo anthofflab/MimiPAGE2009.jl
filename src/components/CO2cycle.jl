@@ -27,7 +27,7 @@ using Mimi
 
     function run_timestep(p, v, d, t)
 
-        if t==1
+        if is_first(t)
             #CO2 emissions gain calculated based on PAGE 2009
             gain=p.ccf_CO2feedback*p.rt_g0_baseglobaltemp
             #eq.6 from Hope (2006) - emissions to atmosphere depend on the sum of natural and anthropogenic emissions

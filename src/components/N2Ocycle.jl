@@ -24,7 +24,7 @@ using Mimi
     function run_timestep(p, v, d, t)
         #note that Hope (2009) states that Equations 1-12 for methane also apply to N2O
 
-        if t==1
+        if is_first(t)
             #eq.3 from Hope (2006) - natural emissions feedback, using global temperatures calculated in ClimateTemperature component
             nte_0=p.stim_N2Oemissionfeedback*p.rtl_g0_baselandtemp
             v.nte_natN2Oemissions[t]=p.stim_N2Oemissionfeedback*p.rtl_g0_baselandtemp
