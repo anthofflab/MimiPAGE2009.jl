@@ -48,6 +48,6 @@ include("test_SulphateForcing.jl")
 include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
-include("test_mcs.jl") #failing, need to finish setting arrays
+include("test_mcs.jl") 
 
 end

@@ -1,6 +1,7 @@
 using Mimi
 using Distributions
 using CSVFiles
+using DataFrames
 
 include("getpagefunction.jl")
 include("utils/mctools.jl")
@@ -8,7 +9,6 @@ include("utils/mctools.jl")
 m = getpage() 
 run(m)
 
-#TODO: handle arrays
 mcs = @defmcs begin
         
     ############################################################################
@@ -19,15 +19,15 @@ mcs = @defmcs begin
     #set here as opposed to below within the blocks of RVs separated by component
     #so that they are not set more than once.
 
-    #     save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages. GDP, SLRDamages
+    save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages. GDP, SLRDamages
 
-    #     wincf_weightsfactor[2] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, , SLRDamages, Discountinuity
-    #     wincf_weightsfactor[3] = TriangularDist(.4, 1.2, .8)
-    #     wincf_weightsfactor[4] = TriangularDist(.2, .6, .4)
-    #     wincf_weightsfactor[5] = TriangularDist(.4, 1.2, .8)
-    #     wincf_weightsfactor[6] = TriangularDist(.4, 1.2, .8)
-    #     wincf_weightsfactor[7] = TriangularDist(.4, .8, .6)
-    #     wincf_weightsfactor[8] = TriangularDist(.4, .8, .6)
+    wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, , SLRDamages, Discountinuity
+    wincf_weightsfactor["OECD"] = TriangularDist(.4, 1.2, .8)
+    wincf_weightsfactor["USSR"] = TriangularDist(.2, .6, .4)
+    wincf_weightsfactor["China"] = TriangularDist(.4, 1.2, .8)
+    wincf_weightsfactor["SEAsia"] = TriangularDist(.4, 1.2, .8)
+    wincf_weightsfactor["Africa"] = TriangularDist(.4, .8, .6)
+    wincf_weightsfactor["LatAmerica"] = TriangularDist(.4, .8, .6)
 
     automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)  #components: AdaptationCosts, AbatementCosts
     
@@ -126,29 +126,30 @@ mcs = @defmcs begin
     
     #the following variables need to be set, but set the same in all 4 abatement cost components
     #note that for these regional variables, the first region is the focus region (EU), which is set in the preceding code, and so is always one for these variables
-#     emitf_uncertaintyinBAUemissfactor[2] = TriangularDist(0.8,1.2,1.0)
-#     emitf_uncertaintyinBAUemissfactor[3] = TriangularDist(0.8,1.2,1.0)
-#     emitf_uncertaintyinBAUemissfactor[4] = TriangularDist(0.65,1.35,1.0)
-#     emitf_uncertaintyinBAUemissfactor[5] = TriangularDist(0.5,1.5,1.0)
-#     emitf_uncertaintyinBAUemissfactor[6] = TriangularDist(0.5,1.5,1.0)
-#     emitf_uncertaintyinBAUemissfactor[7] = TriangularDist(0.5,1.5,1.0)
-#     emitf_uncertaintyinBAUemissfactor[8] = TriangularDist(0.5,1.5,1.0)
     
-#     q0f_negativecostpercentagefactor[2] = TriangularDist(0.75,1.5,1.0)
-#     q0f_negativecostpercentagefactor[3] = TriangularDist(0.75,1.25,1.0)
-#     q0f_negativecostpercentagefactor[4] = TriangularDist(0.4,1.0,0.7)      
-#     q0f_negativecostpercentagefactor[5] = TriangularDist(0.4,1.0,0.7)
-#     q0f_negativecostpercentagefactor[6] = TriangularDist(0.4,1.0,0.7)
-#     q0f_negativecostpercentagefactor[7] = TriangularDist(0.4,1.0,0.7)
-#     q0f_negativecostpercentagefactor[8] = TriangularDist(0.4,1.0,0.7)
+    emitf_uncertaintyinBAUemissfactor["USA"] = TriangularDist(0.8,1.2,1.0)
+    emitf_uncertaintyinBAUemissfactor["OECD"] = TriangularDist(0.8,1.2,1.0)
+    emitf_uncertaintyinBAUemissfactor["USSR"] = TriangularDist(0.65,1.35,1.0)
+    emitf_uncertaintyinBAUemissfactor["China"] = TriangularDist(0.5,1.5,1.0)
+    emitf_uncertaintyinBAUemissfactor["SEAsia"] = TriangularDist(0.5,1.5,1.0)
+    emitf_uncertaintyinBAUemissfactor["Africa"] = TriangularDist(0.5,1.5,1.0)
+    emitf_uncertaintyinBAUemissfactor["LatAmerica"] = TriangularDist(0.5,1.5,1.0)
     
-#     cmaxf_maxcostfactor[2] = TriangularDist(0.8,1.2,1.0)
-#     cmaxf_maxcostfactor[3] = TriangularDist(1.0,1.5,1.2)
-#     cmaxf_maxcostfactor[4] = TriangularDist(0.4,1.0,0.7)
-#     cmaxf_maxcostfactor[5] = TriangularDist(0.8,1.2,1.0)
-#     cmaxf_maxcostfactor[6] = TriangularDist(1,1.5,1.2)
-#     cmaxf_maxcostfactor[7] = TriangularDist(1,1.5,1.2)
-#     cmaxf_maxcostfactor[8] = TriangularDist(0.4,1.0,0.7)
+    q0f_negativecostpercentagefactor["USA"] = TriangularDist(0.75,1.5,1.0)
+    q0f_negativecostpercentagefactor["OECD"] = TriangularDist(0.75,1.25,1.0)
+    q0f_negativecostpercentagefactor["USSR"] = TriangularDist(0.4,1.0,0.7)      
+    q0f_negativecostpercentagefactor["China"] = TriangularDist(0.4,1.0,0.7)
+    q0f_negativecostpercentagefactor["SEAsia"] = TriangularDist(0.4,1.0,0.7)
+    q0f_negativecostpercentagefactor["Africa"] = TriangularDist(0.4,1.0,0.7)
+    q0f_negativecostpercentagefactor["LatAmerica"] = TriangularDist(0.4,1.0,0.7)
+    
+    cmaxf_maxcostfactor["USA"] = TriangularDist(0.8,1.2,1.0)
+    cmaxf_maxcostfactor["OECD"] = TriangularDist(1.0,1.5,1.2)
+    cmaxf_maxcostfactor["USSR"] = TriangularDist(0.4,1.0,0.7)
+    cmaxf_maxcostfactor["China"] = TriangularDist(0.8,1.2,1.0)
+    cmaxf_maxcostfactor["SEAsia"] = TriangularDist(1,1.5,1.2)
+    cmaxf_maxcostfactor["Africa"] = TriangularDist(1,1.5,1.2)
+    cmaxf_maxcostfactor["LatAmerica"] = TriangularDist(0.4,1.0,0.7)
     
     q0propmult_cutbacksatnegativecostinfinalyear = TriangularDist(0.3,1.2,0.7)
     qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear = TriangularDist(1,1.5,1.3)
@@ -166,13 +167,13 @@ mcs = @defmcs begin
     AdaptiveCostsNonEconomic_cp_costplateau_eu = TriangularDist(0.01, 0.04, 0.02)
     AdaptiveCostsNonEconomic_ci_costimpact_eu = TriangularDist(0.002, 0.01, 0.005)
     
-#     cf_costregional[2] = TriangularDist(0.6, 1, 0.8)
-#     cf_costregional[3] = TriangularDist(0.4, 1.2, 0.8)
-#     cf_costregional[4] = TriangularDist(0.2, 0.6, 0.4)
-#     cf_costregional[5] = TriangularDist(0.4, 1.2, 0.8)
-#     cf_costregional[6] = TriangularDist(0.4, 1.2, 0.8)
-#     cf_costregional[7] = TriangularDist(0.4, 0.8, 0.6)
-#     cf_costregional[8] = TriangularDist(0.4, 0.8, 0.6)
+    cf_costregional["USA"] = TriangularDist(0.6, 1, 0.8)
+    cf_costregional["OECD"] = TriangularDist(0.4, 1.2, 0.8)
+    cf_costregional["USSR"] = TriangularDist(0.2, 0.6, 0.4)
+    cf_costregional["China"] = TriangularDist(0.4, 1.2, 0.8)
+    cf_costregional["SEAsia"] = TriangularDist(0.4, 1.2, 0.8)
+    cf_costregional["Africa"] = TriangularDist(0.4, 0.8, 0.6)
+    cf_costregional["LatAmerica"] = TriangularDist(0.4, 0.8, 0.6)
 
     ############################################################################
     # Indicate which parameters to save for each model run
