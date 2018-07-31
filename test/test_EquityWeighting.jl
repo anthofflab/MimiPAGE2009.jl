@@ -4,7 +4,7 @@ using Base.Test
 m = page_model()
 include("../src/components/EquityWeighting.jl")
 
-equityweighting = addcomponent(m, EquityWeighting)
+equityweighting = add_comp!(m, EquityWeighting)
 
 equityweighting[:tct_percap_totalcosts_total] = readpagedata(m, "test/validationdata/tct_per_cap_totalcostspercap.csv")
 equityweighting[:act_adaptationcosts_total] = readpagedata(m, "test/validationdata/act_adaptationcosts_tot.csv")

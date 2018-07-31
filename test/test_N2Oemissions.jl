@@ -4,10 +4,10 @@ using Base.Test
 m = page_model()
 include("../src/components/N2Oemissions.jl")
 
-addcomponent(m, n2oemissions)
+add_comp!(m, n2oemissions)
 
-set_parameter!(m, :n2oemissions, :e0_baselineN2Oemissions, readpagedata(m,"data/e0_baselineN2Oemissions.csv"))
-set_parameter!(m, :n2oemissions, :er_N2Oemissionsgrowth, readpagedata(m, "data/er_N2Oemissionsgrowth.csv"))
+set_param!(m, :n2oemissions, :e0_baselineN2Oemissions, readpagedata(m,"data/e0_baselineN2Oemissions.csv"))
+set_param!(m, :n2oemissions, :er_N2Oemissionsgrowth, readpagedata(m, "data/er_N2Oemissionsgrowth.csv"))
 
 ##running Model
 run(m)

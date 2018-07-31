@@ -6,11 +6,11 @@ using Base.Test
 m = page_model()
 include("../src/components/SeaLevelRise.jl")
 
-SLR = addcomponent(m, SeaLevelRise)
+SLR = add_comp!(m, SeaLevelRise)
 
-set_parameter!(m, :SeaLevelRise, :rt_g_globaltemperature, readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv"))
-set_parameter!(m, :SeaLevelRise, :y_year_0, 2008.)
-set_parameter!(m, :SeaLevelRise, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+set_param!(m, :SeaLevelRise, :rt_g_globaltemperature, readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv"))
+set_param!(m, :SeaLevelRise, :y_year_0, 2008.)
+set_param!(m, :SeaLevelRise, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 
 run(m)
 

@@ -74,7 +74,7 @@ using Mimi
 end
 
 function addadaptationcosts_sealevel(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, :AdaptiveCostsSeaLevel)
+    adaptationcosts = add_comp!(model, AdaptationCosts, :AdaptiveCostsSeaLevel)
     adaptationcosts[:automult_autonomouschange] = 0.65
 
     # Sea Level-specific parameters
@@ -92,7 +92,7 @@ function addadaptationcosts_sealevel(model::Model)
 end
 
 function addadaptationcosts_economic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, :AdaptiveCostsEconomic)
+    adaptationcosts = add_comp!(model, AdaptationCosts, :AdaptiveCostsEconomic)
     adaptationcosts[:automult_autonomouschange] = 0.65
 
     # Economic-specific parameters
@@ -110,7 +110,7 @@ function addadaptationcosts_economic(model::Model)
 end
 
 function addadaptationcosts_noneconomic(model::Model)
-    adaptationcosts = addcomponent(model, AdaptationCosts, :AdaptiveCostsNonEconomic)
+    adaptationcosts = add_comp!(model, AdaptationCosts, :AdaptiveCostsNonEconomic)
     adaptationcosts[:automult_autonomouschange] = 0.65
 
     # Non-economic-specific parameters

@@ -4,11 +4,11 @@ using Base.Test
 m = page_model()
 include("../src/components/CH4cycle.jl")
 
-addcomponent(m, ch4cycle, :ch4cycle)
+add_comp!(m, ch4cycle, :ch4cycle)
 
-set_parameter!(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
-set_parameter!(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
-set_parameter!(m,:ch4cycle,:y_year_0,2008.)
+set_param!(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
+set_param!(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
+set_param!(m,:ch4cycle,:y_year_0,2008.)
 
 p = load_parameters(m)
 p["y_year"] = Mimi.dim_keys(m.md, :time)

@@ -84,7 +84,7 @@ end
 # the default keyword arg for now.
 
 function addmarketdamages(model::Model)
-    marketdamagescomp = addcomponent(model, MarketDamages)
+    marketdamagescomp = add_comp!(model, MarketDamages)
     marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "data/impmax_economic.csv")
 
     return marketdamagescomp

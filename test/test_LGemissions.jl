@@ -4,10 +4,10 @@ using Base.Test
 m = page_model()
 include("../src/components/LGemissions.jl")
 
-addcomponent(m, LGemissions)
+add_comp!(m, LGemissions)
 
-set_parameter!(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/e0_baselineLGemissions.csv"))
-set_parameter!(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/er_LGemissionsgrowth.csv"))
+set_param!(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/e0_baselineLGemissions.csv"))
+set_param!(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/er_LGemissionsgrowth.csv"))
 
 # run Model
 run(m)

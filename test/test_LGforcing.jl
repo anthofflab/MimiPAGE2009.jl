@@ -4,9 +4,9 @@ using Base.Test
 m = page_model()
 include("../src/components/LGforcing.jl")
 
-addcomponent(m, LGforcing)
+add_comp!(m, LGforcing)
 
-set_parameter!(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
+set_param!(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
 
 # run Model
 run(m)

@@ -91,7 +91,7 @@ end
 # readpagedata, which takes model as an input. These cannot be set using 
 # the default keyword arg for now.
 function addslrdamages(model::Model)
-    SLRDamagescomp = addcomponent(model, SLRDamages)
+    SLRDamagescomp = add_comp!(model, SLRDamages)
 
     SLRDamagescomp[:wincf_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
     SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")

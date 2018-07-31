@@ -44,7 +44,7 @@ returns a list of components and each of their incoming parameters and
 outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` for the desired component and variable.
 
 To run the stochastic version of Mimi-PAGE, which uses parameter
-distributions, see the `montecarlo.jl` file in the src folder. The
+distributions, see the `mcs.jl` file in the src folder. The
 current Monte Carlo process outputs a selection of variables that are
 important for validation, but these can be modified by the user if
 desired. The user can also set the number of Monte Carlo runs in

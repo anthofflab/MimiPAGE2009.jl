@@ -33,43 +33,43 @@ include("components/EquityWeighting.jl")
 
 function buildpage(m::Model, policy::String="policy-a")
     #add all the components
-    CO2emissions = addcomponent(m,co2emissions)
-    CO2cycle = addcomponent(m, co2cycle)
-    CO2forcing = addcomponent(m, co2forcing)
-    CH4emissions = addcomponent(m, ch4emissions)
-    CH4cycle = addcomponent(m, ch4cycle)
-    CH4forcing = addcomponent(m, ch4forcing)
-    N2Oemissions = addcomponent(m, n2oemissions)
-    N2Ocycle = addcomponent(m, n2ocycle)
-    N2Oforcing = addcomponent(m, n2oforcing)
-    lgemissions = addcomponent(m, LGemissions)
-    lgcycle = addcomponent(m, LGcycle)
-    lgforcing = addcomponent(m, LGforcing)
-    sulphateforcing = addcomponent(m, SulphateForcing)
-    totalforcing = addcomponent(m, TotalForcing)
-    climatetemperature = addcomponent(m, ClimateTemperature)
-    sealevelrise = addcomponent(m, SeaLevelRise)
+    CO2emissions = add_comp!(m,co2emissions)
+    CO2cycle = add_comp!(m, co2cycle)
+    CO2forcing = add_comp!(m, co2forcing)
+    CH4emissions = add_comp!(m, ch4emissions)
+    CH4cycle = add_comp!(m, ch4cycle)
+    CH4forcing = add_comp!(m, ch4forcing)
+    N2Oemissions = add_comp!(m, n2oemissions)
+    N2Ocycle = add_comp!(m, n2ocycle)
+    N2Oforcing = add_comp!(m, n2oforcing)
+    lgemissions = add_comp!(m, LGemissions)
+    lgcycle = add_comp!(m, LGcycle)
+    lgforcing = add_comp!(m, LGforcing)
+    sulphateforcing = add_comp!(m, SulphateForcing)
+    totalforcing = add_comp!(m, TotalForcing)
+    climatetemperature = add_comp!(m, ClimateTemperature)
+    sealevelrise = add_comp!(m, SeaLevelRise)
     #Socio-Economics
     population = addpopulation(m)
-    gdp = addcomponent(m, GDP)
+    gdp = add_comp!(m, GDP)
     #Abatement Costs
     abatementcosts_CO2 = addabatementcosts(m, :CO2, policy)
     abatementcosts_CH4 = addabatementcosts(m, :CH4, policy)
     abatementcosts_N2O = addabatementcosts(m, :N2O, policy)
     abatementcosts_Lin = addabatementcosts(m, :Lin, policy)
-    totalabatementcosts = addcomponent(m, TotalAbatementCosts)
+    totalabatementcosts = add_comp!(m, TotalAbatementCosts)
     #Adaptation Costs
     adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
     adaptationcosts_economic = addadaptationcosts_economic(m)
     adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
-    totaladaptationcosts = addcomponent(m, TotalAdaptationCosts)
+    totaladaptationcosts = add_comp!(m, TotalAdaptationCosts)
     # Impacts
     slrdamages = addslrdamages(m)
     marketdamages = addmarketdamages(m)
     nonmarketdamages= addnonmarketdamages(m)
-    discontinuity= addcomponent(m, Discontinuity)
+    discontinuity= add_comp!(m, Discontinuity)
     #Equity weighting and Total Costs
-    equityweighting= addcomponent(m, EquityWeighting)
+    equityweighting= add_comp!(m, EquityWeighting)
 
     #connect parameters together
     CO2cycle[:e_globalCO2emissions] = CO2emissions[:e_globalCO2emissions]
@@ -134,21 +134,21 @@ function buildpage(m::Model, policy::String="policy-a")
     slrdamages[:cons_percap_consumption] = gdp[:cons_percap_consumption]
     slrdamages[:tct_per_cap_totalcostspercap] = totalabatementcosts[:tct_per_cap_totalcostspercap]
     slrdamages[:act_percap_adaptationcosts] = totaladaptationcosts[:act_percap_adaptationcosts]
-    connect_parameter(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
+    connect_param!(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
     slrdamages[:imp_actualreductionSLR] = adaptationcosts_sealevel[:imp_adaptedimpacts]
     slrdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
     marketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
     marketdamages[:rgdp_per_cap_SLRRemainGDP] = slrdamages[:rgdp_per_cap_SLRRemainGDP]
     marketdamages[:rcons_per_cap_SLRRemainConsumption] = slrdamages[:rcons_per_cap_SLRRemainConsumption]
-    connect_parameter(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
+    connect_param!(m, :MarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsEconomic, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
     marketdamages[:imp_actualreduction] = adaptationcosts_economic[:imp_adaptedimpacts]
     marketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 
     nonmarketdamages[:rtl_realizedtemperature] = climatetemperature[:rtl_realizedtemperature]
     nonmarketdamages[:rgdp_per_cap_MarketRemainGDP] = marketdamages[:rgdp_per_cap_MarketRemainGDP]
     nonmarketdamages[:rcons_per_cap_MarketRemainConsumption] = marketdamages[:rcons_per_cap_MarketRemainConsumption]
-    connect_parameter(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
+    connect_param!(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic, :atl_adjustedtolerablelevel, ignoreunits=true, offset = 0)
     nonmarketdamages[:imp_actualreduction] = adaptationcosts_noneconomic[:imp_adaptedimpacts]
     nonmarketdamages[:isatg_impactfxnsaturation] = gdp[:isatg_impactfxnsaturation]
 

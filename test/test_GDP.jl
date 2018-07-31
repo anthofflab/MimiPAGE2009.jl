@@ -4,7 +4,7 @@ using Base.Test
 m = page_model()
 include("../src/components/GDP.jl")
 
-gdp = addcomponent(m, GDP)
+gdp = add_comp!(m, GDP)
 
 gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
 gdp[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")

@@ -4,7 +4,7 @@ using Base.Test
 m = page_model()
 include("../src/components/ClimateTemperature.jl")
 
-climatetemperature = addcomponent(m, ClimateTemperature)
+climatetemperature = add_comp!(m, ClimateTemperature)
 
 climatetemperature[:y_year_0] = 2008.
 climatetemperature[:y_year] = Mimi.dim_keys(m.md, :time)

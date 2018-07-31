@@ -4,9 +4,9 @@ using Base.Test
 m = page_model()
 include("../src/components/CO2forcing.jl")
 
-addcomponent(m, co2forcing)
+add_comp!(m, co2forcing)
 
-set_parameter!(m, :co2forcing, :c_CO2concentration, readpagedata(m,"test/validationdata/c_co2concentration.csv"))
+set_param!(m, :co2forcing, :c_CO2concentration, readpagedata(m,"test/validationdata/c_co2concentration.csv"))
 
 ##running Model
 run(m)

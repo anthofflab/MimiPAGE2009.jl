@@ -5,13 +5,13 @@ using Base.Test
 m = page_model()
 include("../src/components/TotalAbatementCosts.jl")
 
-addcomponent(m, TotalAbatementCosts)
+add_comp!(m, TotalAbatementCosts)
 
-set_parameter!(m, :TotalAbatementCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
-set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_co2, readpagedata(m, "test/validationdata/tc_totalcosts_co2.csv"))
-set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_ch4, readpagedata(m, "test/validationdata/tc_totalcosts_ch4.csv"))
-set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_n2o, readpagedata(m, "test/validationdata/tc_totalcosts_n2o.csv"))
-set_parameter!(m, :TotalAbatementCosts, :tc_totalcosts_linear, readpagedata(m, "test/validationdata/tc_totalcosts_linear.csv"))
+set_param!(m, :TotalAbatementCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
+set_param!(m, :TotalAbatementCosts, :tc_totalcosts_co2, readpagedata(m, "test/validationdata/tc_totalcosts_co2.csv"))
+set_param!(m, :TotalAbatementCosts, :tc_totalcosts_ch4, readpagedata(m, "test/validationdata/tc_totalcosts_ch4.csv"))
+set_param!(m, :TotalAbatementCosts, :tc_totalcosts_n2o, readpagedata(m, "test/validationdata/tc_totalcosts_n2o.csv"))
+set_param!(m, :TotalAbatementCosts, :tc_totalcosts_linear, readpagedata(m, "test/validationdata/tc_totalcosts_linear.csv"))
 
 run(m)
 

@@ -4,7 +4,7 @@ using Mimi
 m = m = page_model()
 include("../src/components/TotalForcing.jl")
 
-totalforcing = addcomponent(m, TotalForcing)
+totalforcing = add_comp!(m, TotalForcing)
 
 totalforcing[:f_CO2forcing] = readpagedata(m,"test/validationdata/f_co2forcing.csv")
 totalforcing[:f_CH4forcing] = readpagedata(m,"test/validationdata/f_ch4forcing.csv")

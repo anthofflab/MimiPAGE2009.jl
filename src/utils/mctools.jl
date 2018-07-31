@@ -12,8 +12,8 @@ function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
 
     Mimi.set_external_param!(m, globalname, value; param_dims = param_dims)
     
-    #connect_parameter(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
-    Mimi.disconnect!(m.md, component, name)
+    #connect_param!(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
+    Mimi.disconnect_param!(m.md, component, name)
     x = Mimi.ExternalParameterConnection(component, name, globalname)
     push!(m.md.external_param_conns, x)
 

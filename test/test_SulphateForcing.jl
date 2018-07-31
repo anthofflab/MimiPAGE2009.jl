@@ -4,7 +4,7 @@ using Mimi
 m = page_model()
 include("../src/components/SulphateForcing.jl")
 
-addcomponent(m, SulphateForcing)
+add_comp!(m, SulphateForcing)
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.

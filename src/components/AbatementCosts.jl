@@ -137,7 +137,7 @@ end
 
 function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCosts$class")
-    abatementcostscomp = addcomponent(model, AbatementCosts, componentname)
+    abatementcostscomp = add_comp!(model, AbatementCosts, componentname)
 
     if class == :CO2
         setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 8.333333333333334)

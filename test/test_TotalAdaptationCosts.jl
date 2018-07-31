@@ -5,12 +5,12 @@ using Base.Test
 page_model()
 include("../src/components/TotalAdaptationCosts.jl")
 
-addcomponent(m, TotalAdaptationCosts)
+add_comp!(m, TotalAdaptationCosts)
 
-set_parameter!(m, :TotalAdaptationCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
-set_parameter!(m, :TotalAdaptationCosts, :ac_adaptationcosts_economic, readpagedata(m, "test/validationdata/ac_adaptationcosts_economic.csv"))
-set_parameter!(m, :TotalAdaptationCosts, :ac_adaptationcosts_noneconomic, readpagedata(m, "test/validationdata/ac_adaptationcosts_noneconomic.csv"))
-set_parameter!(m, :TotalAdaptationCosts, :ac_adaptationcosts_sealevelrise, readpagedata(m, "test/validationdata/ac_adaptationcosts_sealevelrise.csv"))
+set_param!(m, :TotalAdaptationCosts, :pop_population, readpagedata(m, "test/validationdata/pop_population.csv"))
+set_param!(m, :TotalAdaptationCosts, :ac_adaptationcosts_economic, readpagedata(m, "test/validationdata/ac_adaptationcosts_economic.csv"))
+set_param!(m, :TotalAdaptationCosts, :ac_adaptationcosts_noneconomic, readpagedata(m, "test/validationdata/ac_adaptationcosts_noneconomic.csv"))
+set_param!(m, :TotalAdaptationCosts, :ac_adaptationcosts_sealevelrise, readpagedata(m, "test/validationdata/ac_adaptationcosts_sealevelrise.csv"))
 
 run(m)
 

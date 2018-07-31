@@ -10,10 +10,10 @@ addabatementcosts(m, :CH4)
 addabatementcosts(m, :N2O)
 addabatementcosts(m, :Lin)
 
-set_parameter!(m, :AbatementCostsCO2, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-set_parameter!(m, :AbatementCostsCH4, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-set_parameter!(m, :AbatementCostsN2O, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-set_parameter!(m, :AbatementCostsLin, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_param!(m, :AbatementCostsCO2, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_param!(m, :AbatementCostsCH4, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_param!(m, :AbatementCostsN2O, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+set_param!(m, :AbatementCostsLin, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
