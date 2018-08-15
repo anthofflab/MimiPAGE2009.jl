@@ -22,6 +22,7 @@ include("components/NonMarketDamages.jl")
 include("components/Discontinuity.jl")
 include("components/AdaptationCosts.jl")
 include("components/SLRDamages.jl")
+include("components/AbatementCostParameters.jl")
 include("components/AbatementCosts.jl")
 include("components/TotalAbatementCosts.jl")
 include("components/TotalAdaptationCosts.jl")
@@ -50,6 +51,10 @@ function buildpage(m::Model, policy::String="policy-a")
     population = addpopulation(m)
     gdp = addgdp(m)
     #Abatement Costs
+    abatementcostparameters_CO2 = addabatementcostparameters(m, :CO2, policy)
+    abatementcostparameters_CH4 = addabatementcostparameters(m, :CH4, policy)
+    abatementcostparameters_N2O = addabatementcostparameters(m, :N2O, policy)
+    abatementcostparameters_Lin = addabatementcostparameters(m, :Lin, policy)
     abatementcosts_CO2 = addabatementcosts(m, :CO2, policy)
     abatementcosts_CH4 = addabatementcosts(m, :CH4, policy)
     abatementcosts_N2O = addabatementcosts(m, :N2O, policy)
@@ -107,11 +112,22 @@ function buildpage(m::Model, policy::String="policy-a")
 
     gdp[:pop_population] = population[:pop_population]
 
-    abatementcosts_CO2[:yagg] = gdp[:yagg_periodspan]
-    abatementcosts_CH4[:yagg] = gdp[:yagg_periodspan]
-    abatementcosts_N2O[:yagg] = gdp[:yagg_periodspan]
-    abatementcosts_Lin[:yagg] = gdp[:yagg_periodspan]
-
+    for abatementcostparameters, abatementcosts in [(abatementcostparameters_CO2, abatementcosts_CO2),
+                                                    (abatementcostparameters_CH4, abatementcosts_CH4),
+                                                    (abatementcostparameters_N2O, abatementcosts_N2O),
+                                                    (abatementcostparameters_Lin, abatementcosts_Lin)]
+        
+        abatementcostparameters[:yagg] = gdp[:yagg_periodspan]
+        abatementcostparameters[:cbe_absoluteemissionreductions] = abatementcosts[:cbe_absoluteemissionreductions]
+        
+        abatementcosts[:zc_zerocostemissions] = abatementcostparameters[:zc_zerocostemissions]
+        abatementcosts[:q0_absolutecutbacksatnegativecost] = abatementcostparameters[:q0_absolutecutbacksatnegativecost]
+        abatementcosts[:blo] = abatementcostparameters[:blo]
+        abatementcosts[:alo] = abatementcostparameters[:alo]
+        abatementcosts[:bhi] = abatementcostparameters[:bhi]
+        abatementcosts[:ahi] = abatementcostparameters[:ahi]
+    end
+    
     totalabatementcosts[:tc_totalcosts_co2] = abatementcosts_CO2[:tc_totalcost]
     totalabatementcosts[:tc_totalcosts_n2o] = abatementcosts_N2O[:tc_totalcost]
     totalabatementcosts[:tc_totalcosts_ch4] = abatementcosts_CH4[:tc_totalcost]
