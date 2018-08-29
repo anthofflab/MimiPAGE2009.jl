@@ -112,14 +112,15 @@ function buildpage(m::Model, policy::String="policy-a")
 
     gdp[:pop_population] = population[:pop_population]
 
-    for abatementcostparameters, abatementcosts in [(abatementcostparameters_CO2, abatementcosts_CO2),
-                                                    (abatementcostparameters_CH4, abatementcosts_CH4),
-                                                    (abatementcostparameters_N2O, abatementcosts_N2O),
-                                                    (abatementcostparameters_Lin, abatementcosts_Lin)]
-        
+    for allabatement in [(abatementcostparameters_CO2, abatementcosts_CO2),
+                         (abatementcostparameters_CH4, abatementcosts_CH4),
+                         (abatementcostparameters_N2O, abatementcosts_N2O),
+                         (abatementcostparameters_Lin, abatementcosts_Lin)]
+        abatementcostparameters, abatementcosts = allabatement
+
         abatementcostparameters[:yagg] = gdp[:yagg_periodspan]
         abatementcostparameters[:cbe_absoluteemissionreductions] = abatementcosts[:cbe_absoluteemissionreductions]
-        
+
         abatementcosts[:zc_zerocostemissions] = abatementcostparameters[:zc_zerocostemissions]
         abatementcosts[:q0_absolutecutbacksatnegativecost] = abatementcostparameters[:q0_absolutecutbacksatnegativecost]
         abatementcosts[:blo] = abatementcostparameters[:blo]
@@ -127,7 +128,7 @@ function buildpage(m::Model, policy::String="policy-a")
         abatementcosts[:bhi] = abatementcostparameters[:bhi]
         abatementcosts[:ahi] = abatementcostparameters[:ahi]
     end
-    
+
     totalabatementcosts[:tc_totalcosts_co2] = abatementcosts_CO2[:tc_totalcost]
     totalabatementcosts[:tc_totalcosts_n2o] = abatementcosts_N2O[:tc_totalcost]
     totalabatementcosts[:tc_totalcosts_ch4] = abatementcosts_CH4[:tc_totalcost]
