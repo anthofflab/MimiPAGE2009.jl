@@ -12,7 +12,7 @@ branches:
   - /release-.*/
 script:
   - julia -e 'Pkg.add("Mimi")'
-  - julia -e 'Pkg.checkout("Mimi", "master")'
+  - julia -e 'Pkg.checkout("Mimi", "release-0.5")'
   - julia -e 'Pkg.add("CSVFiles")'
   - julia --code-coverage=user test/runtests.jl
 after_success:
