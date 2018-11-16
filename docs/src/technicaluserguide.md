@@ -66,44 +66,33 @@ Now we will define the component with its parameters (inputs) and
 variables (outputs).
 
 ```
-@defcomp co2forcing begin # this defines the component, gives it a name, and starts the code chunk
-    # The value of parameters are specified elsewhere in the code,
-    # either as a external value or the output of a variable in another component
+@defcomp co2forcing begin 
+    # this defines the component, gives it a name, and starts the code chunk
+    # We can set default parameter values here or elsewhere in the code either 
+    # as a external value or the output of a variable in another component
 
-    c_CO2concentration = Parameter(index=[time],unit="ppbv") # Sets a parameter which is indexed by time.
-    f0_CO2baseforcing = Parameter(unit="W/m2")
-    fslope_CO2forcingslope = Parameter(unit="W/m2")
-    c0_baseCO2conc = Parameter(unit="ppbv")
-	
-    f_CO2forcing = Variable(index=[time],unit="W/m2") # defines a variable that will be evaluated in the component
+    c_CO2concentration=Parameter(index=[time],unit="ppbv")
+    f0_CO2baseforcing=Parameter(unit="W/m2", default=1.735)
+    fslope_CO2forcingslope=Parameter(unit="W/m2", default=5.5)
+    c0_baseCO2conc=Parameter(unit="ppbv", default=395000.)
+    f_CO2forcing=Variable(index=[time],unit="W/m2")
 end
 ```
 
-Next we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.
+Next we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.  This function is contained within the `@defcomp` macro.
 
 ```
-function run_timestep(s::co2forcing, t::Int64)
-    v = s.Variables
-    p = s.Parameters
+function run_timestep(p, v, d, t)
 
-    # Eq.13 in Hope 2006
-    v.f_CO2forcing[t] = p.f0_CO2baseforcing + p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
+    #eq.13 in Hope 2006
+    v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)
 end
 ```
 
-Lastly, we define a function that is used to add the component to the main model. Here we can also set exogenous parameters.
+In some cases we also define a function that is used to add the component to the main model
+where we can set exogenous parameters imported from a CSV file.  In this case such
+a step is not needed.
 
-```
-function addCO2forcing(model::Model)
-    co2forcingcomp = addcomponent(model, co2forcing)
-
-    co2forcingcomp[:fslope_CO2forcingslope] = 5.5
-    co2forcingcomp[:f0_CO2baseforcing] = 1.735
-    co2forcingcomp[:c0_baseCO2conc] = 395000.
-
-    co2forcingcomp
-end
-```
 
 In the `src/getpagefunction.jl` file, you will find code that sends variables between components. For example,
 

@@ -1,22 +1,18 @@
 using Mimi
 using Base.Test
 
-include("../src/utils/load_parameters.jl")
+m = page_model()
 include("../src/components/GDP.jl")
 
-m = Model()
+gdp = add_comp!(m, GDP)
 
-setindex(m, :time, convert(Vector{Float64}, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200]))
-setindex(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
-
-gdp = addgdp(m)
 gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
 gdp[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")
-gdp[:y_year] = m.indices_values[:time]
+gdp[:y_year] = Mimi.dim_keys(m.md, :time)
 gdp[:y_year_0] = 2008.
 
 p=load_parameters(m)
-setleftoverparameters(m,p)
+set_leftover_params!(m,p)
 
 # run model
 run(m)

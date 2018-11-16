@@ -1,22 +1,18 @@
 using Mimi
 using Base.Test
 
-include("../src/utils/load_parameters.jl")
+m = page_model()
 include("../src/components/CH4cycle.jl")
 
-m = Model()
-setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075.,2100.,2150.,2200.])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_comp!(m, ch4cycle, :ch4cycle)
 
-addCH4cycle(m)
-
-setparameter(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
-setparameter(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
-setparameter(m,:ch4cycle,:y_year_0,2008.)
+set_param!(m, :ch4cycle, :e_globalCH4emissions, readpagedata(m,"test/validationdata/e_globalCH4emissions.csv"))
+set_param!(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
+set_param!(m,:ch4cycle,:y_year_0,2008.)
 
 p = load_parameters(m)
-p["y_year"] = m.indices_values[:time]
-setleftoverparameters(m, p)
+p["y_year"] = Mimi.dim_keys(m.md, :time)
+set_leftover_params!(m, p)
 
 #running Model
 run(m)

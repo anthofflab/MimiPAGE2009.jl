@@ -9,16 +9,17 @@ function checkregionorder(model::Model, regions, file)
                                                                  "USSR" => ["EE"])
 
     for ii in 1:length(regions)
-        if model.indices_values[:region][ii] != regions[ii] && !in(regions[ii], regionaliases[model.indices_values[:region][ii]])
-            error("Region indices in $file do not match expectations: $(model.indices_values[:region][ii]) <> $(regions[ii]).")
+        region_keys = Mimi.dim_keys(model.md, :region)
+        if region_keys[ii] != regions[ii] && !in(regions[ii], regionaliases[region_keys[ii]])
+            error("Region indices in $file do not match expectations: $(region_keys[ii]) <> $(regions[ii]).")
         end
     end
 end
 
 function checktimeorder(model::Model, times, file)
     for ii in 1:length(times)
-        if model.indices_values[:time][ii] != times[ii]
-            error("Time indices in $file do not match expectations: $(model.indices_values[:time][ii]) <> $(times[ii]).")
+        if Mimi.time_labels(model)[ii] != times[ii]
+            error("Time indices in $file do not match expectations: $(Mimi.time_labels(model)[ii]) <> $(times[ii]).")
         end
     end
 end

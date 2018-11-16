@@ -1,15 +1,12 @@
 using Mimi
 using Base.Test
 
+m = page_model()
 include("../src/components/CO2forcing.jl")
 
-m = Model()
-setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_comp!(m, co2forcing)
 
-addCO2forcing(m)
-
-setparameter(m, :co2forcing, :c_CO2concentration, readpagedata(m,"test/validationdata/c_co2concentration.csv"))
+set_param!(m, :co2forcing, :c_CO2concentration, readpagedata(m,"test/validationdata/c_co2concentration.csv"))
 
 ##running Model
 run(m)

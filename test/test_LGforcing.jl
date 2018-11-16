@@ -1,15 +1,12 @@
 using Mimi
 using Base.Test
 
+m = page_model()
 include("../src/components/LGforcing.jl")
 
-m = Model()
-setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+add_comp!(m, LGforcing)
 
-addLGforcing(m)
-
-setparameter(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
+set_param!(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
 
 # run Model
 run(m)

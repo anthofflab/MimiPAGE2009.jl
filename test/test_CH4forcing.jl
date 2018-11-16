@@ -1,18 +1,13 @@
 using Mimi
 using Base.Test
 
+m = page_model()
 include("../src/components/CH4forcing.jl")
-include("../src/utils/load_parameters.jl")
 
+add_comp!(m, ch4forcing, :ch4forcing)
 
-m = Model()
-setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
-
-addCH4forcing(m)
-
-setparameter(m, :ch4forcing, :c_N2Oconcentration, readpagedata(m,"test/validationdata/c_n2oconcentration.csv"))
-setparameter(m, :ch4forcing, :c_CH4concentration, readpagedata(m,"test/validationdata/c_ch4concentration.csv"))
+set_param!(m, :ch4forcing, :c_N2Oconcentration, readpagedata(m,"test/validationdata/c_n2oconcentration.csv"))
+set_param!(m, :ch4forcing, :c_CH4concentration, readpagedata(m,"test/validationdata/c_ch4concentration.csv"))
 
 ##running Model
 run(m)

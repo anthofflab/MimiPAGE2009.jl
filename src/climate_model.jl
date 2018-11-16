@@ -1,5 +1,8 @@
 using Mimi
+
 include("utils/load_parameters.jl")
+include("utils/mctools.jl")
+
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")
 include("components/CO2forcing.jl")
@@ -18,76 +21,76 @@ include("components/ClimateTemperature.jl")
 
 
 m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 #add all the components
-CO2emissions = addcomponent(m,co2emissions)
-CO2cycle = addCO2cycle(m)
-CO2forcing = addCO2forcing(m)
-CH4emissions = addcomponent(m, ch4emissions)
-CH4cycle = addCH4cycle(m)
-CH4forcing = addCH4forcing(m)
-N2Oemissions = addcomponent(m, n2oemissions)
-N2Ocycle = addN2Ocycle(m)
-N2Oforcing = addN2Oforcing(m)
-lgemissions = addcomponent(m, LGemissions)
-lgcycle = addLGcycle(m)
-lgforcing = addLGforcing(m)
-sulphateforcing = addsulphatecomp(m)
-totalforcing = addcomponent(m, TotalForcing)
-climatetemperature = addclimatetemperature(m)
+add_comp!(m,co2emissions)
+add_comp!(m, co2cycle)
+add_comp!(m, co2forcing)
+add_comp!(m, ch4emissions)
+add_comp!(m, ch4cycle)
+add_comp!(m, ch4forcing)
+add_comp!(m, n2oemissions)
+add_comp!(m, n2ocycle)
+add_comp!(m, n2oforcing)
+add_comp!(m, LGemissions)
+add_comp!(m, LGcycle)
+add_comp!(m, LGforcing)
+add_comp!(m, SulphateForcing)
+add_comp!(m, TotalForcing)
+add_comp!(m, ClimateTemperature)
 
 #connect parameters together
 
-CO2cycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
-CO2cycle[:y_year_0] = 2008.
-CO2cycle[:e_globalCO2emissions] = CO2emissions[:e_globalCO2emissions]
-CO2cycle[:rt_g0_baseglobaltemp] = climatetemperature[:rt_g0_baseglobaltemp]
-CO2cycle[:rt_g_globaltemperature] = climatetemperature[:rt_g_globaltemperature]
+set_param!(m, :co2cycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
+set_param!(m, :co2cycle, :y_year_0, 2008.)
+connect_param!(m, :co2cycle => :e_globalCO2emissions, :co2emissions => :e_globalCO2emissions)
+connect_param!(m, :co2cycle => :rt_g0_baseglobaltemp, :ClimateTemperature => :rt_g0_baseglobaltemp, offset = 1)
+connect_param!(m, :co2cycle => :rt_g_globaltemperature, :ClimateTemperature => :rt_g_globaltemperature, offset = 1)
 
-CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration]
+connect_param!(m, :co2forcing => :c_CO2concentration, :co2cycle => :c_CO2concentration)
 
-CH4cycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
-CH4cycle[:y_year_0] = 2008.
-CH4cycle[:e_globalCH4emissions] = CH4emissions[:e_globalCH4emissions]
-CH4cycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
-CH4cycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
+set_param!(m, :ch4cycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
+set_param!(m, :ch4cycle, :y_year_0, 2008.)
+connect_param!(m, :ch4cycle => :e_globalCH4emissions, :ch4emissions => :e_globalCH4emissions)
+connect_param!(m, :ch4cycle => :rtl_g0_baselandtemp, :ClimateTemperature => :rtl_g0_baselandtemp, offset = 1)
+connect_param!(m, :ch4cycle => :rtl_g_landtemperature, :ClimateTemperature => :rtl_g_landtemperature, offset = 1)
 
-CH4forcing[:c_CH4concentration] = CH4cycle[:c_CH4concentration]
-CH4forcing[:c_N2Oconcentration] = N2Ocycle[:c_N2Oconcentration]
+connect_param!(m, :ch4forcing => :c_CH4concentration, :ch4cycle => :c_CH4concentration)
+connect_param!(m, :ch4forcing => :c_N2Oconcentration, :n2ocycle => :c_N2Oconcentration, offset = 1)
 
-N2Ocycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
-N2Ocycle[:y_year_0] = 2008.
-N2Ocycle[:e_globalN2Oemissions] = N2Oemissions[:e_globalN2Oemissions]
-N2Ocycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
-N2Ocycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
+set_param!(m, :n2ocycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
+set_param!(m, :n2ocycle, :y_year_0, 2008.)
+connect_param!(m, :n2ocycle => :e_globalN2Oemissions, :n2oemissions => :e_globalN2Oemissions)
+connect_param!(m, :n2ocycle => :rtl_g0_baselandtemp, :ClimateTemperature => :rtl_g0_baselandtemp, offset = 1)
+connect_param!(m, :n2ocycle => :rtl_g_landtemperature, :ClimateTemperature => :rtl_g_landtemperature, offset = 1)
 
-N2Oforcing[:c_CH4concentration] = CH4cycle[:c_CH4concentration]
-N2Oforcing[:c_N2Oconcentration] = N2Ocycle[:c_N2Oconcentration]
+connect_param!(m, :n2oforcing => :c_CH4concentration, :ch4cycle => :c_CH4concentration)
+connect_param!(m, :n2oforcing => :c_N2Oconcentration, :n2ocycle => :c_N2Oconcentration)
 
-lgcycle[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
-lgcycle[:y_year_0] = 2008.
-lgcycle[:e_globalLGemissions] = lgemissions[:e_globalLGemissions]
-lgcycle[:rtl_g0_baselandtemp] = climatetemperature[:rtl_g0_baselandtemp]
-lgcycle[:rtl_g_landtemperature] = climatetemperature[:rtl_g_landtemperature]
+set_param!(m, :LGcycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
+set_param!(m, :LGcycle, :y_year_0, 2008.)
+connect_param!(m, :LGcycle => :e_globalLGemissions, :LGemissions => :e_globalLGemissions)
+connect_param!(m, :LGcycle => :rtl_g0_baselandtemp, :ClimateTemperature => :rtl_g0_baselandtemp, offset = 1)
+connect_param!(m, :LGcycle => :rtl_g_landtemperature, :ClimateTemperature => :rtl_g_landtemperature, offset = 1)
 
-lgforcing[:c_LGconcentration] = lgcycle[:c_LGconcentration]
+connect_param!(m, :LGforcing => :c_LGconcentration, :LGcycle => :c_LGconcentration)
 
-totalforcing[:f_CO2forcing] = CO2forcing[:f_CO2forcing]
-totalforcing[:f_CH4forcing] = CH4forcing[:f_CH4forcing]
-totalforcing[:f_N2Oforcing] = N2Oforcing[:f_N2Oforcing]
-totalforcing[:f_lineargasforcing] = lgforcing[:f_LGforcing]
+connect_param!(m, :TotalForcing => :f_CO2forcing, :co2forcing => :f_CO2forcing)
+connect_param!(m, :TotalForcing => :f_CH4forcing, :ch4forcing => :f_CH4forcing)
+connect_param!(m, :TotalForcing => :f_N2Oforcing, :n2oforcing => :f_N2Oforcing)
+connect_param!(m, :TotalForcing => :f_lineargasforcing, :LGforcing => :f_LGforcing)
 
-climatetemperature[:y_year] = [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]
-climatetemperature[:y_year_0] = 2008.
-climatetemperature[:ft_totalforcing] = totalforcing[:ft_totalforcing]
-climatetemperature[:fs_sulfateforcing] = sulphateforcing[:fs_sulphateforcing]
+set_param!(m, :ClimateTemperature, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
+set_param!(m, :ClimateTemperature, :y_year_0, 2008.)
+connect_param!(m, :ClimateTemperature => :ft_totalforcing, :TotalForcing => :ft_totalforcing)
+connect_param!(m, :ClimateTemperature => :fs_sulfateforcing, :SulphateForcing => :fs_sulphateforcing)
 
 # next: add vector and panel example
 p = load_parameters(m)
 p["y_year_0"] = 2008.
-p["y_year"] = m.indices_values[:time]
-setleftoverparameters(m, p)
+p["y_year"] = Mimi.dim_keys(m.md, :time)
+set_leftover_params!(m, p)
 
 run(m)

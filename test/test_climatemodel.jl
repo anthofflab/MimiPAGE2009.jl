@@ -1,5 +1,6 @@
 using Base.Test
 
+m = page_model()
 include("../src/climate_model.jl")
 
 rt_g = m[:ClimateTemperature, :rt_g_globaltemperature]

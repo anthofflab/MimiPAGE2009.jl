@@ -2,30 +2,26 @@ using Mimi
 using DataFrames
 using Base.Test
 
-include("../src/utils/load_parameters.jl")
+m = page_model()
 include("../src/components/AdaptationCosts.jl")
-
-m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
 adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
 adaptationcosts_noneconomic[:y_year_0] = 2008.
-adaptationcosts_noneconomic[:y_year] = m.indices_values[:time]
+adaptationcosts_noneconomic[:y_year] = Mimi.dim_keys(m.md, :time)
 adaptationcosts_noneconomic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 adaptationcosts_economic = addadaptationcosts_economic(m)
 adaptationcosts_economic[:y_year_0] = 2008.
-adaptationcosts_economic[:y_year] = m.indices_values[:time]
+adaptationcosts_economic[:y_year] = Mimi.dim_keys(m.md, :time)
 adaptationcosts_economic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
 adaptationcosts_sealevel[:y_year_0] = 2008.
-adaptationcosts_sealevel[:y_year] = m.indices_values[:time]
+adaptationcosts_sealevel[:y_year] = Mimi.dim_keys(m.md, :time)
 adaptationcosts_sealevel[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
 
 p = load_parameters(m)
-setleftoverparameters(m, p)
+set_leftover_params!(m, p)
 
 run(m)
 

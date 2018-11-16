@@ -1,4 +1,19 @@
 using Base.Test
+using Mimi
+
+function page_model()
+    Mimi.reset_compdefs()
+
+    include("../src/utils/load_parameters.jl")
+    include("../src/utils/mctools.jl")
+    
+    m = Model()
+
+    set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
+    set_dimension!(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
+    
+    return m
+ end
 
 @testset "mimi-page.jl" begin
 
@@ -29,10 +44,10 @@ include("test_NonMarketDamages.jl")
 include("test_Population.jl")
 include("test_SeaLevelRise.jl")
 include("test_SLRDamages.jl")
-include("test_SulphateForcing.jl")
+include("test_SulphateForcing.jl") 
 include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
-include("test_montecarlo.jl")
+include("test_mcs.jl") 
 
 end

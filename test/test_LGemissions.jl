@@ -1,19 +1,13 @@
 using Mimi
 using Base.Test
 
+m = page_model()
 include("../src/components/LGemissions.jl")
-include("../src/utils/load_parameters.jl")
 
-m = Model()
+add_comp!(m, LGemissions)
 
-setindex(m, :time, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
-
-
-addcomponent(m, LGemissions)
-
-setparameter(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/e0_baselineLGemissions.csv"))
-setparameter(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/er_LGemissionsgrowth.csv"))
+set_param!(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/e0_baselineLGemissions.csv"))
+set_param!(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/er_LGemissionsgrowth.csv"))
 
 # run Model
 run(m)

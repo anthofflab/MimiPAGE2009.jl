@@ -87,7 +87,7 @@ The following scripts assist in the actual running of Mimi-Page, and are further
 - load_parameters.jl
 - main_model.jl
 - mctools.jl
-- montecarlo.jl
+- mcs.jl
 
 ### Schematic
 

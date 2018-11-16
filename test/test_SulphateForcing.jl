@@ -1,18 +1,15 @@
 using Base.Test
 using Mimi
 
+m = page_model()
 include("../src/components/SulphateForcing.jl")
 
-m = Model()
-setindex(m, :time, [2009.,2010.,2020.,2030.,2040., 2050., 2075., 2100., 2150., 2200.])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
-
-addsulphatecomp(m)
+add_comp!(m, SulphateForcing)
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
-p["y_year"] = m.indices_values[:time]
-setleftoverparameters(m, p)
+p["y_year"] = Mimi.dim_keys(m.md, :time)
+set_leftover_params!(m, p)
 
 run(m)
 

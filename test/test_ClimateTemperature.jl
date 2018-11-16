@@ -1,23 +1,19 @@
 using Mimi
 using Base.Test
 
-include("../src/utils/load_parameters.jl")
+m = page_model()
 include("../src/components/ClimateTemperature.jl")
 
-m = Model()
-setindex(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-setindex(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
-
-climatetemperature = addclimatetemperature(m)
+climatetemperature = add_comp!(m, ClimateTemperature)
 
 climatetemperature[:y_year_0] = 2008.
-climatetemperature[:y_year] = m.indices_values[:time]
+climatetemperature[:y_year] = Mimi.dim_keys(m.md, :time)
 
 climatetemperature[:ft_totalforcing] = readpagedata(m, "test/validationdata/ft_totalforcing.csv")
 climatetemperature[:fs_sulfateforcing] = readpagedata(m, "test/validationdata/fs_sulfateforcing.csv")
 
 p = load_parameters(m)
-setleftoverparameters(m, p)
+set_leftover_params!(m, p)
 
 ##running Model
 run(m)
