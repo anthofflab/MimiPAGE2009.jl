@@ -3,7 +3,7 @@ os:
   - linux
   - osx
 julia:
-  - 0.6
+  - 1.0
 notifications:
   email: false
 branches:
@@ -11,11 +11,11 @@ branches:
   - master
   - /release-.*/
 script:
-  - julia -e 'Pkg.add("Mimi")'
-  - julia -e 'Pkg.add("CSVFiles")'
+  - julia -e 'using Pkg; Pkg.add("Mimi")'
+  - julia -e 'using Pkg; Pkg.add("CSVFiles")'
   - julia --code-coverage=user test/runtests.jl
 after_success:
   # push coverage results to Codecov
-  - julia -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
-  - julia -e 'Pkg.add("Documenter")'
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'using Pkg; Pkg.add("Documenter")'
   - julia -e 'include("docs/make.jl")'

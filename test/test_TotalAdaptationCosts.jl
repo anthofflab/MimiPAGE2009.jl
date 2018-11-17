@@ -1,6 +1,6 @@
 using Mimi
 using DataFrames
-using Base.Test
+using Test
 
 page_model()
 include("../src/components/TotalAdaptationCosts.jl")

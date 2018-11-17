@@ -4,7 +4,6 @@ using Query
 Create a parameter `component`_`name` with the given value,
 and connect parameter `name` within `component` to this distinct global parameter.
 """
-
 function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     globalname = Symbol(string(component, '_', name))
 
@@ -23,7 +22,6 @@ end
 """
 Load raw RV output into reformat_RV_outputs 
 """
-
 function load_RV(name::String; 
                     output_path::String = joinpath(@__DIR__, "../../output/"), 
                     time_filter::Int = 2200,
@@ -50,11 +48,11 @@ function load_RV(name::String;
                 end) |> DataFrame
         end
 
-        return filtered_df[convert(Symbol, name)]
+        return filtered_df[Symbol(name)]
           
     #no filters applied
     else
-        return df[convert(Symbol, name)]
+        return df[Symbol(name)]
     end
 
 end

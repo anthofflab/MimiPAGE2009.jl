@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using Mimi
 
 function page_model()

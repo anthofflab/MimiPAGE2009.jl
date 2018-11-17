@@ -1,3 +1,5 @@
+using DelimitedFiles
+
 function checkregionorder(model::Model, regions, file)
     regionaliases = Dict{AbstractString, Vector{AbstractString}}("EU" => [],
                                                                  "USA" => ["US"],
@@ -34,21 +36,21 @@ function readpagedata(model::Model, filepath::AbstractString)
 
     firstline = chomp(content[1])
     if firstline == "# Index: region"
-        data = readcsv(filepath, header=true)
+        data = readdlm(filepath, ',', header=true, comments=true)
 
         # Check that regions are in the right order
         checkregionorder(model, data[1][:, 1], basename(filepath))
 
         return convert(Vector{Float64},vec(data[1][:, 2]))
     elseif firstline == "# Index: time"
-        data = readcsv(filepath, header=true)
+        data = readdlm(filepath, ',', header=true, comments=true)
 
         # Check that the times are in the right order
         checktimeorder(model, data[1][:, 1], basename(filepath))
 
         return convert(Vector{Float64}, vec(data[1][:, 2]))
     elseif firstline == "# Index: time, region"
-        data = readcsv(filepath, header=true)
+        data = readdlm(filepath, ',', header=true, comments = true)
 
         # Check that both dimension match
         checktimeorder(model, data[1][:, 1], basename(filepath))

@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using CSVFiles
 using Missings
 using DataFrames
@@ -68,6 +68,6 @@ for ii in 1:nrow(compare)
         expected = transform(compare[ii, Symbol("perc_$(trunc(Int, qval * 100))")])
 
         #println("$name x $qval: $estimated ≈ $expected rtol=$(ceil(confidence * stderr, -trunc(Int, log10(stderr))))")
-        @test estimated ≈ expected rtol=ceil(confidence * stderr, -trunc(Int, log10(stderr)))
+        @test estimated ≈ expected rtol=ceil(confidence * stderr; digits = -trunc(Int, log10(stderr)))
     end
 end

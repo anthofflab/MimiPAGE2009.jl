@@ -34,7 +34,7 @@ First, we initialize the model and reference the relevant files (`src/utils/load
 
 ```
 using Mimi
-using Base.Test
+using Test
 
 include("../src/utils/load_parameters.jl")
 include("../src/components/CO2emissions.jl")
