@@ -1,5 +1,5 @@
 using Mimi
-using Base.Test
+using Test
 
 include("../src/components/CO2cycle.jl")
 

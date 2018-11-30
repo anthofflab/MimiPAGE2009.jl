@@ -1,6 +1,6 @@
 using Mimi
 using DataFrames
-using Base.Test
+using Test
 
 m = page_model()
 include("../src/components/SLRDamages.jl")

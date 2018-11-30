@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 
 m = page_model()
 include("../src/climate_model.jl")
