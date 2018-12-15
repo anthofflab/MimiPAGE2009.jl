@@ -13,6 +13,8 @@ branches:
 script:
   - julia -e 'using Pkg; Pkg.add("Mimi")'
   - julia -e 'using Pkg; Pkg.add("CSVFiles")'
+  - julia -e 'using Pkg; Pkg.add("Query")'
+
   - julia --code-coverage=user test/runtests.jl
 after_success:
   # push coverage results to Codecov

@@ -12,9 +12,5 @@ makedocs(
 )
 
 deploydocs(
-    deps = nothing,
-    make = nothing,
-	target = "build",
     repo = "github.com/anthofflab/mimi-page.jl.git",
-    julia = "0.6"
 )

@@ -22,8 +22,17 @@ The Mimi-PAGE model is written for the Mimi modeling framework, which
 needs to be installed as a standard Julia package.
 Once Julia is installed, start Julia and you should see a Julia command prompt. To install the Mimi package, issue the following command:
 ```julia
+julia> using Pkg
 julia> Pkg.add("Mimi")
 ```
+
+Or, alternatively enter the (Pkg REPL-mode)[https://docs.julialang.org/en/v1/stdlib/Pkg/index.html] is from the Julia REPL using the key `]`.  After typing this, you may proceed with `Pkg` methods without using `Pkg.`.  This would look like:
+```julia
+julia> ]add Mimi
+```
+
+To exit the Pkg REPL-mode, simply backspace once to re-enter the Julia REPL.
+
 You only have to run this command once on your machine.
 
 Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles and Missings packages.
@@ -44,11 +53,11 @@ returns a list of components and each of their incoming parameters and
 outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` for the desired component and variable.
 
 To run the stochastic version of Mimi-PAGE, which uses parameter
-distributions, see the `mcs.jl` file in the src folder. The
+distributions, see the `mcs.jl` file in the src folder and the documentation for
+Mimi Monte Carlo support [here](https://github.com/anthofflab/Mimi.jl/blob/master/docs/src/internals/montecarlo.md). The
 current Monte Carlo process outputs a selection of variables that are
 important for validation, but these can be modified by the user if
-desired. The user can also set the number of Monte Carlo runs in
-montecarlo.jl. For more information, see the [Technical Guide](technicaluserguide.md).
+desired. For more information, see the [Technical Guide](technicaluserguide.md).
 
 ## Troubleshooting
 
