@@ -5,7 +5,7 @@ This guide will briefly explain how to install Julia and Mimi-PAGE.
 ## Installing Julia
 
 Mimi-PAGE requires the programming
-language [Julia](http://julialang.org/), version 0.6 or later, to
+language [Julia](http://julialang.org/), version 1.0 or later, to
 run. Download and install the current release from the Julia [download page](http://julialang.org/downloads/).
 
 ### Julia Editor Support
