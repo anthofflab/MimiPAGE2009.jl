@@ -48,7 +48,7 @@ policies can be added in the same fashion.
 
 ## Code format
 
- - The code is written in Julia (v0.6 or greater).
+ - The code is written in Julia (v1.0 or greater).
  - The data are in CSV format for easy portability and manipulation.
  - The docs are in Markdown format for readability on github.
 
