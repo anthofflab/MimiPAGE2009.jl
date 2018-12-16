@@ -33,7 +33,7 @@ julia> ]add Mimi
 
 To exit the Pkg REPL-mode, simply backspace once to re-enter the Julia REPL.
 
-You only have to run this command once on your machine.
+You only have to run this (whichever method you choose) once on your machine.
 
 Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles, Query, and Missings packages.
 
@@ -50,12 +50,21 @@ runs the deterministic version of Mimi-PAGE with central parameter
 estimates. The `getpage` function used in that file create the
 initialized PAGE model. You can print the model, by typing `m`, which
 returns a list of components and each of their incoming parameters and
-outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` for the desired component and variable.
+outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` 
+for the desired component and variable. You may also explore the results graphically
+by running `explore(m)` to view all variables and parameters, or `explore(m, :VariableName)`
+for just one. For more details on the graphical interface of Mimi look to the
+documentation in the Mimi [User Guide](`http://anthofflab.berkeley.edu/Mimi.jl/stable/userguide/#Plotting-and-the-Explorer-UI-1`).
 
 To run the stochastic version of Mimi-PAGE, which uses parameter
 distributions, see the `mcs.jl` file in the src folder and the documentation for
-Mimi Monte Carlo support [here](https://github.com/anthofflab/Mimi.jl/blob/master/docs/src/internals/montecarlo.md). The
-current Monte Carlo process outputs a selection of variables that are
+Mimi Monte Carlo support [here](https://github.com/anthofflab/Mimi.jl/blob/master/docs/src/internals/montecarlo.md). The 
+simplest version of runningn the stochastic version would be carried out as follows:
+```julia
+julia> include(mcs.jl)
+julia> do_monte_carlo_runs(1000) #1000 runs
+```
+The current Monte Carlo process outputs a selection of variables that are
 important for validation, but these can be modified by the user if
 desired. For more information, see the [Technical Guide](technicaluserguide.md).
 
