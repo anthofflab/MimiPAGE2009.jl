@@ -3,17 +3,23 @@ using DataFrames
 using Test
 
 m = page_model()
+include("../src/components/AbatementCostParameters.jl")
 include("../src/components/AbatementCosts.jl")
 
-addabatementcosts(m, :CO2)
-addabatementcosts(m, :CH4)
-addabatementcosts(m, :N2O)
-addabatementcosts(m, :Lin)
+for gas in [:CO2, :CH4, :N2O, :Lin]
+    abatementcostparameters = addabatementcostparameters(m, gas)
+    abatementcosts = addabatementcosts(m, gas)
 
-set_param!(m, :AbatementCostsCO2, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-set_param!(m, :AbatementCostsCH4, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-set_param!(m, :AbatementCostsN2O, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
-set_param!(m, :AbatementCostsLin, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+    abatementcostparameters[:yagg] = readpagedata(m,"test/validationdata/yagg_periodspan.csv")
+    abatementcostparameters[:cbe_absoluteemissionreductions] = abatementcosts[:cbe_absoluteemissionreductions]
+        
+    abatementcosts[:zc_zerocostemissions] = abatementcostparameters[:zc_zerocostemissions]
+    abatementcosts[:q0_absolutecutbacksatnegativecost] = abatementcostparameters[:q0_absolutecutbacksatnegativecost]
+    abatementcosts[:blo] = abatementcostparameters[:blo]
+    abatementcosts[:alo] = abatementcostparameters[:alo]
+    abatementcosts[:bhi] = abatementcostparameters[:bhi]
+    abatementcosts[:ahi] = abatementcostparameters[:ahi]
+end
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
@@ -44,7 +50,7 @@ zc_compare_lin=readpagedata(m, "test/validationdata/zc_zerocostemissionsLG.csv")
 @test m[:AbatementCostsN2O, :tc_totalcost] ≈ tc_compare_n2o rtol=1e-2
 @test m[:AbatementCostsLin, :tc_totalcost] ≈ tc_compare_lin rtol=1e-2
 
-@test m[:AbatementCostsCO2, :zc_zerocostemissions] ≈ zc_compare_co2 rtol=1e-2
-@test m[:AbatementCostsCH4, :zc_zerocostemissions] ≈ zc_compare_ch4 rtol=1e-3
-@test m[:AbatementCostsN2O, :zc_zerocostemissions] ≈ zc_compare_n2o rtol=1e-3
-@test m[:AbatementCostsLin, :zc_zerocostemissions] ≈ zc_compare_lin rtol=1e-3
+@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_co2 rtol=1e-2
+@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_ch4 rtol=1e-3
+@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_n2o rtol=1e-3
+@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_lin rtol=1e-3
