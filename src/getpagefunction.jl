@@ -132,7 +132,7 @@ function buildpage(m::Model, policy::String="policy-a")
         abatementcostparameters, abatementcosts = allabatement
 
         connect_param!(m, abatementcostparameters => :yagg, :GDP => :yagg_periodspan)
-        connect_param!(m, abatementcostparameters => :cbe_absoluteemissionreductions, :abatementcosts => :cbe_absoluteemissionreductions)
+        connect_param!(m, abatementcostparameters => :cbe_absoluteemissionreductions, abatementcosts => :cbe_absoluteemissionreductions)
 
         connect_param!(m, abatementcosts => :zc_zerocostemissions, abatementcostparameters => :zc_zerocostemissions)
         connect_param!(m, abatementcosts => :q0_absolutecutbacksatnegativecost, abatementcostparameters => :q0_absolutecutbacksatnegativecost)

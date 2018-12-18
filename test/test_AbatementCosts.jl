@@ -50,7 +50,7 @@ zc_compare_lin=readpagedata(m, "test/validationdata/zc_zerocostemissionsLG.csv")
 @test m[:AbatementCostsN2O, :tc_totalcost] ≈ tc_compare_n2o rtol=1e-2
 @test m[:AbatementCostsLin, :tc_totalcost] ≈ tc_compare_lin rtol=1e-2
 
-@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_co2 rtol=1e-2
-@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_ch4 rtol=1e-3
-@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_n2o rtol=1e-3
-@test m[:AbatementCostParameters, :zc_zerocostemissions] ≈ zc_compare_lin rtol=1e-3
+@test m[:AbatementCostParametersCO2, :zc_zerocostemissions] ≈ zc_compare_co2 rtol=1e-2
+@test m[:AbatementCostParametersCH4, :zc_zerocostemissions] ≈ zc_compare_ch4 rtol=1e-3
+@test m[:AbatementCostParametersN2O, :zc_zerocostemissions] ≈ zc_compare_n2o rtol=1e-3
+@test m[:AbatementCostParametersLin, :zc_zerocostemissions] ≈ zc_compare_lin rtol=1e-3

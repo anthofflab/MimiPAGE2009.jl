@@ -76,7 +76,7 @@ include("../utils/mctools.jl")
 
             v.zc_zerocostemissions[t,r] = (1+v.emit_UncertaintyinBAUEmissFactor[r]/100 * (p.y_year[t]-p.y_year_0)/(p.y_year[end]-p.y_year_0)) * p.bau_businessasusualemissions[t,r]
 
-            if isfirst(t)
+            if is_first(t)
                 v.cumcbe_cumulativereductionssincebaseyear[t,r] = 0.
             else
                 v.cumcbe_cumulativereductionssincebaseyear[t,r] = v.cumcbe_cumulativereductionssincebaseyear[t-1, r] + p.cbe_absoluteemissionreductions[t-1, r] * p.yagg[t-1]
@@ -117,7 +117,7 @@ end
 
 function addabatementcostparameters(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCostParameters$class")
-    abatementcostscomp = addcomponent(model, AbatementCostParameters, componentname)
+    abatementcostscomp = add_comp!(model, AbatementCostParameters, componentname)
 
     abatementcostscomp[:q0propmult_cutbacksatnegativecostinfinalyear] = .733333333333333334
     abatementcostscomp[:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear] = 1.2666666666666666
