@@ -58,8 +58,7 @@ documentation in the Mimi [User Guide](`http://anthofflab.berkeley.edu/Mimi.jl/s
 
 To run the stochastic version of Mimi-PAGE, which uses parameter
 distributions, see the `mcs.jl` file in the src folder and the documentation for
-Mimi Monte Carlo support [here](https://github.com/anthofflab/Mimi.jl/blob/master/docs/src/internals/montecarlo.md). The 
-simplest version of runningn the stochastic version would be carried out as follows:
+Mimi Monte Carlo support [here](https://github.com/anthofflab/Mimi.jl/blob/master/docs/src/internals/montecarlo.md). The simplest version of the stochastic can be implemented as follows:
 ```julia
 julia> include(mcs.jl)
 julia> do_monte_carlo_runs(1000) #1000 runs
