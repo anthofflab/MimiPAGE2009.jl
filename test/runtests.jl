@@ -49,5 +49,6 @@ include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
 include("test_mcs.jl") 
+include("contrib/test_taxeffect.jl")
 
 end
