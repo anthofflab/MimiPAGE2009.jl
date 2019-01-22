@@ -1,8 +1,7 @@
 using Documenter
 
 makedocs(
-	format = :html,
-	sitename = "mimi-page.jl",
+	sitename = "mimi-page-2009.jl",
 	pages = [
 		"Home" => "index.md",
 		"Getting started" => "gettingstarted.md",
@@ -12,9 +11,5 @@ makedocs(
 )
 
 deploydocs(
-    deps = nothing,
-    make = nothing,
-	target = "build",
-    repo = "github.com/anthofflab/mimi-page.jl.git",
-    julia = "0.6"
+    repo = "github.com/anthofflab/mimi-page-2009.jl.git"
 )
