@@ -26,7 +26,7 @@ julia> Pkg.add("Mimi")
 ```
 You only have to run this command once on your machine.
 
-Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles and Missings packages.
+Mimi-PAGE also requires the Query, Distributions, DataFrames, CSVFiles and Missings packages.
 
 For more information about the Mimi component framework, you can refer to the [Mimi](https://github.com/anthofflab/Mimi.jl) Github repository, which has a documentation and links to various models that are based on Mimi.
 
