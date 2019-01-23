@@ -16,6 +16,7 @@ script:
   - julia -e 'using Pkg; Pkg.add("Query")'
   - julia -e 'using Pkg; Pkg.add("DataFrames")'
   - julia -e 'using Pkg; Pkg.add("Missings")'
+  - julia -e 'using Pkg; Pkg.add("Distributions")'
   - julia --code-coverage=user test/runtests.jl
 after_success:
   # push coverage results to Codecov
