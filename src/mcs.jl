@@ -3,13 +3,12 @@ using Distributions
 using CSVFiles
 using DataFrames
 
-include("getpagefunction.jl")
 include("utils/mctools.jl")
 
 m = getpage() 
 run(m)
 
-mcs = @defmcs begin
+mcs = @defsim begin
         
     ############################################################################
     # Define random variables (RVs) 
@@ -192,7 +191,7 @@ mcs = @defmcs begin
         NonMarketDamages.rgdp_per_cap_NonMarketRemainGDP,
         Discontinuity.rgdp_per_cap_NonMarketRemainGDP)
 
-end #defmcs
+end #def
 
 #Reformat the RV results into the format used for testing
 function reformat_RV_outputs(samplesize::Int; outputpath::String = joinpath(@__DIR__, "../../output/"))         
@@ -242,10 +241,10 @@ function do_monte_carlo_runs(samplesize::Int)
         generate_trials!(mcs, samplesize, filename = joinpath(@__DIR__, "../output/trialdata.csv"))
 
         # set model
-        Mimi.set_model!(mcs, m)
+        Mimi.set_models!(mcs, m)
 
         # Run trials 1:samplesize, and save results to the indicated directory, one CSV file per RV
-        run_mcs(mcs, samplesize, output_dir = joinpath(@__DIR__, "../output/"))
+        run_sim(mcs, samplesize, output_dir = joinpath(@__DIR__, "../output/"))
 
         # reformat outputs for testing and analysis
         reformat_RV_outputs(samplesize)
