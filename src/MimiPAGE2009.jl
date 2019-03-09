@@ -1,3 +1,4 @@
+module MimiPAGE2009
 
 using Mimi
 
@@ -217,4 +218,6 @@ function getpage(policy::String="policy-a")
     initpage(m, policy)
 
     return m
+end
+
 end
