@@ -1,7 +1,7 @@
 using Documenter
 
 makedocs(
-	sitename = "mimi-page-2009.jl",
+	sitename = "MimiPAGE2009.jl",
 	pages = [
 		"Home" => "index.md",
 		"Getting started" => "gettingstarted.md",
@@ -11,5 +11,5 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/anthofflab/mimi-page-2009.jl.git"
+    repo = "github.com/anthofflab/MimiPAGE2009.jl.git"
 )

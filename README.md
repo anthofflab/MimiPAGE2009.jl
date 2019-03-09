@@ -1,13 +1,13 @@
-# Mimi-PAGE-2009.jl - a Julia implementation of the PAGE09 model
+# MimiPAGE2009.jl - a Julia implementation of the PAGE09 model
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](http://anthofflab.berkeley.edu/mimi-page-2009.jl/stable/)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](http://anthofflab.berkeley.edu/mimi-page-2009.jl/latest/)
-[![Build Status](https://travis-ci.org/anthofflab/mimi-page-2009.jl.svg?branch=master)](https://travis-ci.org/anthofflab/mimi-page-2009.jl)
-[![codecov](https://codecov.io/gh/anthofflab/mimi-page-2009.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/anthofflab/mimi-page-2009.jl)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/stable/)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/latest/)
+[![Build Status](https://travis-ci.org/anthofflab/MimiPAGE2009.jl.svg?branch=master)](https://travis-ci.org/anthofflab/MimiPAGE2009.jl)
+[![codecov](https://codecov.io/gh/anthofflab/MimiPAGE2009.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/anthofflab/MimiPAGE2009.jl)
 
 This is an implementation of the PAGE09 model in the Julia programming language. It was created from the equations in Hope (2011), and then compared against the original Excel version of PAGE09. Additional background information about the PAGE model can be found in Hope (2006).
 
-The documentation for Mimi-PAGE-2009.jl can be accessed [here](http://anthofflab.berkeley.edu/mimi-page-2009.jl/stable/).
+The documentation for MimiPAGE2009.jl can be accessed [here](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/stable/).
 
 ## References
 

@@ -4,6 +4,7 @@ uuid = "e25d4f70-4200-11e9-37f3-3b45f1cef54f"
 [deps]
 Mimi = "e4e893b0-ee5e-52ea-8111-44b3bdec128c"
 ExcelReaders = "c04bee98-12a5-510c-87df-2a230cb6e075"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

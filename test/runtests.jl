@@ -1,5 +1,6 @@
 using Test
 using Mimi
+using MimiPAGE2009
 
 function page_model()
     Mimi.reset_compdefs()
