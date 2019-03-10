@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp n2oemissions begin
     region=Index()
 

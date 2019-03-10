@@ -1,4 +1,4 @@
-using Mimi
+
 # using OptiMimi
 
 
@@ -59,13 +59,13 @@ function addtaxdrivengrowth(model::Model, class::Symbol)
     add_comp!(model, TaxDrivenGrowth, componentname, after=Symbol("AbatementCostParameters$class"))
 
     if class == :CO2
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model, "data/e0_baselineCO2emissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCO2emissions.csv"))
     elseif class == :CH4
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model, "data/e0_baselineCH4emissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCH4emissions.csv"))
     elseif class == :N2O
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
     elseif class == :Lin
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model,"data/e0_baselineLGemissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,"data/e0_baselineLGemissions.csv"))
     else
         error("Unknown class of abatement costs.")
     end
@@ -96,7 +96,7 @@ function getuniformtaxmodel()
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-    MimiPAGE2009.buildpage(m)
+    buildpage(m)
 
     add_comp!(m, UniformTaxDrivenGrowth, after=:GDP) # before all abatement costs parameters
     set_param!(m, :UniformTaxDrivenGrowth, :uniformtax, zeros(10))
@@ -115,7 +115,7 @@ function getuniformtaxmodel()
         connect_param!(m, Symbol("AbatementCosts$class"), :er_emissionsgrowth, taxgrowth, :er_emissionsgrowth)
     end
 
-    MimiPAGE2009.initpage(m)
+    initpage(m)
 
     return m
 end

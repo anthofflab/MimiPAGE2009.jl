@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp AbatementCosts begin
     region = Index()
 
@@ -56,32 +54,32 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
     abatementcostscomp = add_comp!(model, AbatementCosts, componentname)
 
     if class == :CO2
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model, "data/e0_baselineCO2emissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCO2emissions.csv"))
         if policy == "policy-a"
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model, "data/er_CO2emissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/er_CO2emissionsgrowth.csv"))
         else
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model, "data/$policy/er_CO2emissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/$policy/er_CO2emissionsgrowth.csv"))
         end
     elseif class == :CH4
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model, "data/e0_baselineCH4emissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCH4emissions.csv"))
         if policy == "policy-a"
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model, "data/er_CH4emissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/er_CH4emissionsgrowth.csv"))
         else
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model, "data/$policy/er_CH4emissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/$policy/er_CH4emissionsgrowth.csv"))
         end
     elseif class == :N2O
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
         if policy == "policy-a"
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model, "data/er_N2Oemissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/er_N2Oemissionsgrowth.csv"))
         else
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model, "data/$policy/er_N2Oemissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/$policy/er_N2Oemissionsgrowth.csv"))
         end
     elseif class == :Lin
-        MimiPAGE2009.setdistinctparameter(model, componentname, :e0_baselineemissions, MimiPAGE2009.readpagedata(model,"data/e0_baselineLGemissions.csv"))
+        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,"data/e0_baselineLGemissions.csv"))
         if policy == "policy-a"
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model,"data/er_LGemissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/er_LGemissionsgrowth.csv"))
         else
-            MimiPAGE2009.setdistinctparameter(model, componentname, :er_emissionsgrowth, MimiPAGE2009.readpagedata(model,"data/$policy/er_LGemissionsgrowth.csv"))
+            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/$policy/er_LGemissionsgrowth.csv"))
         end
     else
         error("Unknown class of abatement costs.")

@@ -14,12 +14,12 @@ end
 
 # Climate component
 temp = m[:ClimateTemperature, :rt_g_globaltemperature]
-temp_compare = MimiPAGE2009.readpagedata(m,"test/validationdata/policy-b/rt_g_globaltemperature.csv")
+temp_compare = readpagedata(m,"test/validationdata/policy-b/rt_g_globaltemperature.csv")
 @test temp ≈ temp_compare rtol=1e-4
 
 # Abatement Costs
 abatement = m[:TotalAbatementCosts, :tct_totalcosts]
-abatement_compare = MimiPAGE2009.readpagedata(m,"test/validationdata/policy-b/tct_totalcosts.csv")
+abatement_compare = readpagedata(m,"test/validationdata/policy-b/tct_totalcosts.csv")
 @test abatement ≈ abatement_compare rtol=1e-2
 
 te = m[:EquityWeighting, :te_totaleffect]

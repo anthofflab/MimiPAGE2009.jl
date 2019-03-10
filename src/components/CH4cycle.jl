@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp ch4cycle begin
     e_globalCH4emissions=Parameter(index=[time],unit="Mtonne/year")
     e_0globalCH4emissions=Parameter(unit="Mtonne/year", default=363.00000000000006)

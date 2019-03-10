@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp co2forcing begin
     c_CO2concentration=Parameter(index=[time],unit="ppbv")
     f0_CO2baseforcing=Parameter(unit="W/m2", default=1.735)

@@ -1,14 +1,12 @@
-using Mimi
+
 using DataFrames
 using Test
 
 m = page_model()
-include("../src/components/AbatementCostParameters.jl")
-include("../src/components/AbatementCosts.jl")
 
 for gas in [:CO2, :CH4, :N2O, :Lin]
-    abatementcostparameters = addabatementcostparameters(m, gas)
-    abatementcosts = addabatementcosts(m, gas)
+    abatementcostparameters = MimiPAGE2009.addabatementcostparameters(m, gas)
+    abatementcosts = MimiPAGE2009.addabatementcosts(m, gas)
 
     abatementcostparameters[:yagg] = readpagedata(m,"test/validationdata/yagg_periodspan.csv")
     abatementcostparameters[:cbe_absoluteemissionreductions] = abatementcosts[:cbe_absoluteemissionreductions]

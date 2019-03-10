@@ -1,12 +1,9 @@
 using Test
 using Mimi
-using MimiPAGE2009
+using MimiPAGE2009: readpagedata, buildpage, initpage, load_parameters, setdistinctparameter
 
 function page_model()
     Mimi.reset_compdefs()
-
-    include("../src/utils/load_parameters.jl")
-    include("../src/utils/mctools.jl")
     
     m = Model()
 
@@ -16,7 +13,7 @@ function page_model()
     return m
  end
 
-@testset "mimi-page.jl" begin
+@testset "MimiPAGE2009.jl" begin
 
 include("test_climatemodel.jl")
 include("test_AbatementCosts.jl")

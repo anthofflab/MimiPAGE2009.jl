@@ -2,10 +2,9 @@ using Test
 using CSVFiles
 using Missings
 using DataFrames
+using Distributions
 
 Mimi.reset_compdefs()
-
-include("../src/mcs.jl")
 
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
 samplesize = 1000 # normal MC sample size (takes ~5 seconds)
@@ -48,7 +47,6 @@ if regenerate
             println(",")
         end
     end 
-
 else
     println("Performing MC sample")
     # Perform a small MC run

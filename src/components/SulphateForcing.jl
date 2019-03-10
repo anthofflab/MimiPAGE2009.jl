@@ -1,4 +1,4 @@
-using Mimi
+
 
 @defcomp SulphateForcing begin
     region = Index()
