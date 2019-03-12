@@ -2,7 +2,7 @@ module MimiPAGE2009
 
 using Mimi, ExcelReaders
 
-export getpage, do_monte_carlo_runs
+export getpage
 
 include("utils/load_parameters.jl")
 include("utils/mctools.jl")

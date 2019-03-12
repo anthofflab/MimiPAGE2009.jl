@@ -18,8 +18,6 @@ script:
   - julia -e 'using Pkg; Pkg.add("Distributions")'
   - julia -e 'using Pkg; Pkg.add("Query")'
   - julia -e 'using Pkg; Pkg.add("Missings")'
-  - julia -e 'using Pkg; registry add https://github.com/mimiframework/MimiRegistry.git'
-  - julia -e 'using Pkg; Pkg.add("MimiPAGE2009")'
   - julia --code-coverage=user test/runtests.jl
 after_success:
   # push coverage results to Codecov

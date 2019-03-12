@@ -29,7 +29,7 @@ if regenerate
     println("Regenerating MC distribution information")
 
     # Perform a large MC run and extract statistics
-    do_monte_carlo_runs(100_000)
+    MimiPAGE2009.do_monte_carlo_runs(100_000)
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 
      for ii in 1:nrow(compare)
@@ -50,7 +50,7 @@ if regenerate
 else
     println("Performing MC sample")
     # Perform a small MC run
-    do_monte_carlo_runs(samplesize)
+    MimiPAGE2009.do_monte_carlo_runs(samplesize)
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 end
 

@@ -1,5 +1,7 @@
 using Test
 using Mimi
+using MimiPAGE2009
+
 using MimiPAGE2009: readpagedata, buildpage, initpage, load_parameters, setdistinctparameter
 
 function page_model()
