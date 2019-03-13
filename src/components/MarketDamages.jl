@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp MarketDamages begin
     region = Index()
     y_year = Parameter(index=[time], unit="year")

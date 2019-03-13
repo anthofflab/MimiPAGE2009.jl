@@ -9,6 +9,37 @@ This is an implementation of the PAGE09 model in the Julia programming language.
 
 The documentation for MimiPAGE2009.jl can be accessed [here](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/stable/).
 
+## Software Requirements
+You need to install [julia 1.1](https://julialang.org) or newer to run this model.
+
+## Preparing the Software Environment
+You first need to connect your julia installation with the central
+[Mimi registry](https://github.com/mimiframework/MimiRegistry) of Mimi models.
+This central registry is like a catalogue of models that use Mimi that is
+maintained by the Mimi project. To add this registry, run the following
+command at the julia package REPL:
+`
+```julia
+	pkg> registry add https://github.com/mimiframework/MimiRegistry.git
+```
+
+You only need to run this command once on a computer.
+
+The next step is to install MimiRICE2010.jl itself. You need to run the
+following command at the julia package REPL:
+
+```julia
+pkg> add MimiPAGE2009
+```
+You probably also want to install the Mimi package into your julia environment,
+so that you can use some of the tools in there:
+
+```julia
+pkg> add Mimi
+
+## Running the Model
+The model uses the Mimi framework and it is highly recommended to read the Mimi documentation first to understand the code structure. For starter code on running the model just once, see the code in the file `examples/main.jl`.
+
 ## References
 
 Hope, Chris. [The PAGE09 integrated assessment model: A technical description](https://www.jbs.cam.ac.uk/fileadmin/user_upload/research/workingpapers/wp1104.pdf). *Cambridge Judge Business School Working Paper*, 2011, 4(11). 

@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp ch4emissions begin
     region=Index()
 

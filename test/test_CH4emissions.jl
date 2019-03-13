@@ -1,4 +1,4 @@
-using Mimi
+
 
 m = page_model()
 include("../src/components/CH4emissions.jl")

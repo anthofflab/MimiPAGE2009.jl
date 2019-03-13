@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp co2cycle begin
     e_globalCO2emissions=Parameter(index=[time],unit="Mtonne/year")
     e0_globalCO2emissions=Parameter(unit="Mtonne/year", default=38191.0315797948)

@@ -1,4 +1,4 @@
-using Mimi
+
 
 @defcomp TotalAdaptationCosts begin
     region = Index()

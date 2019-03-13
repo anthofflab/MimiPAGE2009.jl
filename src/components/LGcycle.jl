@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp LGcycle begin
     e_globalLGemissions=Parameter(index=[time],unit="Mtonne/year")
     e_0globalLGemissions=Parameter(unit="Mtonne/year", default=557.2112715473608)

@@ -1,4 +1,4 @@
-using Mimi
+
 using Test
 
 include("../src/components/CO2cycle.jl")

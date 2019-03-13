@@ -1,11 +1,13 @@
 module MimiPAGE2009
 
-using Mimi
+using Mimi, ExcelReaders
 
 export getpage
 
 include("utils/load_parameters.jl")
 include("utils/mctools.jl")
+
+include("mcs.jl")
 
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")

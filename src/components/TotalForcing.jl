@@ -1,4 +1,4 @@
-using Mimi
+
 
 @defcomp TotalForcing begin
     f_CO2forcing = Parameter(index=[time], unit="W/m2")

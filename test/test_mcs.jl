@@ -2,10 +2,9 @@ using Test
 using CSVFiles
 using Missings
 using DataFrames
+using Distributions
 
 Mimi.reset_compdefs()
-
-include("../src/mcs.jl")
 
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
 samplesize = 1000 # normal MC sample size (takes ~5 seconds)
@@ -30,7 +29,7 @@ if regenerate
     println("Regenerating MC distribution information")
 
     # Perform a large MC run and extract statistics
-    do_monte_carlo_runs(100_000)
+    MimiPAGE2009.do_monte_carlo_runs(100_000)
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 
      for ii in 1:nrow(compare)
@@ -48,11 +47,10 @@ if regenerate
             println(",")
         end
     end 
-
 else
     println("Performing MC sample")
     # Perform a small MC run
-    do_monte_carlo_runs(samplesize)
+    MimiPAGE2009.do_monte_carlo_runs(samplesize)
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 end
 

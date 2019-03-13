@@ -2,11 +2,10 @@ using Test
 using Mimi
 using MimiPAGE2009
 
+using MimiPAGE2009: readpagedata, buildpage, initpage, load_parameters, setdistinctparameter
+
 function page_model()
     Mimi.reset_compdefs()
-
-    include("../src/utils/load_parameters.jl")
-    include("../src/utils/mctools.jl")
     
     m = Model()
 
@@ -16,7 +15,7 @@ function page_model()
     return m
  end
 
-@testset "mimi-page.jl" begin
+@testset "MimiPAGE2009.jl" begin
 
 include("test_climatemodel.jl")
 include("test_AbatementCosts.jl")
@@ -35,8 +34,8 @@ include("test_LGcycle.jl")
 include("test_LGemissions.jl")
 include("test_LGforcing.jl")
 include("test_loadparameters.jl")
-include("test_mainmodel.jl")
-include("test_mainmodel_policyb.jl")
+include("test_mainmodel.jl") 
+include("test_mainmodel_policyb.jl") 
 include("test_MarketDamages.jl")
 include("test_N2Ocycle.jl")
 include("test_N2Oemissions.jl")
@@ -49,7 +48,7 @@ include("test_SulphateForcing.jl")
 include("test_TotalAbatementCosts.jl")
 include("test_TotalAdaptationCosts.jl")
 include("test_TotalForcing.jl")
-include("test_mcs.jl") 
-include("contrib/test_taxeffect.jl")
+include("test_mcs.jl")
+include("contrib/test_taxeffect.jl") 
 
 end
