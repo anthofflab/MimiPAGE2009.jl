@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Getting started",
     "title": "Getting Started",
     "category": "section",
-    "text": "This guide will briefly explain how to install Julia and Mimi-PAGE."
+    "text": "This guide will briefly explain how to install Julia and MimiPAGE2009."
 },
 
 {
@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Getting started",
     "title": "Installing Julia",
     "category": "section",
-    "text": "Mimi-PAGE requires the programming language Julia, version 0.6 or later, to run. Download and install the current release from the Julia download page."
+    "text": "Mimi-PAGE requires the programming language Julia, version 1.1 or later, to run. Download and install the current release from the Julia download page."
 },
 
 {
@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Getting started",
     "title": "Installing Mimi",
     "category": "section",
-    "text": "The Mimi-PAGE model is written for the Mimi modeling framework, which needs to be installed as a standard Julia package. Once Julia is installed, start Julia and you should see a Julia command prompt. To install the Mimi package, issue the following command:julia> Pkg.add(\"Mimi\")You only have to run this command once on your machine.Mimi-PAGE also requires the Query, Distributions, DataFrames, CSVFiles and Missings packages.For more information about the Mimi component framework, you can refer to the Mimi Github repository, which has a documentation and links to various models that are based on Mimi."
+    "text": "The Mimi-PAGE model is written for the Mimi modeling framework, which needs to be installed as a standard Julia package.Once Julia is installed, start Julia and you should see a Julia command prompt. To install the Mimi package, issue the following command:julia> using Pkg\njulia> Pkg.add(\"Mimi\")Or, alternatively enter the (Pkg REPL-mode)[https://docs.julialang.org/en/v1/stdlib/Pkg/index.html] is from the Julia REPL using the key ].  After typing this, you may proceed with Pkg methods without using Pkg..  This would look like:julia> ]add MimiTo exit the Pkg REPL-mode, simply backspace once to re-enter the Julia REPL.You only have to run this (whichever method you choose) once on your machine.Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles, Query, and Missings packages.For more information about the Mimi component framework, you can refer to the Mimi Github repository, which has a documentation and links to various models that are based on Mimi."
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Getting started",
     "title": "Installing Mimi-PAGE",
     "category": "section",
-    "text": "Clone or download the Mimi-PAGE repository from the Mimi-PAGE Github website."
+    "text": "You first need to connect your julia installation with the central Mimi registry of Mimi models. This central registry is like a catalogue of models that use Mimi that is maintained by the Mimi project. To add this registry, run the following command at the julia package REPL: `pkg> registry add https://github.com/mimiframework/MimiRegistry.gitYou only need to run this command once on a computer.The next step is to install MimiRICE2010.jl itself. You need to run the following command at the julia package REPL:pkg> add MimiPAGE2009"
 },
 
 {
@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Getting started",
     "title": "Using Mimi-PAGE",
     "category": "section",
-    "text": "To run the model, run the main_model.jl file in the src folder. This runs the deterministic version of Mimi-PAGE with central parameter estimates. The getpage function used in that file create the initialized PAGE model. You can print the model, by typing m, which returns a list of components and each of their incoming parameters and outgoing variables. Results can be viewed by running m[:ComponentName, :VariableName] for the desired component and variable.To run the stochastic version of Mimi-PAGE, which uses parameter distributions, see the mcs.jl file in the src folder. The current Monte Carlo process outputs a selection of variables that are important for validation, but these can be modified by the user if desired. The user can also set the number of Monte Carlo runs in montecarlo.jl. For more information, see the Technical Guide."
+    "text": "To run the model, run the main.jl file in the examples folder. This runs the deterministic version of Mimi-PAGE with central parameter estimates. The getpage function used in that file create the initialized PAGE model. You can print the model, by typing m, which returns a list of components and each of their incoming parameters and outgoing variables. Results can be viewed by running m[:ComponentName, :VariableName]  for the desired component and variable. You may also explore the results graphically by running explore(m) to view all variables and parameters, or explore(m, :VariableName) for just one. For more details on the graphical interface of Mimi look to the documentation in the Mimi User Guide.To run the stochastic version of Mimi-PAGE, which uses parameter distributions, see the mcs.jl file in the src folder and the documentation for Mimi Monte Carlo support here. The simplest version of the stochastic can be implemented as follows:julia> MimiPAGE2009.do_monte_carlo_runs(1000) #1000 runsThe current Monte Carlo process outputs a selection of variables that are important for validation, but these can be modified by the user if desired. For more information, see the Technical Guide."
 },
 
 {
@@ -197,7 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Technical User Guide",
     "title": "Code format",
     "category": "section",
-    "text": "The code is written in Julia (v0.6 or greater).\nThe data are in CSV format for easy portability and manipulation.\nThe docs are in Markdown format for readability on github.Each component in the model (and the test files as well) has the same basic Mimi structure.Here we show the code for the CO2 Forcing component to provide an example of the Mimi structure with comments.# Imports the Mimi package. This is only done with certain components,\n# because once it is loaded in the model, it becomes redundant code.\nusing MimiNow we will define the component with its parameters (inputs) and variables (outputs).@defcomp co2forcing begin \n    # this defines the component, gives it a name, and starts the code chunk\n    # We can set default parameter values here or elsewhere in the code either \n    # as a external value or the output of a variable in another component\n\n    c_CO2concentration=Parameter(index=[time],unit=\"ppbv\")\n    f0_CO2baseforcing=Parameter(unit=\"W/m2\", default=1.735)\n    fslope_CO2forcingslope=Parameter(unit=\"W/m2\", default=5.5)\n    c0_baseCO2conc=Parameter(unit=\"ppbv\", default=395000.)\n    f_CO2forcing=Variable(index=[time],unit=\"W/m2\")\nendNext we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.  This function is contained within the @defcomp macro.function run_timestep(p, v, d, t)\n\n    #eq.13 in Hope 2006\n    v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)\nendIn some cases we also define a function that is used to add the component to the main model where we can set exogenous parameters imported from a CSV file.  In this case such a step is not needed.In the src/getpagefunction.jl file, you will find code that sends variables between components. For example,CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing.\n# In this case, the `c_CO2concentration` is constructed in the `CO2cycle` component\n# and then sent to the `CO2forcing` component.Once the model has run, you can access variable outputs with this syntax (note, that the model is referred to as m):m[:co2forcing, :f_CO2forcing]"
+    "text": "The code is written in Julia (v1.0 or greater).\nThe data are in CSV format for easy portability and manipulation.\nThe docs are in Markdown format for readability on github.Each component in the model (and the test files as well) has the same basic Mimi structure.Here we show the code for the CO2 Forcing component to provide an example of the Mimi structure with comments.# Imports the Mimi package. This is only done with certain components,\n# because once it is loaded in the model, it becomes redundant code.\nusing MimiNow we will define the component with its parameters (inputs) and variables (outputs).@defcomp co2forcing begin \n    # this defines the component, gives it a name, and starts the code chunk\n    # We can set default parameter values here or elsewhere in the code either \n    # as a external value or the output of a variable in another component\n\n    c_CO2concentration=Parameter(index=[time],unit=\"ppbv\")\n    f0_CO2baseforcing=Parameter(unit=\"W/m2\", default=1.735)\n    fslope_CO2forcingslope=Parameter(unit=\"W/m2\", default=5.5)\n    c0_baseCO2conc=Parameter(unit=\"ppbv\", default=395000.)\n    f_CO2forcing=Variable(index=[time],unit=\"W/m2\")\nendNext we will create the function that carries the components equations. These equations utilize the parameters and variables defined above.  This function is contained within the @defcomp macro.function run_timestep(p, v, d, t)\n\n    #eq.13 in Hope 2006\n    v.f_CO2forcing[t]=p.f0_CO2baseforcing+p.fslope_CO2forcingslope*log(p.c_CO2concentration[t]/p.c0_baseCO2conc)\nendIn some cases we also define a function that is used to add the component to the main model where we can set exogenous parameters imported from a CSV file.  In this case such a step is not needed.In the src/getpagefunction.jl file, you will find code that sends variables between components. For example,CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing.\n# In this case, the `c_CO2concentration` is constructed in the `CO2cycle` component\n# and then sent to the `CO2forcing` component.Once the model has run, you can access variable outputs with this syntax (note, that the model is referred to as m):m[:co2forcing, :f_CO2forcing]"
 },
 
 {
