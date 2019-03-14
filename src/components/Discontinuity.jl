@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp Discontinuity begin
 
   region = Index()

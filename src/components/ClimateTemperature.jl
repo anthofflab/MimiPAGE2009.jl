@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp ClimateTemperature begin
     region = Index()
 

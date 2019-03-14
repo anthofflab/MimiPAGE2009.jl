@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp GDP begin
 # GDP: Gross domestic product $M
 # GRW: GDP growth rate %/year

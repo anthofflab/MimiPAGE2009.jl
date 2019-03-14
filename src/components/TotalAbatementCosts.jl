@@ -1,4 +1,4 @@
-using Mimi
+
 
 @defcomp TotalAbatementCosts begin
     region = Index()

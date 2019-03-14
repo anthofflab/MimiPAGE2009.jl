@@ -1,5 +1,3 @@
-using Mimi
-
 # SF6 defined as "linear gas" or gas 4 in PAGE 2009; equations are the same as for gas 3 (CH4) in PAGE2002
 @defcomp LGemissions begin
     region=Index()

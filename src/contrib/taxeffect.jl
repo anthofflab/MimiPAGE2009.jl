@@ -1,7 +1,6 @@
-using Mimi
+
 # using OptiMimi
 
-include("../getpagefunction.jl")
 
 @defcomp TaxDrivenGrowth begin
     region = Index()

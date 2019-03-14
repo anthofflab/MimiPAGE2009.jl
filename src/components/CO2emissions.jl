@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp co2emissions begin
     region=Index()
 

@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp LGforcing begin
 
     c_LGconcentration=Parameter(index=[time],unit="ppbv")

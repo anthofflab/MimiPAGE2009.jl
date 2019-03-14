@@ -1,5 +1,5 @@
 using Test
-using Mimi
+
 
 m = page_model()
 include("../src/components/SulphateForcing.jl")

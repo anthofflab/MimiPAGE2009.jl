@@ -1,5 +1,3 @@
-using Mimi
-
 @defcomp ch4forcing begin
     c_N2Oconcentration=Parameter(index=[time],unit="ppbv")
     c_CH4concentration=Parameter(index=[time],unit="ppbv")
