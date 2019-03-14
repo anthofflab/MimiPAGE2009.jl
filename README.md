@@ -20,7 +20,7 @@ maintained by the Mimi project. To add this registry, run the following
 command at the julia package REPL:
 `
 ```julia
-	pkg> registry add https://github.com/mimiframework/MimiRegistry.git
+pkg> registry add https://github.com/mimiframework/MimiRegistry.git
 ```
 
 You only need to run this command once on a computer.
@@ -36,6 +36,7 @@ so that you can use some of the tools in there:
 
 ```julia
 pkg> add Mimi
+```
 
 ## Running the Model
 The model uses the Mimi framework and it is highly recommended to read the Mimi documentation first to understand the code structure. For starter code on running the model just once, see the code in the file `examples/main.jl`.

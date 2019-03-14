@@ -1,11 +1,11 @@
 # Getting Started
 
-This guide will briefly explain how to install Julia and Mimi-PAGE.
+This guide will briefly explain how to install Julia and MimiPAGE2009.
 
 ## Installing Julia
 
 Mimi-PAGE requires the programming
-language [Julia](http://julialang.org/), version 1.0 or later, to
+language [Julia](http://julialang.org/), version 1.1 or later, to
 run. Download and install the current release from the Julia [download page](http://julialang.org/downloads/).
 
 ### Julia Editor Support
@@ -20,6 +20,7 @@ There are various editors around that have Julia support:
 
 The Mimi-PAGE model is written for the Mimi modeling framework, which
 needs to be installed as a standard Julia package.
+
 Once Julia is installed, start Julia and you should see a Julia command prompt. To install the Mimi package, issue the following command:
 ```julia
 julia> using Pkg
@@ -41,11 +42,28 @@ For more information about the Mimi component framework, you can refer to the [M
 
 ## Installing Mimi-PAGE
 
-Clone or download the Mimi-PAGE repository from the Mimi-PAGE [Github website](https://github.com/anthofflab/MimiPAGE2009.jl).
+You first need to connect your julia installation with the central
+[Mimi registry](https://github.com/mimiframework/MimiRegistry) of Mimi models.
+This central registry is like a catalogue of models that use Mimi that is
+maintained by the Mimi project. To add this registry, run the following
+command at the julia package REPL:
+`
+```julia
+pkg> registry add https://github.com/mimiframework/MimiRegistry.git
+```
+
+You only need to run this command once on a computer.
+
+The next step is to install MimiRICE2010.jl itself. You need to run the
+following command at the julia package REPL:
+
+```julia
+pkg> add MimiPAGE2009
+```
 
 ## Using Mimi-PAGE
 
-To run the model, run the `main_model.jl` file in the src folder. This
+To run the model, run the `main.jl` file in the examples folder. This
 runs the deterministic version of Mimi-PAGE with central parameter
 estimates. The `getpage` function used in that file create the
 initialized PAGE model. You can print the model, by typing `m`, which
@@ -60,8 +78,7 @@ To run the stochastic version of Mimi-PAGE, which uses parameter
 distributions, see the `mcs.jl` file in the src folder and the documentation for
 Mimi Monte Carlo support [here](https://github.com/anthofflab/Mimi.jl/blob/master/docs/src/internals/montecarlo.md). The simplest version of the stochastic can be implemented as follows:
 ```julia
-julia> include(mcs.jl)
-julia> do_monte_carlo_runs(1000) #1000 runs
+julia> MimiPAGE2009.do_monte_carlo_runs(1000) #1000 runs
 ```
 The current Monte Carlo process outputs a selection of variables that are
 important for validation, but these can be modified by the user if
