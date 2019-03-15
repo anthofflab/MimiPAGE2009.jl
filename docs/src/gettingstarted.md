@@ -54,7 +54,7 @@ pkg> registry add https://github.com/mimiframework/MimiRegistry.git
 
 You only need to run this command once on a computer.
 
-The next step is to install MimiRICE2010.jl itself. You need to run the
+The next step is to install MimiPAGE2009.jl itself. You need to run the
 following command at the julia package REPL:
 
 ```julia
