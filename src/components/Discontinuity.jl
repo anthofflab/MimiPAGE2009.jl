@@ -12,7 +12,7 @@
 
   igdpeqdis_eqdiscimpact=Variable(index=[time,region], unit="%")
   rgdp_per_cap_NonMarketRemainGDP=Parameter(index=[time,region], unit="\$/person")
-  GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="unitless", default=27934.244777382406)
+  GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person", default=27934.244777382406)
   ipow_incomeexponent=Parameter(unit="unitless", default=-0.13333333333333333)
 
   igdp_realizeddiscimpact=Variable(index=[time,region], unit="%")

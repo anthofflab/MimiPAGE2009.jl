@@ -20,7 +20,7 @@
     ipow_MarketIncomeFxnExponent =Parameter(default=-0.13333333333333333)
     iben_MarketInitialBenefit=Parameter(default=.1333333333333)
     tcal_CalibrationTemp = Parameter(default=3.)
-    GDP_per_cap_focus_0_FocusRegionEU = Parameter(default=27934.244777382406)
+    GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person", default=27934.244777382406)
 
     #impact variables
     isatg_impactfxnsaturation = Parameter(unit="unitless")
