@@ -13,9 +13,10 @@ function getsim()
                 #set here as opposed to below within the blocks of RVs separated by component
                 #so that they are not set more than once.
 
-                save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages. GDP, SLRDamages
+                save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages, GDP, SLRDamages
+                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.) # components: MarketDamages, NonMarketDamages
 
-                wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, , SLRDamages, Discountinuity
+                wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, SLRDamages, Discountinuity
                 wincf_weightsfactor["OECD"] = TriangularDist(.4, 1.2, .8)
                 wincf_weightsfactor["USSR"] = TriangularDist(.2, .6, .4)
                 wincf_weightsfactor["China"] = TriangularDist(.4, 1.2, .8)
@@ -54,14 +55,12 @@ function getsim()
                 isat0_initialimpactfxnsaturation = TriangularDist(20, 50, 30) 
                 
                 # MarketDamages
-                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
                 iben_MarketInitialBenefit = TriangularDist(0, .3, .1)
                 W_MarketImpactsatCalibrationTemp = TriangularDist(.2, .8, .5)
                 pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
                 ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
 
                 # NonMarketDamages
-                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
                 iben_NonMarketInitialBenefit = TriangularDist(0, .2, .05)
                 w_NonImpactsatCalibrationTemp = TriangularDist(.1, 1, .5)
                 pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
