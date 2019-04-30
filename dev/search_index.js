@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Getting started",
     "title": "Installing Mimi-PAGE",
     "category": "section",
-    "text": "You first need to connect your julia installation with the central Mimi registry of Mimi models. This central registry is like a catalogue of models that use Mimi that is maintained by the Mimi project. To add this registry, run the following command at the julia package REPL: `pkg> registry add https://github.com/mimiframework/MimiRegistry.gitYou only need to run this command once on a computer.The next step is to install MimiRICE2010.jl itself. You need to run the following command at the julia package REPL:pkg> add MimiPAGE2009"
+    "text": "You first need to connect your julia installation with the central Mimi registry of Mimi models. This central registry is like a catalogue of models that use Mimi that is maintained by the Mimi project. To add this registry, run the following command at the julia package REPL: `pkg> registry add https://github.com/mimiframework/MimiRegistry.gitYou only need to run this command once on a computer.The next step is to install MimiPAGE2009.jl itself. You need to run the following command at the julia package REPL:pkg> add MimiPAGE2009"
 },
 
 {
