@@ -1,6 +1,6 @@
 module MimiPAGE2009
 
-using Mimi, ExcelReaders
+using Mimi
 
 export getpage
 
