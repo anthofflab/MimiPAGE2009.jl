@@ -247,7 +247,11 @@ function do_monte_carlo_runs(samplesize::Int; output_dir::String = joinpath(@__D
         set_models!(mcs, m)
 
         # Run trials 1:samplesize, and save results to the indicated directory, one CSV file per RV
+<<<<<<< HEAD
         run_sim(mcs, output_dir = output_dir)
+=======
+        run_sim(mcs, output_dir = joinpath(@__DIR__, "../output/"))
+>>>>>>> master
 
         # reformat outputs for testing and analysis
         MimiPAGE2009.reformat_RV_outputs(samplesize, output_path = output_dir)
