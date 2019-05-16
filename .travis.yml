@@ -10,15 +10,6 @@ branches:
   only:
   - master
   - /release-.*/
-script:
-  - julia -e 'using Pkg; Pkg.add("Mimi")'
-  - julia -e 'using Pkg; Pkg.add("CSVFiles")'
-  - julia -e 'using Pkg; Pkg.add("Query")'
-  - julia -e 'using Pkg; Pkg.add("DataFrames")'
-  - julia -e 'using Pkg; Pkg.add("Distributions")'
-  - julia -e 'using Pkg; Pkg.add("Query")'
-  - julia -e 'using Pkg; Pkg.add("Missings")'
-  - julia --code-coverage=user test/runtests.jl
 after_success:
   # push coverage results to Codecov
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
