@@ -13,9 +13,10 @@ function getsim()
                 #set here as opposed to below within the blocks of RVs separated by component
                 #so that they are not set more than once.
 
-                save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages. GDP, SLRDamages
+                save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages, GDP, SLRDamages
+                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.) # components: MarketDamages, NonMarketDamages
 
-                wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, , SLRDamages, Discountinuity
+                wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, SLRDamages, Discountinuity
                 wincf_weightsfactor["OECD"] = TriangularDist(.4, 1.2, .8)
                 wincf_weightsfactor["USSR"] = TriangularDist(.2, .6, .4)
                 wincf_weightsfactor["China"] = TriangularDist(.4, 1.2, .8)
@@ -54,14 +55,12 @@ function getsim()
                 isat0_initialimpactfxnsaturation = TriangularDist(20, 50, 30) 
                 
                 # MarketDamages
-                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
                 iben_MarketInitialBenefit = TriangularDist(0, .3, .1)
                 W_MarketImpactsatCalibrationTemp = TriangularDist(.2, .8, .5)
                 pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
                 ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
 
                 # NonMarketDamages
-                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.)
                 iben_NonMarketInitialBenefit = TriangularDist(0, .2, .05)
                 w_NonImpactsatCalibrationTemp = TriangularDist(.1, 1, .5)
                 pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
@@ -191,7 +190,7 @@ function getsim()
 end
 
 #Reformat the RV results into the format used for testing
-function reformat_RV_outputs(samplesize::Int; outputpath::String = joinpath(@__DIR__, "../../output/"))         
+function reformat_RV_outputs(samplesize::Int; output_path::String = joinpath(@__DIR__, "../output"))         
 
     #create vectors to hold results of Monte Carlo runs
     td=zeros(samplesize);
@@ -209,30 +208,30 @@ function reformat_RV_outputs(samplesize::Int; outputpath::String = joinpath(@__D
 
     #load raw data
     #no filter
-    td      = load_RV("td_totaldiscountedimpacts")
-    tpc     = load_RV("tpc_totalaggregatedcosts")
-    tac     = load_RV("tac_totaladaptationcosts")
-    te      = load_RV("te_totaleffect")
+    td      = load_RV("td_totaldiscountedimpacts"; output_path = output_path)
+    tpc     = load_RV("tpc_totalaggregatedcosts"; output_path = output_path)
+    tac     = load_RV("tac_totaladaptationcosts"; output_path = output_path)
+    te      = load_RV("te_totaleffect"; output_path = output_path)
 
     #time index
-    c_co2concentration = load_RV("c_CO2concentration")
-    ft      = load_RV("ft_totalforcing")
-    rt_g    = load_RV("rt_g_globaltemperature")
-    s       = load_RV("s_sealevel")
+    c_co2concentration = load_RV("c_CO2concentration"; output_path = output_path)
+    ft      = load_RV("ft_totalforcing"; output_path = output_path)
+    rt_g    = load_RV("rt_g_globaltemperature"; output_path = output_path)
+    s       = load_RV("s_sealevel"; output_path = output_path)
 
     #region index
-    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP")
-    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP")
-    rgdppercap_market       = load_RV("rgdp_per_cap_MarketRemainGDP")
-    rgdppercap_nonmarket    =load_RV("rgdp_per_cap_NonMarketRemainGDP")
-    rgdppercap_disc         = load_RV("rgdp_per_cap_NonMarketRemainGDP")
+    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP"; output_path = output_path)
+    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP"; output_path = output_path)
+    rgdppercap_market       = load_RV("rgdp_per_cap_MarketRemainGDP"; output_path = output_path)
+    rgdppercap_nonmarket    =load_RV("rgdp_per_cap_NonMarketRemainGDP"; output_path = output_path)
+    rgdppercap_disc         = load_RV("rgdp_per_cap_NonMarketRemainGDP"; output_path = output_path)
 
     #resave data
     df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
-    save(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv"),df)
+    save(joinpath(output_path, "mimipagemontecarlooutput.csv"),df)
 end
 
-function do_monte_carlo_runs(samplesize::Int)
+function do_monte_carlo_runs(samplesize::Int; output_dir::String = joinpath(@__DIR__, "../output"))
 
         # get simulation
         mcs = getsim()
@@ -242,14 +241,14 @@ function do_monte_carlo_runs(samplesize::Int)
         run(m)
 
         # Generate trial data for all RVs and save to a file
-        generate_trials!(mcs, samplesize, filename = joinpath(@__DIR__, "../output/trialdata.csv"))
+        generate_trials!(mcs, samplesize, filename = joinpath(output_dir, "trialdata.csv"))
 
         # set model
-        Mimi.set_models!(mcs, m)
+        set_models!(mcs, m)
 
         # Run trials 1:samplesize, and save results to the indicated directory, one CSV file per RV
-        run_sim(mcs, samplesize, output_dir = joinpath(@__DIR__, "../output/"))
+        run_sim(mcs, output_dir = output_dir)
 
         # reformat outputs for testing and analysis
-        reformat_RV_outputs(samplesize)
+        MimiPAGE2009.reformat_RV_outputs(samplesize, output_path = output_dir)
 end
