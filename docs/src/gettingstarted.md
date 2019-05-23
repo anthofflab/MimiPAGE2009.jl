@@ -36,7 +36,7 @@ To exit the Pkg REPL-mode, simply backspace once to re-enter the Julia REPL.
 
 You only have to run this (whichever method you choose) once on your machine.
 
-Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles, Query, and Missings packages.
+Mimi-PAGE also requires the Distributions, DataFrames, CSVFiles and Query packages.
 
 For more information about the Mimi component framework, you can refer to the [Mimi](https://github.com/anthofflab/Mimi.jl) Github repository, which has a documentation and links to various models that are based on Mimi.
 
