@@ -10,9 +10,9 @@ branches:
   only:
   - master
   - /release-.*/
+  - /v(\d+)\.(\d+)\.(\d+)/
 after_success:
-  # push coverage results to Codecov
-  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'using Pkg; cd(Pkg.dir("MimiDICE2013")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
 
 jobs:
   include:
