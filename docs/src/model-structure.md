@@ -83,7 +83,7 @@ The components in this portion of Mimi-PAGE include:
 ### Functional Components of Mimi-PAGE
 
 The following scripts assist in the actual running of Mimi-Page, and are further elaborated in the technical user guide.
-- getpagefunction.jl
+- MimiPAGE2009.jl
 - load_parameters.jl
 - main_model.jl
 - mctools.jl

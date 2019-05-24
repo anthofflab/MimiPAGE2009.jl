@@ -2,7 +2,7 @@ using Test
 
 Mimi.reset_compdefs()
 
-m = getpage()
+m = MimiPAGE2009.get_model()
 run(m)
 
 while m[:Discontinuity,:occurdis_occurrencedummy] != [0.,0.,0.,0.,0.,0.,0.,0.,0.,1.]

@@ -237,7 +237,7 @@ function do_monte_carlo_runs(samplesize::Int; output_dir::String = joinpath(@__D
         mcs = getsim()
         
         # get a model
-        m = getpage()
+        m = get_model()
         run(m)
 
         # Generate trial data for all RVs and save to a file

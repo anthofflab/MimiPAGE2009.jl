@@ -51,4 +51,6 @@ include("test_TotalForcing.jl")
 include("test_mcs.jl")
 include("contrib/test_taxeffect.jl") 
 
+include("test_standard_api.jl")
+
 end

@@ -65,7 +65,7 @@ pkg> add MimiPAGE2009
 
 To run the model, run the `main.jl` file in the examples folder. This
 runs the deterministic version of Mimi-PAGE with central parameter
-estimates. The `getpage` function used in that file create the
+estimates. The `MimiPAGE209.get_model` function used in that file create the
 initialized PAGE model. You can print the model, by typing `m`, which
 returns a list of components and each of their incoming parameters and
 outgoing variables. Results can be viewed by running `m[:ComponentName, :VariableName]` 

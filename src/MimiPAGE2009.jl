@@ -9,6 +9,8 @@ include("utils/mctools.jl")
 
 include("mcs.jl")
 
+include("compute_scc.jl")
+
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")
 include("components/CO2forcing.jl")
@@ -211,7 +213,7 @@ function initpage(m::Model, policy::String="policy-a")
     set_leftover_params!(m, p)
 end
 
-function getpage(policy::String="policy-a")
+function get_model(policy::String="policy-a")
     m = Model()
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
@@ -223,5 +225,7 @@ function getpage(policy::String="policy-a")
 
     return m
 end
+
+getpage = get_model
 
 end
