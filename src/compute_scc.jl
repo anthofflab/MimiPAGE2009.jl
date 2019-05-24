@@ -44,22 +44,16 @@ Computes the social cost of CO2 for an emissions pulse in `year` for the provide
 If no model is provided, the default model from MimiPAGE2009.get_model() is used.
 Discounting scheme can be specified by the `eta` and `prtp` parameters, which will update the values of emuc_utilitiyconvexity and ptp_timepreference in the model. 
 If no values are provided, the discount factors will be computed using the default PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333333333.
-
-TODO:
-- I did not allow for last_year keyword
-- Should we allow eta and prpt keywords, even though they are model parameters and I have to update the provided model with them? should I warn in this case?
-- note that prtp has to be specified as a percent (i.e. 3 instead of 0.03)
-- SCC values for later years are lower, because I think td_totaldiscountedimpacts are discounted back to today instead of the SCC year. Should we change this?
 """
 function compute_scc(m::Model = get_model(); year::Union{Int, Nothing} = nothing, eta::Union{Float64, Nothing} = nothing, prtp::Union{Float64, Nothing} = nothing)
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
     eta == nothing ? nothing : update_param!(m, :emuc_utilityconvexity, eta)
-    prtp == nothing ? nothing : update_param!(m, :ptp_timepreference, prtp)
+    prtp == nothing ? nothing : update_param!(m, :ptp_timepreference, prtp * 100.)
 
     mm = get_marginal_model(m, year=year)   # Returns a marginal model that has already been run
-    scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / 100000
+    scc = mm[:EquityWeighting, :td_totaldiscountedimpacts]
 
     return scc
 end
@@ -78,10 +72,10 @@ function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = noth
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
     eta == nothing ? nothing : update_param!(m, :emuc_utilityconvexity, eta)
-    prtp == nothing ? nothing : update_param!(m, :ptp_timepreference, prtp)
+    prtp == nothing ? nothing : update_param!(m, :ptp_timepreference, prtp * 100.)
 
     mm = get_marginal_model(m, year=year)   # Returns a marginal model that has already been run
-    scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / 100000
+    scc = mm[:EquityWeighting, :td_totaldiscountedimpacts]
 
     return (scc = scc, mm = mm)
 end
@@ -91,17 +85,14 @@ get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = nothing)
 
 Returns a Mimi MarginalModel where the provided m is the base model, and the marginal model has additional emissions of CO2 in year `year`.
 If no Model m is provided, the default model from MimiPAGE2009.get_model() is used as the base model.
-
-Notes:
-- the marginal model values haven't been divided by 10^5 to reflect the size of the pulse. this is true for FUND and DICE too at this point.
-- Returns a MarginalModel that has already been run, because of the need to run the base model before being able to calculate what the marginal emission rate needs to be in the marginal model.
-- This is how the IWG did the pulse and added marginal emissions. I'm not sure if there's a different example of doing this in PAGE that I should use instead.
+Note that the returned MarginalModel has already been run.
 """
 function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = nothing)
     year === nothing ? error("Must specify an emission year. Try `get_marginal_model(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot add marginal emissions in $year, year must be within the model's time index $page_years.") : nothing
 
-    mm = create_marginal_model(m)
+    pulse_size = 100000.
+    mm = create_marginal_model(m, pulse_size)
 
     add_comp!(mm.marginal, PAGE_marginal_emissions, :marginal_emissions; before = :co2emissions)
     connect_param!(mm.marginal, :co2emissions=>:er_CO2emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
@@ -116,7 +107,7 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
     e_co2_g = mm.base[:co2emissions, :e_globalCO2emissions]  
 
     # Calculate pulse 
-    ER_SCC = 100 * -100000 / (base_glob0_emissions * getperiodlength(year))
+    ER_SCC = 100 * -1 * pulse_size / (base_glob0_emissions * getperiodlength(year))
     pulse = er_co2_a - ER_SCC * (er_co2_a/100) * (base_glob0_emissions / e_co2_g[i])
     marginal_emissions_growth = copy(mm.base[:co2emissions, :er_CO2emissionsgrowth])
     marginal_emissions_growth[i, :] = pulse

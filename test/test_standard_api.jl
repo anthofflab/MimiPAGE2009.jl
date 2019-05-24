@@ -8,7 +8,7 @@ scc1 = MimiPAGE2009.compute_scc(year=2020)
 @test scc1 isa Float64
 
 # Test that a higher discount rate makes a lower scc value
-scc2 = MimiPAGE2009.compute_scc(year=2020, eta=0., prtp=3.)
+scc2 = MimiPAGE2009.compute_scc(year=2020, eta=0., prtp=0.03)
 @test scc2 < scc1   
 
 # Test with a modified model

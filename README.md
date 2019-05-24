@@ -78,7 +78,7 @@ There is an additional function for computing the SCC that also returns the Marg
 using Mimi
 using MimiPAGE2009
 
-result = MimiPAGE2009.compute_scc_mm(year=2030, eta=0, prtp=2.5)
+result = MimiPAGE2009.compute_scc_mm(year=2030, eta=0, prtp=0.025)
 
 result.scc  # returns the computed SCC value
 
