@@ -94,7 +94,7 @@ where we can set exogenous parameters imported from a CSV file.  In this case su
 a step is not needed.
 
 
-In the `src/getpagefunction.jl` file, you will find code that sends variables between components. For example,
+In the `src/MimiPAGE2009.jl` file, you will find code that sends variables between components. For example,
 
 ```
 CO2forcing[:c_CO2concentration] = CO2cycle[:c_CO2concentration] # incoming = outgoing.
