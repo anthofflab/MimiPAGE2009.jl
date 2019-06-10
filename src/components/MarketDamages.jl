@@ -31,7 +31,7 @@
     impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC")
 
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
-    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
+    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region], unit="\$/person")
     pow_MarketImpactExponent=Parameter(unit="", default=2.16666666666665)
 
     function run_timestep(p, v, d, t)

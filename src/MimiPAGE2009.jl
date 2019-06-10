@@ -38,6 +38,7 @@ include("components/AbatementCosts.jl")
 include("components/TotalAbatementCosts.jl")
 include("components/TotalAdaptationCosts.jl")
 include("components/Population.jl")
+include("components/TotalDamages.jl")
 include("components/EquityWeighting.jl")
 
 function buildpage(m::Model, policy::String="policy-a")
@@ -87,6 +88,9 @@ function buildpage(m::Model, policy::String="policy-a")
     marketdamages = addmarketdamages(m)
     nonmarketdamages = addnonmarketdamages(m)
     add_comp!(m, Discontinuity)
+
+    # Total damages component 
+    add_comp!(m, TotalDamages)
 
     #Equity weighting and Total Costs
     add_comp!(m, EquityWeighting)
@@ -192,6 +196,14 @@ function buildpage(m::Model, policy::String="policy-a")
     connect_param!(m, :Discontinuity => :rgdp_per_cap_NonMarketRemainGDP, :NonMarketDamages => :rgdp_per_cap_NonMarketRemainGDP)
     connect_param!(m, :Discontinuity => :rcons_per_cap_NonMarketRemainConsumption, :NonMarketDamages => :rcons_per_cap_NonMarketRemainConsumption)
     connect_param!(m, :Discontinuity => :isatg_saturationmodification, :GDP => :isatg_impactfxnsaturation)
+
+    connect_param!(m, :TotalDamages => :population, :Population => :pop_population)
+    connect_param!(m, :TotalDamages => :abatement_costs_percap, :TotalAbatementCosts => :tct_per_cap_totalcostspercap) 
+    connect_param!(m, :TotalDamages => :adaptation_costs_percap, :TotalAdaptationCosts => :act_percap_adaptationcosts)
+    connect_param!(m, :TotalDamages => :slr_damages_percap, :SLRDamages => :isat_per_cap_SLRImpactperCapinclSaturationandAdaptation)
+    connect_param!(m, :TotalDamages => :market_damages_percap, :MarketDamages => :isat_per_cap_ImpactperCapinclSaturationandAdaptation)
+    connect_param!(m, :TotalDamages => :non_market_damages_percap, :NonMarketDamages => :isat_per_cap_ImpactperCapinclSaturationandAdaptation)
+    connect_param!(m, :TotalDamages => :discontinuity_damages_percap, :Discontinuity => :isat_per_cap_DiscImpactperCapinclSaturation)
 
     connect_param!(m, :EquityWeighting => :pop_population, :Population => :pop_population)
     connect_param!(m, :EquityWeighting => :tct_percap_totalcosts_total, :TotalAbatementCosts => :tct_per_cap_totalcostspercap)
