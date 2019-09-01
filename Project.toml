@@ -12,6 +12,3 @@ Query = "1a8c2f83-1ff3-5112-b086-8aa67b057ba1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[compat]
-CSVFiles = "0.16.0"
