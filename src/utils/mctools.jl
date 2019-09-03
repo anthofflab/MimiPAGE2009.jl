@@ -22,12 +22,12 @@ end
 """
 Load raw RV output into reformat_RV_outputs 
 """
-function load_RV(name::String; 
+function load_RV(filename::String, RVname::String; 
                     output_path::String = joinpath(@__DIR__, "../../output/"), 
                     time_filter::Int = 2200,
                     region_filter::String = "LatAmerica")
     
-    df = DataFrame(load(joinpath(output_path, "$name.csv")))
+    df = DataFrame(load(joinpath(output_path, "$filename.csv")))
     cols = names(df)
     
     #apply filters if necessary, currently the function supports a time filter 
@@ -48,11 +48,11 @@ function load_RV(name::String;
                 end) |> DataFrame
         end
 
-        return filtered_df[Symbol(name)]
+        return filtered_df[Symbol(RVname)]
           
     #no filters applied
     else
-        return df[Symbol(name)]
+        return df[Symbol(RVname)]
     end
 
 end

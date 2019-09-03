@@ -208,23 +208,22 @@ function reformat_RV_outputs(samplesize::Int; output_path::String = joinpath(@__
 
     #load raw data
     #no filter
-    td      = load_RV("td_totaldiscountedimpacts"; output_path = output_path)
-    tpc     = load_RV("tpc_totalaggregatedcosts"; output_path = output_path)
-    tac     = load_RV("tac_totaladaptationcosts"; output_path = output_path)
-    te      = load_RV("te_totaleffect"; output_path = output_path)
+    td      = load_RV("EquityWeighting_td_totaldiscountedimpacts", "td_totaldiscountedimpacts"; output_path = output_path)
+    tpc     = load_RV("EquityWeighting_tpc_totalaggregatedcosts", "tpc_totalaggregatedcosts"; output_path = output_path)
+    tac     = load_RV("EquityWeighting_tac_totaladaptationcosts", "tac_totaladaptationcosts"; output_path = output_path)
+    te      = load_RV("EquityWeighting_te_totaleffect", "te_totaleffect"; output_path = output_path)
 
     #time index
-    c_co2concentration = load_RV("c_CO2concentration"; output_path = output_path)
-    ft      = load_RV("ft_totalforcing"; output_path = output_path)
-    rt_g    = load_RV("rt_g_globaltemperature"; output_path = output_path)
-    s       = load_RV("s_sealevel"; output_path = output_path)
+    c_co2concentration = load_RV("co2cycle_c_CO2concentration", "c_CO2concentration"; output_path = output_path)
+    ft      = load_RV("TotalForcing_ft_totalforcing", "ft_totalforcing"; output_path = output_path)
+    rt_g    = load_RV("ClimateTemperature_rt_g_globaltemperature", "rt_g_globaltemperature"; output_path = output_path)
+    s       = load_RV("SeaLevelRise_s_sealevel", "s_sealevel"; output_path = output_path)
 
     #region index
-    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP"; output_path = output_path)
-    rgdppercap_slr          = load_RV("rgdp_per_cap_SLRRemainGDP"; output_path = output_path)
-    rgdppercap_market       = load_RV("rgdp_per_cap_MarketRemainGDP"; output_path = output_path)
-    rgdppercap_nonmarket    =load_RV("rgdp_per_cap_NonMarketRemainGDP"; output_path = output_path)
-    rgdppercap_disc         = load_RV("rgdp_per_cap_NonMarketRemainGDP"; output_path = output_path)
+    rgdppercap_slr          = load_RV("SLRDamages_rgdp_per_cap_SLRRemainGDP", "rgdp_per_cap_SLRRemainGDP"; output_path = output_path)
+    rgdppercap_market       = load_RV("MarketDamages_rgdp_per_cap_MarketRemainGDP", "rgdp_per_cap_MarketRemainGDP"; output_path = output_path)
+    rgdppercap_nonmarket    =load_RV("NonMarketDamages_rgdp_per_cap_NonMarketRemainGDP", "rgdp_per_cap_NonMarketRemainGDP"; output_path = output_path)
+    rgdppercap_disc         = load_RV("NonMarketDamages_rgdp_per_cap_NonMarketRemainGDP", "rgdp_per_cap_NonMarketRemainGDP"; output_path = output_path)
 
     #resave data
     df=DataFrame(td=td,tpc=tpc,tac=tac,te=te,c_co2concentration=c_co2concentration,ft=ft,rt_g=rt_g,sealevel=s,rgdppercap_slr=rgdppercap_slr,rgdppercap_market=rgdppercap_market,rgdppercap_nonmarket=rgdppercap_nonmarket,rgdppercap_di=rgdppercap_disc)
