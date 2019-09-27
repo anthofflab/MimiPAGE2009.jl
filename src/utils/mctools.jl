@@ -48,11 +48,11 @@ function load_RV(filename::String, RVname::String;
                 end) |> DataFrame
         end
 
-        return filtered_df[Symbol(RVname)]
+        return filtered_df[!, Symbol(RVname)]
           
     #no filters applied
     else
-        return df[Symbol(RVname)]
+        return df[!, Symbol(RVname)]
     end
 
 end
