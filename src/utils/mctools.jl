@@ -6,16 +6,15 @@ and connect parameter `name` within `component` to this distinct global paramete
 """
 function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     globalname = Symbol(string(component, '_', name))
+    # @info "setdistinctparameter: globalname=$globalname"
 
     param_dims = Mimi.parameter_dimensions(m, component, name)    
 
     Mimi.set_external_param!(m, globalname, value; param_dims = param_dims)
     
-    #connect_param!(m, component, name, globalname) # BUG: Cannot use this, because `checklabels` misuses globalname.  Instead, doing the below.
-    Mimi.disconnect_param!(m.md, component, name)
-    x = Mimi.ExternalParameterConnection(component, name, globalname)
-    push!(m.md.external_param_conns, x)
-
+    # Added keywd arg to bypass checking labels
+    connect_param!(m.md, component, name, globalname; check_labels=false)
+    
     nothing
 end
 
