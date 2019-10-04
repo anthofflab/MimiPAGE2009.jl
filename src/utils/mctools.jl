@@ -13,7 +13,7 @@ function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     Mimi.set_external_param!(m, globalname, value; param_dims = param_dims)
     
     # Added keywd arg to bypass checking labels
-    connect_param!(m.md, component, name, globalname; check_labels=false)
+    connect_param!(m.md, component, name, globalname)
     
     nothing
 end
