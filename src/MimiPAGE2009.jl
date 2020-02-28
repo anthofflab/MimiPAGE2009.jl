@@ -89,7 +89,7 @@ function buildpage(m::Model, policy::String="policy-a")
     nonmarketdamages = addnonmarketdamages(m)
     add_comp!(m, Discontinuity)
 
-    # Total damages component 
+    # Total costs component 
     add_comp!(m, TotalCosts)
 
     #Equity weighting and Total Costs
