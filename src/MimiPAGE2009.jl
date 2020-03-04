@@ -64,7 +64,7 @@ function buildpage(m::Model, policy::String="policy-a")
     population = addpopulation(m)
     add_comp!(m, GDP)
 
-    #Abatement Costs
+    #Abatement Costs - TODO Mimiv1 work on these add parameter helper functions
     abatementcostparameters_CO2 = addabatementcostparameters(m, :CO2, policy)
     abatementcostparameters_CH4 = addabatementcostparameters(m, :CH4, policy)
     abatementcostparameters_N2O = addabatementcostparameters(m, :N2O, policy)
