@@ -17,9 +17,9 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Query = "0.12"
 julia = "1"
 Mimi = "0.10"
-CSVFiles = "0.16.0"
-DataFrames = "0.19.1"
-Distributions = "0.20, 0.21"
+CSVFiles = "0.16, 1"
+DataFrames = "0.19.1, 0.20"
+Distributions = "0.20, 0.21, 0.22"
 
 [targets]
 test = ["Test"]
