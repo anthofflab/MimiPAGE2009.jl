@@ -223,9 +223,7 @@ function initpage(m::Model, policy::String="policy-a")
     p = load_parameters(m, policy)
     p["y_year_0"] = 2008.
     p["y_year"] = Mimi.dim_keys(m.md, :time)
-    for (name, value) in p
-        set_param!(m, name, value)
-    end
+    set_leftover_params!(m, p)
 end
 
 function get_model(policy::String="policy-a")

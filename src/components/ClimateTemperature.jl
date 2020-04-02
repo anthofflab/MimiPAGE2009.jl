@@ -2,7 +2,7 @@
     region = Index()
 
     # Basic parameters
-    area = Parameter(index=[region], unit="km2")
+    area = Parameter(index=[region], unit="km^2")
     y_year_0 = Parameter(unit="year")
     y_year = Parameter(index=[time], unit="year")
 

@@ -17,7 +17,7 @@
     impmax_maxSLRforadaptpolicySLR = Parameter(index=[region], unit= "m") 
 
     save_savingsrate = Parameter(unit= "%", default=15.00) #pp33 PAGE09 documentation, "savings rate".
-    wincf_weightsfactor =Parameter(index=[region], unit="")
+    wincf_weightsfactor =Parameter(index=[region], unit="unitless")
     W_SatCalibrationSLR =Parameter(default=1.0) #pp33 PAGE09 documentation, "Sea level impact at calibration sea level rise"
     ipow_SLRIncomeFxnExponent =Parameter(default=-0.30)
     pow_SLRImpactFxnExponent=Parameter(default=0.7333333333333334)
@@ -91,10 +91,7 @@ end
 # readpagedata, which takes model as an input. These cannot be set using 
 # the default keyword arg for now.
 function addslrdamages(model::Model)
-    SLRDamagescomp = add_comp!(model, SLRDamages)
+    add_comp!(model, SLRDamages)
 
-    SLRDamagescomp[:wincf_weightsfactor] = readpagedata(model, "data/wincf_weightsfactor.csv")
-    SLRDamagescomp[:impmax_maxSLRforadaptpolicySLR] = readpagedata(model, "data/impmax_sealevel.csv")
-
-    return SLRDamagescomp
+    set_param!(model, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, readpagedata(model, "data/impmax_sealevel.csv"))
 end
