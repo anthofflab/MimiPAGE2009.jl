@@ -4,7 +4,7 @@ using MimiPAGE2009
 
 using MimiPAGE2009: readpagedata, buildpage, initpage, load_parameters, setdistinctparameter
 
-function page_model()   
+function test_page_model()   
     m = Model()
 
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])

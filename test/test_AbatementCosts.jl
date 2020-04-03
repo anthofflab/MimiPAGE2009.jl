@@ -2,7 +2,7 @@
 using DataFrames
 using Test
 
-m = page_model()
+m = test_page_model()
 
 for gas in [:CO2, :CH4, :N2O, :Lin]
     MimiPAGE2009.addabatementcostparameters(m, gas)

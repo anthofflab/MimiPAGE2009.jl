@@ -1,7 +1,7 @@
 using Test
 
 
-m = m = page_model()
+m = m = test_page_model()
 include("../src/components/TotalForcing.jl")
 
 totalforcing = add_comp!(m, TotalForcing)

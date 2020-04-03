@@ -1,6 +1,6 @@
+using Test
 
-
-m = page_model()
+m = test_page_model()
 include("../src/components/CH4emissions.jl")
 
 add_comp!(m, ch4emissions)

@@ -1,7 +1,7 @@
 
 using Test
 
-m = page_model()
+m = test_page_model()
 include("../src/components/N2Ocycle.jl")
 
 add_comp!(m, n2ocycle)

@@ -29,8 +29,10 @@ end
 # readpagedata, which takes model as an input. These cannot be set using 
 # the default keyword arg for now.
 function addpopulation(model::Model)
-    add_comp!(model, Population)
+    populationcomp = add_comp!(model, Population)
 
-    set_param!(model, :Population, :popgrw_populationgrowth, readpagedata(model, "data/popgrw_populationgrowth.csv"))
-    set_param!(model, :Population, :pop0_initpopulation, readpagedata(model, "data/pop0_initpopulation.csv"))
+    populationcomp[:popgrw_populationgrowth] = readpagedata(model, "data/popgrw_populationgrowth.csv")
+    populationcomp[:pop0_initpopulation] = readpagedata(model, "data/pop0_initpopulation.csv")
+    
+    return populationcomp
 end
