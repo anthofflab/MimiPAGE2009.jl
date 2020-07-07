@@ -23,7 +23,7 @@ mm[:ClimateTemperature, :rt_realizedtemperature]
 
 # Test compute_scc_mm
 result = MimiPAGE2009.compute_scc_mm(year=2050)
-@test result.scc < scc1
+@test result.scc > scc1
 @test result.mm isa Mimi.MarginalModel
 
 # Test Monte Carlo SCC support
