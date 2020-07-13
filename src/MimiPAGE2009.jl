@@ -2,6 +2,8 @@ module MimiPAGE2009
 
 using Mimi
 
+import Random
+
 export getpage
 
 include("utils/load_parameters.jl")
