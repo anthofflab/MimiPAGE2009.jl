@@ -108,7 +108,7 @@ function compute_scc(
         simdef = getsim()
         seed !== nothing ? Random.seed!(seed) : nothing
         si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
-        scc = si[:EquityWeighting, :td_totaldiscountedimpacts].td_totaldiscountedimpacts
+        scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts
     end
 
     return scc
