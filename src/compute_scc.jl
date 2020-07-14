@@ -162,9 +162,9 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
     
     mm = create_marginal_model(m, pulse_size)
 
-    add_comp!(mm.marginal, PAGE_marginal_emissions, :marginal_emissions; before = :co2emissions)
-    connect_param!(mm.marginal, :co2emissions=>:er_CO2emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
-    connect_param!(mm.marginal, :AbatementCostsCO2=>:er_emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
+    add_comp!(mm.modified, PAGE_marginal_emissions, :marginal_emissions; before = :co2emissions)
+    connect_param!(mm.modified, :co2emissions=>:er_CO2emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
+    connect_param!(mm.modified, :AbatementCostsCO2=>:er_emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
 
     i = getpageindexfromyear(year) 
 
@@ -181,8 +181,8 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
     marginal_emissions_growth[i, :] = pulse
 
     # Marginal emissions model
-    set_param!(mm.marginal, :marginal_emissions_growth, marginal_emissions_growth)
-    run(mm.marginal)
+    set_param!(mm.modified, :marginal_emissions_growth, marginal_emissions_growth)
+    run(mm.modified)
 
     return mm
 end
