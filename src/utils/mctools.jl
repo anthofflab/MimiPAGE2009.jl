@@ -22,9 +22,9 @@ function load_RV(filename::String, RVname::String;
     
     #apply filters if necessary, currently the function supports a time filter 
     #of a single time value and a region filter of a single region
-    if in(:time, cols)
+    if in("time", cols)
 
-        if in(:region, cols) 
+        if in("region", cols) 
             filtered_df = df |> @query(i, begin
                 @where i.time == time_filter
                 @where i.region == region_filter
