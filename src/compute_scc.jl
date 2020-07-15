@@ -79,9 +79,22 @@ function compute_scc(
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    eta == nothing ? nothing : update_param!(m, :emuc_utilityconvexity, eta)
-    prtp == nothing ? nothing : update_param!(m, :ptp_timepreference, prtp * 100.)
+    if eta != nothing
+        try
+            set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :emuc_utilityconvexity, eta)   # or update_param! if it has been set
+        end
+    end
 
+    if prtp != nothing
+        try
+            set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
+        end
+    end
+    
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
 
     if n===nothing
@@ -95,7 +108,7 @@ function compute_scc(
         simdef = getsim()
         seed !== nothing ? Random.seed!(seed) : nothing
         si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
-        scc = si[:EquityWeighting, :td_totaldiscountedimpacts].td_totaldiscountedimpacts
+        scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts
     end
 
     return scc
@@ -114,8 +127,21 @@ function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = noth
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    eta == nothing ? nothing : update_param!(m, :emuc_utilityconvexity, eta)
-    prtp == nothing ? nothing : update_param!(m, :ptp_timepreference, prtp * 100.)
+    if eta != nothing
+        try
+            set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :emuc_utilityconvexity, eta)   # or update_param! if it has been set
+        end
+    end
+
+    if prtp != nothing
+        try
+            set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
+        end
+    end
 
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
     scc = mm[:EquityWeighting, :td_totaldiscountedimpacts]
@@ -136,9 +162,9 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
     
     mm = create_marginal_model(m, pulse_size)
 
-    add_comp!(mm.marginal, PAGE_marginal_emissions, :marginal_emissions; before = :co2emissions)
-    connect_param!(mm.marginal, :co2emissions=>:er_CO2emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
-    connect_param!(mm.marginal, :AbatementCostsCO2=>:er_emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
+    add_comp!(mm.modified, PAGE_marginal_emissions, :marginal_emissions; before = :co2emissions)
+    connect_param!(mm.modified, :co2emissions=>:er_CO2emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
+    connect_param!(mm.modified, :AbatementCostsCO2=>:er_emissionsgrowth, :marginal_emissions=>:er_CO2emissionsgrowth)
 
     i = getpageindexfromyear(year) 
 
@@ -155,8 +181,8 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
     marginal_emissions_growth[i, :] = pulse
 
     # Marginal emissions model
-    update_param!(mm.marginal, :marginal_emissions_growth, marginal_emissions_growth)
-    run(mm.marginal)
+    set_param!(mm.modified, :marginal_emissions_growth, marginal_emissions_growth)
+    run(mm.modified)
 
     return mm
 end

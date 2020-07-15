@@ -1,7 +1,7 @@
 
 using Test
 
-m = page_model()
+m = test_page_model()
 include("../src/components/CH4forcing.jl")
 
 add_comp!(m, ch4forcing, :ch4forcing)

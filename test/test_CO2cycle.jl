@@ -1,6 +1,7 @@
 
 using Test
 
+m = test_page_model()
 include("../src/components/CO2cycle.jl")
 
 add_comp!(m, co2cycle)
@@ -9,9 +10,10 @@ set_param!(m, :co2cycle, :e_globalCO2emissions, readpagedata(m, "test/validation
 set_param!(m, :co2cycle, :y_year,[2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.])#real values
 set_param!(m, :co2cycle, :y_year_0,2008.)#real value
 set_param!(m, :co2cycle, :rt_g_globaltemperature, readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv"))
+
 p=load_parameters(m)
-set_leftover_params!(m,p) #important for setting left over component values
-##running Model
+set_leftover_params!(m,p) 
+
 run(m)
 
 pop=m[:co2cycle,  :c_CO2concentration]

@@ -2,22 +2,27 @@
 using DataFrames
 using Test
 
-m = page_model()
+m = test_page_model()
 
 for gas in [:CO2, :CH4, :N2O, :Lin]
-    abatementcostparameters = MimiPAGE2009.addabatementcostparameters(m, gas)
-    abatementcosts = MimiPAGE2009.addabatementcosts(m, gas)
+    MimiPAGE2009.addabatementcostparameters(m, gas)
+    MimiPAGE2009.addabatementcosts(m, gas)
 
-    abatementcostparameters[:yagg] = readpagedata(m,"test/validationdata/yagg_periodspan.csv")
-    abatementcostparameters[:cbe_absoluteemissionreductions] = abatementcosts[:cbe_absoluteemissionreductions]
+    comp_name1 = Symbol("AbatementCostParameters$gas")
+    comp_name2 = Symbol("AbatementCosts$gas")
+
+    connect_param!(m, comp_name1 => :cbe_absoluteemissionreductions, comp_name2 => :cbe_absoluteemissionreductions)
         
-    abatementcosts[:zc_zerocostemissions] = abatementcostparameters[:zc_zerocostemissions]
-    abatementcosts[:q0_absolutecutbacksatnegativecost] = abatementcostparameters[:q0_absolutecutbacksatnegativecost]
-    abatementcosts[:blo] = abatementcostparameters[:blo]
-    abatementcosts[:alo] = abatementcostparameters[:alo]
-    abatementcosts[:bhi] = abatementcostparameters[:bhi]
-    abatementcosts[:ahi] = abatementcostparameters[:ahi]
+    connect_param!(m, comp_name2 => :zc_zerocostemissions, comp_name1 => :zc_zerocostemissions)
+    connect_param!(m, comp_name2 => :q0_absolutecutbacksatnegativecost, comp_name1 => :q0_absolutecutbacksatnegativecost)
+    connect_param!(m, comp_name2 => :blo, comp_name1 => :blo)
+    connect_param!(m, comp_name2 => :alo, comp_name1 => :alo)
+    connect_param!(m, comp_name2 => :bhi, comp_name1 => :bhi)
+    connect_param!(m, comp_name2 => :ahi, comp_name1 => :ahi)
+
 end
+
+set_param!(m, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.

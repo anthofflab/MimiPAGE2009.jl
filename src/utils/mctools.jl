@@ -6,16 +6,7 @@ and connect parameter `name` within `component` to this distinct global paramete
 """
 function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
     globalname = Symbol(string(component, '_', name))
-    # @info "setdistinctparameter: globalname=$globalname"
-
-    param_dims = Mimi.parameter_dimensions(m, component, name)    
-
-    Mimi.set_external_param!(m, globalname, value; param_dims = param_dims)
-    
-    # Added keywd arg to bypass checking labels
-    connect_param!(m.md, component, name, globalname)
-    
-    nothing
+    set_param!(m, component, name, globalname, value)
 end
 
 """
@@ -31,9 +22,9 @@ function load_RV(filename::String, RVname::String;
     
     #apply filters if necessary, currently the function supports a time filter 
     #of a single time value and a region filter of a single region
-    if in(:time, cols)
+    if in("time", cols)
 
-        if in(:region, cols) 
+        if in("region", cols) 
             filtered_df = df |> @query(i, begin
                 @where i.time == time_filter
                 @where i.region == region_filter
