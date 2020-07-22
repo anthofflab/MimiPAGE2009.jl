@@ -1,7 +1,7 @@
 
 using Test
 
-m = page_model()
+m = test_page_model()
 include("../src/components/CO2forcing.jl")
 
 add_comp!(m, co2forcing)

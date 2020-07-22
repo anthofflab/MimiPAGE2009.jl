@@ -3,8 +3,6 @@ using CSVFiles
 using DataFrames
 using Distributions
 
-Mimi.reset_compdefs()
-
 regenerate = false # do a large MC run, to regenerate information needed for std. errors
 samplesize = 1000 # normal MC sample size (takes ~5 seconds)
 confidence = 2.576 # 99% CI by default; use 1.96 to apply a 95% CI, but expect more spurious errors
@@ -59,7 +57,7 @@ for ii in 1:nrow(compare)
     transform = information[name][:transform]
     distribution = Normal(information[name][:mu], information[name][:sigma])
     for qval in [.05, .10, .25, .50, .75, .90, .95]
-        estimated = transform(quantile(collect(Missings.skipmissing(df[name])), qval)) # perform transform *after* quantile, so captures effect of all values
+        estimated = transform(quantile(collect(Missings.skipmissing(df[!, name])), qval)) # perform transform *after* quantile, so captures effect of all values
         stderr = sqrt(qval * (1 - qval) / (samplesize * pdf(distribution, estimated)^2))
 
         expected = transform(compare[ii, Symbol("perc_$(trunc(Int, qval * 100))")])

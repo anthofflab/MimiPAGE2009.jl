@@ -2,23 +2,17 @@
 using DataFrames
 using Test
 
-m = page_model()
+m = test_page_model()
 include("../src/components/AdaptationCosts.jl")
 
 adaptationcosts_noneconomic = MimiPAGE2009.addadaptationcosts_noneconomic(m)
-adaptationcosts_noneconomic[:y_year_0] = 2008.
-adaptationcosts_noneconomic[:y_year] = Mimi.dim_keys(m.md, :time)
-adaptationcosts_noneconomic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
-
 adaptationcosts_economic = MimiPAGE2009.addadaptationcosts_economic(m)
-adaptationcosts_economic[:y_year_0] = 2008.
-adaptationcosts_economic[:y_year] = Mimi.dim_keys(m.md, :time)
-adaptationcosts_economic[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
-
 adaptationcosts_sealevel = MimiPAGE2009.addadaptationcosts_sealevel(m)
-adaptationcosts_sealevel[:y_year_0] = 2008.
-adaptationcosts_sealevel[:y_year] = Mimi.dim_keys(m.md, :time)
-adaptationcosts_sealevel[:gdp] = readpagedata(m, "test/validationdata/gdp.csv")
+
+set_param!(m, :y_year_0, 2008)
+set_param!(m, :y_year, Mimi.dim_keys(m.md, :time))
+set_param!(m, :gdp, readpagedata(m, "test/validationdata/gdp.csv"))
+set_param!(m, :automult_autonomouschange, 0.65)
 
 p = load_parameters(m)
 set_leftover_params!(m, p)
