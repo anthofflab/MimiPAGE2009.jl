@@ -16,15 +16,15 @@
 
     total_damages_percap_peryear    = Variable(index = [time, region], unit = "\$/person")  # Undiscounted total damages per capita per year   
     total_damages_peryear           = Variable(index = [time, region], unit = "\$million")  # Undiscounted total damages per year 
-    total_damages_perperiod         = Variable(index = [time, region], unit = "\$million")  # Undiscounted total damages per period
+    total_damages_aggregated        = Variable(index = [time, region], unit = "\$million")  # Undiscounted total damages per period
     
     total_abatement_percap_peryear  = Variable(index = [time, region], unit = "\$/person")  # Undiscounted total abatement per capita per year     
     total_abatement_peryear         = Variable(index = [time, region], unit = "\$million")  # Undiscounted total abatement per year 
-    total_abatement_perperiod       = Variable(index = [time, region], unit = "\$million")  # Undiscounted total abatement per period 
+    total_abatement_aggregated      = Variable(index = [time, region], unit = "\$million")  # Undiscounted total abatement per period 
     
     total_costs_percap_peryear      = Variable(index = [time, region], unit = "\$/person")  # Undiscounted total costs per capita per year (damages + abatement)
     total_costs_peryear             = Variable(index = [time, region], unit = "\$million")  # Undiscounted total costs per year                  
-    total_costs_perperiod           = Variable(index = [time, region], unit = "\$million")  # Undiscounted total costs per period                  
+    total_costs_aggregated          = Variable(index = [time, region], unit = "\$million")  # Undiscounted total costs per period                  
 
     function run_timestep(p, v, d, t)
 
@@ -36,16 +36,16 @@
             p.non_market_damages_percap_peryear[t, :] +
             p.discontinuity_damages_percap_peryear[t, :]
         v.total_damages_peryear[t, :] = v.total_damages_percap_peryear[t, :] .* p.population[t, :]
-        v.total_damages_perperiod[t, :] = v.total_damages_peryear[t, :] .* p.period_length[t]
+        v.total_damages_aggregated[t, :] = v.total_damages_peryear[t, :] .* p.period_length[t]
 
         # Abatement
         v.total_abatement_percap_peryear[t, :] = p.abatement_costs_percap_peryear[t, :]
         v.total_abatement_peryear[t, :] = v.total_abatement_percap_peryear[t, :] .* p.population[t, :]
-        v.total_abatement_perperiod[t, :] = v.total_abatement_peryear[t, :] .* p.period_length[t]
+        v.total_abatement_aggregated[t, :] = v.total_abatement_peryear[t, :] .* p.period_length[t]
 
         # Total costs (damages + abatement)
         v.total_costs_percap_peryear[t, :] = v.total_damages_percap_peryear[t, :] + p.abatement_costs_percap_peryear[t, :]
         v.total_costs_peryear[t, :] = v.total_costs_percap_peryear[t, :] .* p.population[t, :]
-        v.total_costs_perperiod[t, :] = v.total_costs_peryear[t, :] .* p.period_length[t]
+        v.total_costs_aggregated[t, :] = v.total_costs_peryear[t, :] .* p.period_length[t]
     end
 end
