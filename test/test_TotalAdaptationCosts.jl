@@ -2,7 +2,7 @@
 using DataFrames
 using Test
 
-page_model()
+m = test_page_model()
 include("../src/components/TotalAdaptationCosts.jl")
 
 add_comp!(m, TotalAdaptationCosts)

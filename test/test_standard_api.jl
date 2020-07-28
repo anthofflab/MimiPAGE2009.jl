@@ -13,7 +13,7 @@ scc2 = MimiPAGE2009.compute_scc(year=2020, eta=0., prtp=0.03)
 
 # Test with a modified model
 m = MimiPAGE2009.get_model()
-update_param!(m, :tcr_transientresponse, 3)
+set_param!(m, :tcr_transientresponse, 3)
 scc3 = MimiPAGE2009.compute_scc(m, year=2020)
 @test scc3 > scc1
 
@@ -25,5 +25,13 @@ mm[:ClimateTemperature, :rt_realizedtemperature]
 result = MimiPAGE2009.compute_scc_mm(year=2050)
 @test result.scc < scc1
 @test result.mm isa Mimi.MarginalModel
+
+# Test Monte Carlo SCC support
+sccs1 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=350)
+sccs2 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=350)
+@test sccs1 == sccs2
+
+sccs3 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=351)
+@test sccs3 != sccs1
 
 end

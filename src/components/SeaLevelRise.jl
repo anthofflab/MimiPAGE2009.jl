@@ -22,7 +22,7 @@
 
   function run_timestep(p, v, d, t)
     if is_first(t)
-      v.yp_timestep[t]=p.y_year[1] - p.y_year_0
+      v.yp_timestep[t]=p.y_year[TimestepIndex(1)] - p.y_year_0
       v.es_equilibriumSL[t]=p.sltemp_SLtemprise*p.rt_g_globaltemperature[t] + p.sla_SLbaselinerise
       v.expfs_exponential[t]=exp(-v.yp_timestep[t]/p.sltau_SLresponsetime)
       v.s_sealevel[t]=p.s0_initialSL + (v.es_equilibriumSL[t] - p.s0_initialSL)*(1-v.expfs_exponential[t])

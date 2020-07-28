@@ -1,7 +1,5 @@
 using Test
 
-Mimi.reset_compdefs()
-
 m = MimiPAGE2009.get_model()
 run(m)
 

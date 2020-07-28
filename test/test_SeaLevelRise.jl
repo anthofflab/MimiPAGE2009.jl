@@ -3,7 +3,7 @@
 using DataFrames
 using Test
 
-m = page_model()
+m = test_page_model()
 include("../src/components/SeaLevelRise.jl")
 
 SLR = add_comp!(m, SeaLevelRise)

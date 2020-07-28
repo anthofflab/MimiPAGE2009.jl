@@ -117,17 +117,6 @@ function addabatementcostparameters(model::Model, class::Symbol, policy::String=
     componentname = Symbol("AbatementCostParameters$class")
     abatementcostscomp = add_comp!(model, AbatementCostParameters, componentname)
 
-    abatementcostscomp[:q0propmult_cutbacksatnegativecostinfinalyear] = .733333333333333334
-    abatementcostscomp[:qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear] = 1.2666666666666666
-    abatementcostscomp[:c0mult_mostnegativecostinfinalyear] = .8333333333333334
-    abatementcostscomp[:curve_below_curvatureofMACcurvebelowzerocost] = .5
-    abatementcostscomp[:curve_above_curvatureofMACcurveabovezerocost] = .4
-    abatementcostscomp[:cross_experiencecrossoverratio] = .2
-    abatementcostscomp[:learn_learningrate] = .2
-    abatementcostscomp[:automult_autonomoustechchange] = .65
-    abatementcostscomp[:equity_prop_equityweightsproportion] = 1.
-    abatementcostscomp[:y_year_0] = 2008.
-
     if class == :CO2
         setdistinctparameter(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 8.333333333333334)
         setdistinctparameter(model, componentname, :q0propinit_CutbacksinNegativeCostinFocusRegioninBaseYear, 20.)

@@ -31,8 +31,8 @@ end
 function addpopulation(model::Model)
     populationcomp = add_comp!(model, Population)
 
-    populationcomp[:popgrw_populationgrowth]=readpagedata(model, "data/popgrw_populationgrowth.csv")
-    populationcomp[:pop0_initpopulation]=readpagedata(model, "data/pop0_initpopulation.csv")
-
+    populationcomp[:popgrw_populationgrowth] = readpagedata(model, "data/popgrw_populationgrowth.csv")
+    populationcomp[:pop0_initpopulation] = readpagedata(model, "data/pop0_initpopulation.csv")
+    
     return populationcomp
 end
