@@ -180,12 +180,12 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
     
     mm = create_marginal_model(m, pulse_size)
 
-    add_comp!(mm.marginal, ExtraEmissions, :extra_emissions; after=:co2emissions)
-    connect_param!(mm.marginal, :extra_emissions => :e_globalCO2emissions, :co2emissions => :e_globalCO2emissions)
-    set_param!(mm.marginal, :extra_emissions, :pulse_size, pulse_size)
-    set_param!(mm.marginal, :extra_emissions, :pulse_year, year)
+    add_comp!(mm.modified, ExtraEmissions, :extra_emissions; after=:co2emissions)
+    connect_param!(mm.modified, :extra_emissions => :e_globalCO2emissions, :co2emissions => :e_globalCO2emissions)
+    set_param!(mm.modified, :extra_emissions, :pulse_size, pulse_size)
+    set_param!(mm.modified, :extra_emissions, :pulse_year, year)
 
-    connect_param!(mm.marginal, :co2cycle => :e_globalCO2emissions, :extra_emissions => :e_globalCO2emissions_adjusted)
+    connect_param!(mm.modified, :co2cycle => :e_globalCO2emissions, :extra_emissions => :e_globalCO2emissions_adjusted)
     run(mm)
 
     return mm
