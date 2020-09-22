@@ -15,11 +15,11 @@
     rgdp_per_cap_SLRRemainGDP = Parameter(index=[time, region], unit = "\$/person")
 
     save_savingsrate = Parameter(unit= "%", default=15.)
-    wincf_weightsfactor =Parameter(index=[region], unit="")
+    wincf_weightsfactor =Parameter(index=[region], unit="unitless")
     W_MarketImpactsatCalibrationTemp =Parameter(unit="%GDP", default=0.5)
     ipow_MarketIncomeFxnExponent =Parameter(default=-0.13333333333333333)
     iben_MarketInitialBenefit=Parameter(default=.1333333333333)
-    tcal_CalibrationTemp = Parameter(default=3.)
+    tcal_CalibrationTemp = Parameter(unit="degreeC", default=3.)
     GDP_per_cap_focus_0_FocusRegionEU = Parameter(unit="\$/person", default=27934.244777382406)
 
     #impact variables
@@ -31,7 +31,7 @@
     impmax_maxtempriseforadaptpolicyM = Parameter(index=[region], unit= "degreeC")
 
     isat_ImpactinclSaturationandAdaptation= Variable(index=[time,region])
-    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region])
+    isat_per_cap_ImpactperCapinclSaturationandAdaptation = Variable(index=[time,region], unit="\$/person")
     pow_MarketImpactExponent=Parameter(unit="", default=2.16666666666665)
 
     function run_timestep(p, v, d, t)
@@ -84,6 +84,6 @@ end
 function addmarketdamages(model::Model)
     marketdamagescomp = add_comp!(model, MarketDamages)
     marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "data/impmax_economic.csv")
-
+    
     return marketdamagescomp
 end

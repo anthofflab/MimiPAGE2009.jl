@@ -40,6 +40,7 @@ include("components/AbatementCosts.jl")
 include("components/TotalAbatementCosts.jl")
 include("components/TotalAdaptationCosts.jl")
 include("components/Population.jl")
+include("components/TotalCosts.jl")
 include("components/EquityWeighting.jl")
 
 function buildpage(m::Model, policy::String="policy-a")
@@ -63,32 +64,49 @@ function buildpage(m::Model, policy::String="policy-a")
     add_comp!(m, SeaLevelRise)
 
     #Socio-Economics
-    population = addpopulation(m)
+    addpopulation(m)
     add_comp!(m, GDP)
 
-    #Abatement Costs
-    abatementcostparameters_CO2 = addabatementcostparameters(m, :CO2, policy)
-    abatementcostparameters_CH4 = addabatementcostparameters(m, :CH4, policy)
-    abatementcostparameters_N2O = addabatementcostparameters(m, :N2O, policy)
-    abatementcostparameters_Lin = addabatementcostparameters(m, :Lin, policy)
+    #Abatement Costs 
 
-    abatementcosts_CO2 = addabatementcosts(m, :CO2, policy)
-    abatementcosts_CH4 = addabatementcosts(m, :CH4, policy)
-    abatementcosts_N2O = addabatementcosts(m, :N2O, policy)
-    abatementcosts_Lin = addabatementcosts(m, :Lin, policy)
+    addabatementcostparameters(m, :CO2, policy)
+    addabatementcostparameters(m, :CH4, policy)
+    addabatementcostparameters(m, :N2O, policy)
+    addabatementcostparameters(m, :Lin, policy)
+
+    set_param!(m, :q0propmult_cutbacksatnegativecostinfinalyear, .733333333333333334)
+    set_param!(m, :qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear, 1.2666666666666666)
+    set_param!(m, :c0mult_mostnegativecostinfinalyear, .8333333333333334)
+    set_param!(m, :curve_below_curvatureofMACcurvebelowzerocost, .5)
+    set_param!(m, :curve_above_curvatureofMACcurveabovezerocost, .4)
+    set_param!(m, :cross_experiencecrossoverratio, .2)
+    set_param!(m, :learn_learningrate, .2)
+    set_param!(m, :automult_autonomoustechchange, .65)
+    set_param!(m, :equity_prop_equityweightsproportion, 1)
+    set_param!(m, :y_year_0, 2008)
+
+    addabatementcosts(m, :CO2, policy)
+    addabatementcosts(m, :CH4, policy)
+    addabatementcosts(m, :N2O, policy)
+    addabatementcosts(m, :Lin, policy)
     add_comp!(m, TotalAbatementCosts)
 
     #Adaptation Costs
-    adaptationcosts_sealevel = addadaptationcosts_sealevel(m)
-    adaptationcosts_economic = addadaptationcosts_economic(m)
-    adaptationcosts_noneconomic = addadaptationcosts_noneconomic(m)
+    addadaptationcosts_sealevel(m)
+    addadaptationcosts_economic(m)
+    addadaptationcosts_noneconomic(m)
     add_comp!(m, TotalAdaptationCosts)
+    set_param!(m, :automult_autonomouschange, 0.65)
+
 
     # Impacts
-    slrdamages = addslrdamages(m)
-    marketdamages = addmarketdamages(m)
-    nonmarketdamages = addnonmarketdamages(m)
+    addslrdamages(m)
+    addmarketdamages(m)
+    addnonmarketdamages(m)
     add_comp!(m, Discontinuity)
+
+    # Total costs component 
+    add_comp!(m, TotalCosts)
 
     #Equity weighting and Total Costs
     add_comp!(m, EquityWeighting)
@@ -132,13 +150,12 @@ function buildpage(m::Model, policy::String="policy-a")
 
     connect_param!(m, :GDP => :pop_population, :Population => :pop_population)
 
-    for allabatement in [
-        (:AbatementCostParametersCO2, :AbatementCostsCO2),
-        (:AbatementCostParametersCH4, :AbatementCostsCH4),
-        (:AbatementCostParametersN2O, :AbatementCostsN2O),
-        (:AbatementCostParametersLin, :AbatementCostsLin)]
-
-        abatementcostparameters, abatementcosts = allabatement
+    for (abatementcostparameters, abatementcosts) in [
+            (:AbatementCostParametersCO2, :AbatementCostsCO2),
+            (:AbatementCostParametersCH4, :AbatementCostsCH4),
+            (:AbatementCostParametersN2O, :AbatementCostsN2O),
+            (:AbatementCostParametersLin, :AbatementCostsLin)
+        ]
 
         connect_param!(m, abatementcostparameters => :yagg, :GDP => :yagg_periodspan)
         connect_param!(m, abatementcostparameters => :cbe_absoluteemissionreductions, abatementcosts => :cbe_absoluteemissionreductions)
@@ -194,6 +211,15 @@ function buildpage(m::Model, policy::String="policy-a")
     connect_param!(m, :Discontinuity => :rgdp_per_cap_NonMarketRemainGDP, :NonMarketDamages => :rgdp_per_cap_NonMarketRemainGDP)
     connect_param!(m, :Discontinuity => :rcons_per_cap_NonMarketRemainConsumption, :NonMarketDamages => :rcons_per_cap_NonMarketRemainConsumption)
     connect_param!(m, :Discontinuity => :isatg_saturationmodification, :GDP => :isatg_impactfxnsaturation)
+
+    connect_param!(m, :TotalCosts => :population, :Population => :pop_population)
+    connect_param!(m, :TotalCosts => :period_length, :GDP => :yagg_periodspan)
+    connect_param!(m, :TotalCosts => :abatement_costs_percap_peryear, :TotalAbatementCosts => :tct_per_cap_totalcostspercap) 
+    connect_param!(m, :TotalCosts => :adaptation_costs_percap_peryear, :TotalAdaptationCosts => :act_percap_adaptationcosts)
+    connect_param!(m, :TotalCosts => :slr_damages_percap_peryear, :SLRDamages => :isat_per_cap_SLRImpactperCapinclSaturationandAdaptation)
+    connect_param!(m, :TotalCosts => :market_damages_percap_peryear, :MarketDamages => :isat_per_cap_ImpactperCapinclSaturationandAdaptation)
+    connect_param!(m, :TotalCosts => :non_market_damages_percap_peryear, :NonMarketDamages => :isat_per_cap_ImpactperCapinclSaturationandAdaptation)
+    connect_param!(m, :TotalCosts => :discontinuity_damages_percap_peryear, :Discontinuity => :isat_per_cap_DiscImpactperCapinclSaturation)
 
     connect_param!(m, :EquityWeighting => :pop_population, :Population => :pop_population)
     connect_param!(m, :EquityWeighting => :tct_percap_totalcosts_total, :TotalAbatementCosts => :tct_per_cap_totalcostspercap)

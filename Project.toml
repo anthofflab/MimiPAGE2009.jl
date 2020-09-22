@@ -1,6 +1,6 @@
 name = "MimiPAGE2009"
 uuid = "e25d4f70-4200-11e9-37f3-3b45f1cef54f"
-version = "2.0.7-DEV"
+version = "3.1.1-DEV"
 
 [deps]
 Query = "1a8c2f83-1ff3-5112-b086-8aa67b057ba1"
@@ -15,12 +15,12 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-Query = "0.12"
-julia = "1"
-Mimi = "0.9.3"
+Query = "0.12, 1.0"
+julia = "1.4"
+Distributions = "0.20, 0.21, 0.22, 0.23"
 CSVFiles = "0.16, 1"
-DataFrames = "0.19.1, 0.20"
-Distributions = "0.20, 0.21"
+DataFrames = "0.19.1, 0.20, 0.21"
+Mimi = "0.10, 1.0"
 
 [targets]
 test = ["Test"]

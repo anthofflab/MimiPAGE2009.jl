@@ -13,7 +13,7 @@ scc2 = MimiPAGE2009.compute_scc(year=2020, eta=0., prtp=0.03)
 
 # Test with a modified model
 m = MimiPAGE2009.get_model()
-update_param!(m, :tcr_transientresponse, 3)
+set_param!(m, :tcr_transientresponse, 3)
 scc3 = MimiPAGE2009.compute_scc(m, year=2020)
 @test scc3 > scc1
 

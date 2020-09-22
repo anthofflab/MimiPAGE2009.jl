@@ -97,9 +97,22 @@ function compute_scc(
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    eta === nothing ? nothing : update_param!(m, :emuc_utilityconvexity, eta)
-    prtp === nothing ? nothing : update_param!(m, :ptp_timepreference, prtp * 100.)
+    if eta != nothing
+        try
+            set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :emuc_utilityconvexity, eta)   # or update_param! if it has been set
+        end
+    end
 
+    if prtp != nothing
+        try
+            set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
+        end
+    end
+    
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
 
     if n===nothing
@@ -113,7 +126,7 @@ function compute_scc(
         simdef = getsim()
         seed !== nothing ? Random.seed!(seed) : nothing
         si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
-        scc = si[:EquityWeighting, :td_totaldiscountedimpacts].td_totaldiscountedimpacts ./ undiscount_scc(mm.base, year)
+        scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts ./ undiscount_scc(mm.base, year)
     end
 
     return scc
@@ -132,8 +145,21 @@ function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = noth
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    eta === nothing ? nothing : update_param!(m, :emuc_utilityconvexity, eta)
-    prtp === nothing ? nothing : update_param!(m, :ptp_timepreference, prtp * 100.)
+    if eta != nothing
+        try
+            set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :emuc_utilityconvexity, eta)   # or update_param! if it has been set
+        end
+    end
+
+    if prtp != nothing
+        try
+            set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
+        catch e
+            update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
+        end
+    end
 
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
     scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)

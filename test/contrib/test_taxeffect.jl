@@ -4,7 +4,7 @@ include("../../src/contrib/taxeffect.jl")
 taxes = rand(10) * 100
 
 m = getuniformtaxmodel()
-set_param!(m, :UniformTaxDrivenGrowth, :uniformtax, taxes)
+update_param!(m, :uniformtax, taxes)
 run(m)
 
 for ii in 1:10
