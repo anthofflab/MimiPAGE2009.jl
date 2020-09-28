@@ -27,6 +27,19 @@ function getperiodlength(year)      # same calculations made for yagg_periodspan
     return (last_year - start_year) / 2
 end
 
+# This is different than the period span; this is just the difference between the current year and the previous year
+function getindexlengthfromyear(year)
+    if year == 2009
+        return 1
+    end 
+
+    i = findfirst(isequal(year), page_years)
+    if i == 0
+        error("Invalid PAGE year: $year.")
+    end 
+    return page_years[i] - page_years[i-1]
+end
+
 """
 Applies undiscounting factor to get the SCC, discounted to the emissions year instead of the base year.
 """
@@ -88,7 +101,8 @@ function compute_scc(
         year::Union{Int, Nothing} = nothing,
         eta::Union{Float64, Nothing} = nothing,
         prtp::Union{Float64, Nothing} = nothing,
-        pulse_size = 100000.,
+        equity_weighting::Bool = true,
+        pulse_size = 100_000.,
         n::Union{Int,Nothing}=nothing,
         trials_output_filename::Union{String, Nothing} = nothing,
         seed::Union{Int, Nothing} = nothing
@@ -97,7 +111,7 @@ function compute_scc(
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    if eta != nothing
+    if eta !== nothing
         try
             set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
         catch e
@@ -105,7 +119,7 @@ function compute_scc(
         end
     end
 
-    if prtp != nothing
+    if prtp !== nothing
         try
             set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
         catch e
@@ -118,15 +132,42 @@ function compute_scc(
     if n===nothing
         # Run the "best guess" social cost calculation
         run(mm)
-        scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)
+        if !equity_weighting && eta != 0
+            # This is the case for using Ramsey discounting without regional equity weighting
+            global_md = sum(mm[:TotalCosts, :total_damages_aggregated], dims=2) # get global marginal damages, already aggregated over the period length
+            global_cpc = sum(mm.base[:GDP, :cons_consumption], dims=2) ./ sum(mm.base[:Population, :pop_population], dims=2) # get global consumption per capita
+
+            p_idx = getpageindexfromyear(year) # index of the pulse year
+
+            # calculate instantaneous cpc growth rates in each period
+            g1 = NaN 
+            idx_lengths = [getindexlengthfromyear(y) for y in page_years]
+            g = [g1, [(global_cpc[i]/global_cpc[i-1]) ^ (1/idx_lengths[i]) - 1 for i in 2:length(page_years)]...] 
+
+            # calculate the discount factor for each period
+            r = prtp .+ eta .* g
+            df = zeros(length(page_years))
+            df[p_idx] = 1
+            df[p_idx+1:end] = [prod([(1 + r[i])^(-1 * idx_lengths[i]) for i in p_idx+1:t]) for t in p_idx+1:length(page_years)] 
+
+            # discount and sum to the SCC
+            scc = sum(global_md .* df) 
+        else
+            scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)
+        end
     elseif n<1
         error("Invalid `n` value, only values >=1 allowed.")
     else
         # Run a Monte Carlo simulation
-        simdef = getsim()
-        seed !== nothing ? Random.seed!(seed) : nothing
-        si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
-        scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts ./ undiscount_scc(mm.base, year)
+        if !equity_weighting && eta != 0
+            # This is the case for using Ramsey discounting without regional equity weighting
+            error("Ramsey discounting without regional equity weighting not yet implemented for n>1")
+        else
+            simdef = getsim()
+            seed !== nothing ? Random.seed!(seed) : nothing
+            si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
+            scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts ./ undiscount_scc(mm.base, year)
+        end
     end
 
     return scc
