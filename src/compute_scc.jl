@@ -129,48 +129,63 @@ function compute_scc(
     
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
 
-    if n===nothing
-        # Run the "best guess" social cost calculation
-        run(mm)
-        if !equity_weighting && eta != 0
-            # This is the case for using Ramsey discounting without regional equity weighting
-            global_md = sum(mm[:TotalCosts, :total_damages_aggregated], dims=2) # get global marginal damages, already aggregated over the period length
-            global_cpc = sum(mm.base[:GDP, :cons_consumption], dims=2) ./ sum(mm.base[:Population, :pop_population], dims=2) # get global consumption per capita
-
-            p_idx = getpageindexfromyear(year) # index of the pulse year
-
-            # calculate instantaneous cpc growth rates in each period
-            g1 = NaN 
-            idx_lengths = [getindexlengthfromyear(y) for y in page_years]
-            g = [g1, [(global_cpc[i]/global_cpc[i-1]) ^ (1/idx_lengths[i]) - 1 for i in 2:length(page_years)]...] 
-
-            # calculate the discount factor for each period
-            r = prtp .+ eta .* g
-            df = zeros(length(page_years))
-            df[p_idx] = 1
-            df[p_idx+1:end] = [prod([(1 + r[i])^(-1 * idx_lengths[i]) for i in p_idx+1:t]) for t in p_idx+1:length(page_years)] 
-
-            # discount and sum to the SCC
-            scc = sum(global_md .* df) 
-        else
-            scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)
-        end
-    elseif n<1
-        error("Invalid `n` value, only values >=1 allowed.")
+    if n<1
+        error("Invalid `n` value, must be >=1.")    
+    elseif n===nothing
+        # Run the "best guess" social cost calculation (deterministic)
+        scc = _compute_scc_from_mm(mm, year=year, prtp=prtp, eta=eta, equity_weighting=equity_weighting)
     else
-        # Run a Monte Carlo simulation
-        if !equity_weighting && eta != 0
-            # This is the case for using Ramsey discounting without regional equity weighting
-            error("Ramsey discounting without regional equity weighting not yet implemented for n>1")
-        else
-            simdef = getsim()
-            seed !== nothing ? Random.seed!(seed) : nothing
-            si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
-            scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts ./ undiscount_scc(mm.base, year)
-        end
+        # Run a Monte Carlo simulation of size `n`
+        simdef = getsim()
+        seed !== nothing ? Random.seed!(seed) : nothing
+        payload = (Vector{Float64}(undef, n), year, prtp, eta, equity_weighting)    # pass the specs and a vector for storing SCC values to the `run` function
+        Mimi.set_payload!(simdef, payload)
+        si = run(simdef, mm, n, trials_output_filename = trials_output_filename, post_trial_func = _scc_post_trial_func)
+        scc = Mimi.payload(si)[1]   # collect the values computed during the post-trial function
     end
 
     return scc
+end
+
+# Helper function-- computes the SCC from an already run marginal model
+function _compute_scc_from_mm(mm::MarginalModel;
+    year::Union{Int, Nothing} = nothing,
+    eta::Union{Float64, Nothing} = nothing,
+    prtp::Union{Float64, Nothing} = nothing,
+    equity_weighting::Bool = true)
+
+    if !equity_weighting && eta != 0
+        # This is the case for using Ramsey discounting without regional equity weighting
+        global_md = sum(mm[:TotalCosts, :total_damages_aggregated], dims=2) # get global marginal damages, already aggregated over the period length
+        global_cpc = sum(mm.base[:GDP, :cons_consumption], dims=2) ./ sum(mm.base[:Population, :pop_population], dims=2) # get global consumption per capita
+
+        p_idx = getpageindexfromyear(year) # index of the pulse year
+
+        # calculate instantaneous cpc growth rates in each period
+        g1 = NaN 
+        idx_lengths = [getindexlengthfromyear(y) for y in page_years]
+        g = [g1, [(global_cpc[i]/global_cpc[i-1]) ^ (1/idx_lengths[i]) - 1 for i in 2:length(page_years)]...] 
+
+        # calculate the discount factor for each period
+        r = prtp .+ eta .* g
+        df = zeros(length(page_years))
+        df[p_idx] = 1
+        df[p_idx+1:end] = [prod([(1 + r[i])^(-1 * idx_lengths[i]) for i in p_idx+1:t]) for t in p_idx+1:length(page_years)] 
+
+        # discount and sum to the SCC
+        scc = sum(global_md .* df) 
+    else
+        # This case works for both constant discounting w/o equity weighting (i.e. eta==0), or for Ramsey discounting w/ equity weighting
+        scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)
+    end
+    return scc
+end
+
+# Post trial function for calculating the scc in Monte Carlo mode
+function _scc_post_trial_func(si::SimulationInstance, trial::Int, ntimesteps::Int, tup::Nothing)
+    (scc_array, year, prtp, eta, equity_weighting) = Mimi.payload(si)
+    mm = si.models[1]
+    scc_array[trial] = _compute_scc_from_mm(mm, year=year, prtp=prtp, eta=eta, equity_weighting=equity_weighting)
 end
 
 """

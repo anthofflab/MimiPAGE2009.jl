@@ -45,4 +45,9 @@ sccs3 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=351)
 @test MimiPAGE2009.compute_scc(year=2020, eta=0., prtp = 0.03, equity_weighting = true) ==
         MimiPAGE2009.compute_scc(year=2020, eta=0., prtp = 0.03, equity_weighting = false)
 
+# Test Monte Carlo w/ and w/o equity weighting, with the same seed
+scc10a = MimiPAGE2009.compute_scc(year=2020, eta=1.5, prtp = 0.01, equity_weighting = true, n = 10, seed=350)
+scc10b = MimiPAGE2009.compute_scc(year=2020, eta=1.5, prtp = 0.01, equity_weighting = false, n = 10, seed=350)
+@test all(scc10a .> scc10b)
+
 end
