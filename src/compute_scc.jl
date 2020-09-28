@@ -129,11 +129,12 @@ function compute_scc(
     
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
 
-    if n<1
-        error("Invalid `n` value, must be >=1.")    
-    elseif n===nothing
+   
+    if n===nothing
         # Run the "best guess" social cost calculation (deterministic)
         scc = _compute_scc_from_mm(mm, year=year, prtp=prtp, eta=eta, equity_weighting=equity_weighting)
+    elseif n<1
+        error("Invalid `n` value, must be >=1.") 
     else
         # Run a Monte Carlo simulation of size `n`
         simdef = getsim()
