@@ -42,7 +42,7 @@ end
 
 @defcomp ExtraEmissions begin
     e_globalCO2emissions = Parameter(index=[time],unit="Mtonne/year")
-    pulse_size = Parameter()
+    pulse_size = Parameter(unit="Mtonne CO2")
     pulse_year = Parameter()
     e_globalCO2emissions_adjusted = Variable(index=[time],unit="Mtonne/year")
 
@@ -74,7 +74,7 @@ and ptp_timepreference in the model. If no values are provided, the discount fac
 PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333333333.
 
 The size of the marginal emission pulse can be modified with the `pulse_size` keyword argument, in metric 
-tonnes (this does not change the units of the returned value, which is always normalized by the `pulse_size` used).
+tonnes of CO2 (this does not change the units of the returned value, which is always normalized by the `pulse_size` used).
 
 By default, `n = nothing`, and a single value for the "best guess" social cost of CO2 is returned. If a positive 
 value for keyword `n` is specified, then a Monte Carlo simulation with sample size `n` will run, sampling from 
@@ -88,7 +88,8 @@ function compute_scc(
         year::Union{Int, Nothing} = nothing,
         eta::Union{Float64, Nothing} = nothing,
         prtp::Union{Float64, Nothing} = nothing,
-        pulse_size = 100000.,
+        equity_weighting::Bool = true,
+        pulse_size = 100_000.,
         n::Union{Int,Nothing}=nothing,
         trials_output_filename::Union{String, Nothing} = nothing,
         seed::Union{Int, Nothing} = nothing
@@ -97,7 +98,7 @@ function compute_scc(
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    if eta != nothing
+    if eta !== nothing
         try
             set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
         catch e
@@ -105,11 +106,19 @@ function compute_scc(
         end
     end
 
-    if prtp != nothing
+    if prtp !== nothing
         try
             set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
         catch e
             update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
+        end
+    end
+
+    if !equity_weighting #&& eta != 0
+        try
+            set_param!(m, :equity_proportion, 0)
+        catch e
+            update_param!(m, :equity_proportion, 0)
         end
     end
     
