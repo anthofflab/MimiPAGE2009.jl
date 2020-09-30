@@ -57,7 +57,7 @@
     rcons_percap_dis = Parameter(index=[time, region], unit="\$/person")
 
     wit_equityweightedimpact = Variable(index=[time, region], unit="\$million")
-    widt_equityweightedimpact_discounted = Variable(index=[time, region], unit="\$million")
+    widt_partiallyweighted_discounted  = Variable(index=[time, region], unit="\$million")
 
     yagg_periodspan = Parameter(index=[time], unit="year")
 
@@ -125,16 +125,16 @@
             if p.equity_proportion == 0
                 v.pcdt_partiallyweighted_discounted[tt, rr] = v.pct_partiallyweighted[tt, rr] * v.dfc_consumptiondiscountrate[tt, rr]
                 v.wacdt_partiallyweighted_discounted[tt, rr] = p.act_adaptationcosts_total[tt, rr] * v.dfc_consumptiondiscountrate[tt, rr]
-                v.widt_equityweightedimpact_discounted[tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.dfc_consumptiondiscountrate[tt]
+                v.widt_partiallyweighted_discounted [tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.dfc_consumptiondiscountrate[tt]
             else
                 v.pcdt_partiallyweighted_discounted[tt, rr] = v.pct_partiallyweighted[tt, rr] * v.df_utilitydiscountfactor[tt]
                 v.wacdt_partiallyweighted_discounted[tt, rr] = v.wact_partiallyweighted[tt, rr] * v.df_utilitydiscountfactor[tt]
-                v.widt_equityweightedimpact_discounted[tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.df_utilitydiscountfactor[tt]
+                v.widt_partiallyweighted_discounted [tt, rr] = v.wit_equityweightedimpact[tt, rr] * v.df_utilitydiscountfactor[tt]
             end
 
             v.pcdat_partiallyweighted_discountedaggregated[tt, rr] = v.pcdt_partiallyweighted_discounted[tt, rr] * p.yagg_periodspan[tt]
 
-            v.addt_equityweightedimpact_discountedaggregated[tt, rr] = v.widt_equityweightedimpact_discounted[tt, rr] * p.yagg_periodspan[tt]
+            v.addt_equityweightedimpact_discountedaggregated[tt, rr] = v.widt_partiallyweighted_discounted [tt, rr] * p.yagg_periodspan[tt]
             v.aact_equityweightedadaptation_discountedaggregated[tt, rr] = v.wacdt_partiallyweighted_discounted[tt, rr] * p.yagg_periodspan[tt]
         end
 
