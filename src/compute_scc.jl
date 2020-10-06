@@ -114,7 +114,7 @@ function compute_scc(
         end
     end
 
-    if !equity_weighting #&& eta != 0
+    if !equity_weighting
         try
             set_param!(m, :equity_proportion, 0)
         catch e

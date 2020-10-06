@@ -41,8 +41,8 @@ sccs3 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=351)
         MimiPAGE2009.compute_scc(year=2020, eta=1.5, prtp = 0.01, equity_weighting = false)
 
 # Test that when eta==0, equity_weighting does not change the SCC value
-@test MimiPAGE2009.compute_scc(year=2020, eta=0., prtp = 0.03, equity_weighting = true) ==
-        MimiPAGE2009.compute_scc(year=2020, eta=0., prtp = 0.03, equity_weighting = false)
+@test MimiPAGE2009.compute_scc(year=2020, eta=0., prtp = 0.03, equity_weighting = true) ≈
+        MimiPAGE2009.compute_scc(year=2020, eta=0., prtp = 0.03, equity_weighting = false) atol=1e3
 
 # Test Monte Carlo w/ and w/o equity weighting, with the same seed
 scc10a = MimiPAGE2009.compute_scc(year=2020, eta=1.5, prtp = 0.01, equity_weighting = true, n = 10, seed=350)
