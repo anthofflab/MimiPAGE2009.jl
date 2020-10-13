@@ -34,6 +34,9 @@ sccs2 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=350)
 sccs3 = MimiPAGE2009.compute_scc(year=2020, n=10, seed=351)
 @test sccs3 != sccs1
 
+sccs4 = MimiPAGE2009.compute_scc(year=2020, prtp=0.02, eta=1.5, n=10, seed=350)
+@test sccs4 != sccs1    # test that the user specified discounting scheme overrides the default random variable values
+
 #Test equity weighting options
 
 # Test that regional equity weighting inreases the SCC
