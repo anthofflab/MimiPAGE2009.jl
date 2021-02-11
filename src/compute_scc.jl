@@ -114,7 +114,7 @@ function compute_scc(
         end
     end
 
-    if !equity_weighting #&& eta != 0
+    if !equity_weighting
         try
             set_param!(m, :equity_proportion, 0)
         catch e
@@ -132,14 +132,38 @@ function compute_scc(
         error("Invalid `n` value, only values >=1 allowed.")
     else
         # Run a Monte Carlo simulation
-        simdef = getsim()
+
+        simdef = getsim()   # get the default simulation, need to remove :emuc_utilityconvexity and :ptp_timepreference RVs if user specified values for these
+        eta !== nothing ? _remove_RV!(simdef, :emuc_utilityconvexity) : nothing
+        prtp !== nothing ? _remove_RV!(simdef, :ptp_timepreference) : nothing
+       
         seed !== nothing ? Random.seed!(seed) : nothing
-        si = run(simdef, mm, n, trials_output_filename = trials_output_filename)
-        scc = getdataframe(si, :EquityWeighting, :td_totaldiscountedimpacts).td_totaldiscountedimpacts ./ undiscount_scc(mm.base, year)
+        Mimi.set_payload!(simdef, (Vector{Float64}(undef, n), year))  # pass the year and a vector for storing SCC values to the `run` function
+        si = run(simdef, mm, n, trials_output_filename = trials_output_filename, post_trial_func = _scc_post_trial_func)
+        scc = Mimi.payload(si)[1]   # collect the values computed during the post-trial function        
     end
 
     return scc
 end
+
+# Post trial function for calculating the scc in Monte Carlo mode
+function _scc_post_trial_func(si::SimulationInstance, trial::Int, ntimesteps::Int, tup::Nothing)
+    (scc_array, year) = Mimi.payload(si)
+    mm = si.models[1]
+    scc_array[trial] = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)
+end
+
+# Helper function for removing a random variable by its parameter name in the model. 
+#   Their random variable names have been appended with a unique number by Mimi, 
+#   so need to look them up this way to find the RV name in the simulation definition
+#   in order to use the Mimi.delete_RV! function.
+#   If it is an array variable, it will be represented by multiple RVs; this deletes them all.
+function _remove_RV!(simdef, _name)
+    all_rv_names = collect(keys(simdef.rvdict))
+    rv_names = all_rv_names[findall(startswith(String(_name)), map(String, all_rv_names))]
+    [Mimi.delete_RV!(simdef, rv_name) for rv_name in rv_names]  
+end
+
 
 """
 compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = nothing, eta::Union{Float64, Nothing} = nothing, prtp::Union{Float64, Nothing} = nothing)

@@ -34,7 +34,7 @@ pcdt = m[:EquityWeighting, :pcdt_partiallyweighted_discounted]
 wacdt = m[:EquityWeighting, :wacdt_partiallyweighted_discounted]
 aact = m[:EquityWeighting, :aact_equityweightedadaptation_discountedaggregated]
 
-wit = m[:EquityWeighting, :wit_equityweightedimpact]
+wit = m[:EquityWeighting, :wit_partiallyweighted]
 addt = m[:EquityWeighting, :addt_equityweightedimpact_discountedaggregated]
 addt_gt = m[:EquityWeighting, :addt_gt_equityweightedimpact_discountedglobal]
 te = m[:EquityWeighting, :te_totaleffect]
@@ -50,7 +50,7 @@ pcdt_compare = readpagedata(m, "test/validationdata/pcdt_partiallyweighted_disco
 wacdt_compare = readpagedata(m, "test/validationdata/wacdt_partiallyweighted_discounted.csv")
 aact_compare = readpagedata(m, "test/validationdata/aact_equityweightedadaptation_discountedaggregated.csv")
 
-wit_compare = readpagedata(m, "test/validationdata/wit_equityweightedimpact.csv")
+wit_compare = readpagedata(m, "test/validationdata/wit_partiallyweighted.csv")
 addt_compare = readpagedata(m, "test/validationdata/addt_equityweightedimpact_discountedaggregated.csv")
 addt_gt_compare = 204132238.85242900
 te_compare = 213208136.69903600
