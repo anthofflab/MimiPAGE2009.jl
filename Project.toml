@@ -14,7 +14,7 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 [compat]
 CSVFiles = "0.16, 1"
 DataFrames = "0.19.1, 0.20, 0.21, 0.22"
-Distributions = "0.20, 0.21, 0.22, 0.23, 0.24"
+Distributions = "0.20, 0.21, 0.22, 0.23, 0.24, 0.25"
 Mimi = "0.10, 1.0"
 Query = "0.12, 1.0"
 julia = "1.4"
