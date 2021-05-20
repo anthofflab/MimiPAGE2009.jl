@@ -13,8 +13,21 @@ function getsim()
                 #set here as opposed to below within the blocks of RVs separated by component
                 #so that they are not set more than once.
 
-                save_savingsrate = TriangularDist(10, 20, 15) # components: MarketDamages, NonMarketDamages, GDP, SLRDamages
-                tcal_CalibrationTemp = TriangularDist(2.5, 3.5, 3.) # components: MarketDamages, NonMarketDamages
+                # each component should have the same value for its save_savingsrate,
+                # so we use an RV here because in the model this is not an explicitly
+                # shared parameter
+                rv(RV_save_savingsrate) = TriangularDist(10, 20, 15)
+                MarketDamages.save_savingsrate = RV_save_savingsrate
+                NonMarketDamages.save_savingsrate = RV_save_savingsrate
+                GDP.save_savingsrate = RV_save_savingsrate
+                SLRDamages.save_savingsrate = RV_save_savingsrate
+
+                # each component should have the same value for its tcal_CalibrationTemp
+                # so we use an RV here because in the model this is not an explicitly
+                # shared parameter
+                rv(RV_tcal_CalibrationTemp) = TriangularDist(2.5, 3.5, 3.)
+                MarketDamages.tcal_CalibrationTemp = RV_tcal_CalibrationTemp
+                NonMarketDamages.tcal_CalibrationTemp = RV_tcal_CalibrationTemp
 
                 wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, SLRDamages, Discountinuity
                 wincf_weightsfactor["OECD"] = TriangularDist(.4, 1.2, .8)
