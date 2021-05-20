@@ -9,9 +9,6 @@ function getsim()
                 # Define random variables (RVs) 
                 ############################################################################
                 
-                #The folllowing RVs are in more than one component.  For clarity they are 
-                #set here as opposed to below within the blocks of RVs separated by component
-                #so that they are not set more than once.
 
                 # each component should have the same value for its save_savingsrate,
                 # so we use an RV here because in the model this is not an explicitly
@@ -29,7 +26,9 @@ function getsim()
                 MarketDamages.tcal_CalibrationTemp = RV_tcal_CalibrationTemp
                 NonMarketDamages.tcal_CalibrationTemp = RV_tcal_CalibrationTemp
 
-                wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) # components: MarketDamages, NonMarketDamages, SLRDamages, Discountinuity
+                # shared external variable in components: MarketDamages, NonMarketDamages, 
+                # SLRDamages, Discountinuity
+                wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) 
                 wincf_weightsfactor["OECD"] = TriangularDist(.4, 1.2, .8)
                 wincf_weightsfactor["USSR"] = TriangularDist(.2, .6, .4)
                 wincf_weightsfactor["China"] = TriangularDist(.4, 1.2, .8)
@@ -37,67 +36,68 @@ function getsim()
                 wincf_weightsfactor["Africa"] = TriangularDist(.4, .8, .6)
                 wincf_weightsfactor["LatAmerica"] = TriangularDist(.4, .8, .6)
 
-                automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)  #components: AdaptationCosts, AbatementCosts
+                # shared external variable in components: AdaptationCosts, AbatementCosts
+                automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)  
                 
                 #The following RVs are divided into blocks by component
 
                 # CO2cycle
-                air_CO2fractioninatm = TriangularDist(57, 67, 62)
-                res_CO2atmlifetime = TriangularDist(50, 100, 70)
-                ccf_CO2feedback = TriangularDist(4, 15, 10)
-                ccfmax_maxCO2feedback = TriangularDist(30, 80, 50)
-                stay_fractionCO2emissionsinatm = TriangularDist(0.25,0.35,0.3)
+                co2cycle.air_CO2fractioninatm = TriangularDist(57, 67, 62)
+                co2cycle.res_CO2atmlifetime = TriangularDist(50, 100, 70)
+                co2cycle.ccf_CO2feedback = TriangularDist(4, 15, 10)
+                co2cycle.ccfmax_maxCO2feedback = TriangularDist(30, 80, 50)
+                co2cycle.stay_fractionCO2emissionsinatm = TriangularDist(0.25,0.35,0.3)
                 
                 # SulphateForcing
-                d_sulphateforcingbase = TriangularDist(-0.8, -0.2, -0.4)
-                ind_slopeSEforcing_indirect = TriangularDist(-0.8, 0, -0.4)
+                SulphateForcing.d_sulphateforcingbase = TriangularDist(-0.8, -0.2, -0.4)
+                SulphateForcing.ind_slopeSEforcing_indirect = TriangularDist(-0.8, 0, -0.4)
                 
                 # ClimateTemperature
-                rlo_ratiolandocean = TriangularDist(1.2, 1.6, 1.4)
-                pole_polardifference = TriangularDist(1, 2, 1.5)
-                frt_warminghalflife = TriangularDist(10, 65, 30)
-                tcr_transientresponse = TriangularDist(1, 2.8, 1.3)
+                ClimateTemperature.rlo_ratiolandocean = TriangularDist(1.2, 1.6, 1.4)
+                ClimateTemperature.pole_polardifference = TriangularDist(1, 2, 1.5)
+                ClimateTemperature.frt_warminghalflife = TriangularDist(10, 65, 30)
+                ClimateTemperature.tcr_transientresponse = TriangularDist(1, 2.8, 1.3)
                 
                 # SeaLevelRise
-                s0_initialSL = TriangularDist(0.1, 0.2, 0.15)
-                sltemp_SLtemprise = TriangularDist(0.7, 3., 1.5)
-                sla_SLbaselinerise = TriangularDist(0.5, 1.5, 1.)
-                sltau_SLresponsetime = TriangularDist(500, 1500, 1000)
+                SeaLevelRise.s0_initialSL = TriangularDist(0.1, 0.2, 0.15)
+                SeaLevelRise.sltemp_SLtemprise = TriangularDist(0.7, 3., 1.5)
+                SeaLevelRise.sla_SLbaselinerise = TriangularDist(0.5, 1.5, 1.)
+                SeaLevelRise.sltau_SLresponsetime = TriangularDist(500, 1500, 1000)
                 
                 # GDP
-                isat0_initialimpactfxnsaturation = TriangularDist(20, 50, 30) 
+                GDP.isat0_initialimpactfxnsaturation = TriangularDist(20, 50, 30) 
                 
                 # MarketDamages
-                iben_MarketInitialBenefit = TriangularDist(0, .3, .1)
-                W_MarketImpactsatCalibrationTemp = TriangularDist(.2, .8, .5)
-                pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
-                ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
+                MarketDamages.iben_MarketInitialBenefit = TriangularDist(0, .3, .1)
+                MarketDamages.W_MarketImpactsatCalibrationTemp = TriangularDist(.2, .8, .5)
+                MarketDamages.pow_MarketImpactExponent = TriangularDist(1.5, 3, 2)
+                MarketDamages.ipow_MarketIncomeFxnExponent = TriangularDist(-.3, 0, -.1)
 
                 # NonMarketDamages
-                iben_NonMarketInitialBenefit = TriangularDist(0, .2, .05)
-                w_NonImpactsatCalibrationTemp = TriangularDist(.1, 1, .5)
-                pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
-                ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
+                NonMarketDamages.iben_NonMarketInitialBenefit = TriangularDist(0, .2, .05)
+                NonMarketDamages.w_NonImpactsatCalibrationTemp = TriangularDist(.1, 1, .5)
+                NonMarketDamages.pow_NonMarketExponent = TriangularDist(1.5, 3, 2)
+                NonMarketDamages.ipow_NonMarketIncomeFxnExponent = TriangularDist(-.2, .2, 0)
                 
                 # SLRDamages
-                scal_calibrationSLR = TriangularDist(0.45, 0.55, .5)
-                #iben_SLRInitialBenefit = TriangularDist(0, 0, 0) # only usable if lb <> ub
-                W_SatCalibrationSLR = TriangularDist(.5, 1.5, 1)
-                pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
-                ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
+                SLRDamages.scal_calibrationSLR = TriangularDist(0.45, 0.55, .5)
+                #SLRDamages.iben_SLRInitialBenefit = TriangularDist(0, 0, 0) # only usable if lb <> ub
+                SLRDamages.W_SatCalibrationSLR = TriangularDist(.5, 1.5, 1)
+                SLRDamages.pow_SLRImpactFxnExponent = TriangularDist(.5, 1, .7)
+                SLRDamages.ipow_SLRIncomeFxnExponent = TriangularDist(-.4, -.2, -.3)
                 
-                # Discountinuity
-                rand_discontinuity = Uniform(0, 1)
-                tdis_tolerabilitydisc = TriangularDist(2, 4, 3)
-                pdis_probability = TriangularDist(10, 30, 20)
-                wdis_gdplostdisc = TriangularDist(5, 25, 15)
-                ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
-                distau_discontinuityexponent = TriangularDist(20, 200, 50)
+                # Discontinuity
+                Discontinuity.rand_discontinuity = Uniform(0, 1)
+                Discontinuity.tdis_tolerabilitydisc = TriangularDist(2, 4, 3)
+                Discontinuity.pdis_probability = TriangularDist(10, 30, 20)
+                Discontinuity.wdis_gdplostdisc = TriangularDist(5, 25, 15)
+                Discontinuity.ipow_incomeexponent = TriangularDist(-.3, 0, -.1)
+                Discontinuity.distau_discontinuityexponent = TriangularDist(20, 200, 50)
                 
                 # EquityWeighting
-                civvalue_civilizationvalue = TriangularDist(1e10, 1e11, 5e10)
-                ptp_timepreference = TriangularDist(0.1,2,1)
-                emuc_utilityconvexity = TriangularDist(0.5,2,1)
+                EquityWeighting.civvalue_civilizationvalue = TriangularDist(1e10, 1e11, 5e10)
+                EquityWeighting.ptp_timepreference = TriangularDist(0.1,2,1)
+                EquityWeighting.emuc_utilityconvexity = TriangularDist(0.5,2,1)
                 
                 # AbatementCosts
                 AbatementCostParametersCO2_emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear = TriangularDist(-50,75,0)
