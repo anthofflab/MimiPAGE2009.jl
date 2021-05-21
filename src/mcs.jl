@@ -8,7 +8,6 @@ function getsim()
                 ############################################################################
                 # Define random variables (RVs) 
                 ############################################################################
-                
 
                 # each component should have the same value for its save_savingsrate,
                 # so we use an RV here because in the model this is not an explicitly
