@@ -25,7 +25,7 @@ function getsim()
                 MarketDamages.tcal_CalibrationTemp = RV_tcal_CalibrationTemp
                 NonMarketDamages.tcal_CalibrationTemp = RV_tcal_CalibrationTemp
 
-                # shared external variable in components: MarketDamages, NonMarketDamages, 
+                # shared parameter linked to components: MarketDamages, NonMarketDamages, 
                 # SLRDamages, Discountinuity
                 wincf_weightsfactor["USA"] = TriangularDist(.6, 1, .8) 
                 wincf_weightsfactor["OECD"] = TriangularDist(.4, 1.2, .8)
@@ -35,7 +35,7 @@ function getsim()
                 wincf_weightsfactor["Africa"] = TriangularDist(.4, .8, .6)
                 wincf_weightsfactor["LatAmerica"] = TriangularDist(.4, .8, .6)
 
-                # shared external variable in components: AdaptationCosts, AbatementCosts
+                # shared parameter linked to components: AdaptationCosts, AbatementCosts
                 automult_autonomouschange = TriangularDist(0.5, 0.8, 0.65)  
                 
                 #The following RVs are divided into blocks by component
