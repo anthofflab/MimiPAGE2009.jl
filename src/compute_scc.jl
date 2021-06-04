@@ -48,6 +48,7 @@ end
 
     function run_timestep(p, v, d, t)
         if gettime(t) == p.pulse_year
+            # pulse is spread evently across the years within this period, thus division by getperiodlength(p.pulse_year)
             v.e_globalCO2emissions_adjusted[t] = p.e_globalCO2emissions[t] + p.pulse_size / getperiodlength(p.pulse_year)
         else
             v.e_globalCO2emissions_adjusted[t] = p.e_globalCO2emissions[t]
@@ -56,14 +57,17 @@ end
 end
 
 """
-    compute_scc(m::Model = get_model(); 
-        year::Union{Int, Nothing} = nothing, 
-        eta::Union{Float64, Nothing} = nothing, 
+    compute_scc(
+        m::Model = get_model();
+        year::Union{Int, Nothing} = nothing,
+        eta::Union{Float64, Nothing} = nothing,
         prtp::Union{Float64, Nothing} = nothing,
-        pulse_size = 100000.,
+        equity_weighting::Bool = true,
+        pulse_size = 100_000.,
         n::Union{Int,Nothing}=nothing,
         trials_output_filename::Union{String, Nothing} = nothing,
-        seed::Union{Int, Nothing} = nothing)
+        seed::Union{Int, Nothing} = nothing
+    )
 
 Computes the social cost of CO2 for an emissions pulse in `year` for the provided MimiPAGE2009 model `m`. 
 If no model is provided, the default model from MimiPAGE2009.get_model() is used.
@@ -73,8 +77,10 @@ The discounting scheme can be specified by the `eta` and `prtp` parameters, whic
 and ptp_timepreference in the model. If no values are provided, the discount factors will be computed using the default 
 PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333333333.
 
-The size of the marginal emission pulse can be modified with the `pulse_size` keyword argument, in metric 
-tonnes of CO2 (this does not change the units of the returned value, which is always normalized by the `pulse_size` used).
+The size of the marginal emission defaults to 100_000 metric tonnes of CO2, and this 
+pulse can be modified with the `pulse_size` keyword argument, in metric tonnes of CO2 
+(this does not change the units of the returned value, which is always normalized by the
+`pulse_size` used). The pulse size is spread over all years in the timestep following `year`.
 
 By default, `n = nothing`, and a single value for the "best guess" social cost of CO2 is returned. If a positive 
 value for keyword `n` is specified, then a Monte Carlo simulation with sample size `n` will run, sampling from 
@@ -122,6 +128,8 @@ function compute_scc(
         end
     end
     
+    # note here that we use `pulse_size` as the `delta` keyword argument for
+    # the marginal model so we can normalize to $ per ton
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
 
     if n===nothing
@@ -166,13 +174,16 @@ end
 
 
 """
-compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = nothing, eta::Union{Float64, Nothing} = nothing, prtp::Union{Float64, Nothing} = nothing)
+    compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = nothing, eta::Union{Float64, Nothing} = nothing, prtp::Union{Float64, Nothing} = nothing)
 
 Returns a NamedTuple (scc=scc, mm=mm) of the social cost of carbon and the MarginalModel used to compute it.
 Computes the social cost of CO2 for an emissions pulse in `year` for the provided MimiPAGE2009 model. 
-If no model is provided, the default model from MimiPAGE2009.get_model() is used.
-Discounting scheme can be specified by the `eta` and `prtp` parameters, which will update the values of emuc_utilitiyconvexity and ptp_timepreference in the model. 
-If no values are provided, the discount factors will be computed using the default PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333333333.    
+This pulse defaults to 100_000 metric tonnes of CO2, and is spread over all years within the 
+period following `year`. If no model is provided, the default model from MimiPAGE2009.get_model() is used.
+Discounting scheme can be specified by the `eta` and `prtp` parameters, which will 
+update the values of emuc_utilitiyconvexity and ptp_timepreference in the model. 
+If no values are provided, the discount factors will be computed using the default 
+PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333333333.    
 """
 function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = nothing, eta::Union{Float64, Nothing} = nothing, prtp::Union{Float64, Nothing} = nothing, pulse_size = 100000.)
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
@@ -193,7 +204,9 @@ function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = noth
             update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
         end
     end
-
+    
+    # note here that we use `pulse_size` as the `delta` keyword argument for
+    # the marginal model so we can normalize to $ per ton
     mm = get_marginal_model(m, year=year, pulse_size=pulse_size)   # Returns a marginal model that has already been run
     scc = mm[:EquityWeighting, :td_totaldiscountedimpacts] / undiscount_scc(mm.base, year)
 
@@ -203,14 +216,19 @@ end
 """
     get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = nothing)
 
-Returns a Mimi MarginalModel where the provided m is the base model, and the marginal model has additional emissions of CO2 in year `year`.
-If no Model m is provided, the default model from MimiPAGE2009.get_model() is used as the base model.
-Note that the returned MarginalModel has already been run.
+Returns a Mimi MarginalModel where the provided m is the base model, and the 
+marginal model has additional emissions of CO2 in year `year`. If no Model m is 
+provided, the default model from MimiPAGE2009.get_model() is used as the base model.
+Note that the returned MarginalModel has already been run. The `pulse_size` defaults 
+to 100_000 metric tonnes of CO2, and is spread over all years within the 
+period following `year`.
 """
 function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = nothing, pulse_size = 100000.)
     year === nothing ? error("Must specify an emission year. Try `get_marginal_model(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot add marginal emissions in $year, year must be within the model's time index $page_years.") : nothing
     
+    # note here that we use `pulse_size` as the `delta` keyword argument for
+    # the marginal model so we can normalize to $ per ton
     mm = create_marginal_model(m, pulse_size)
 
     add_comp!(mm.modified, ExtraEmissions, :extra_emissions; after=:co2emissions)

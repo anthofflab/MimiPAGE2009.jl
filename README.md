@@ -68,7 +68,8 @@ scc = MimiPAGE2009.compute_scc(m, year=2020)    # compute the scc from the modif
 The first argument to the `compute_scc` function is a MimiPAGE2009 model, and it is an optional argument. If no model is provided, the default MimiPAGE2009 model will be used. 
 There are also other keyword arguments available to `compute_scc`. Note that the user must specify a `year` for the SCC calculation, but the rest of the keyword arguments have default values.
 ```
-compute_scc(m = get_model(),  # if no model provided, will use the default MimiPAGE2009 model
+compute_scc(
+    m = get_model(),  # if no model provided, will use the default MimiPAGE2009 model
     year = nothing,  # user must specify an emission year for the SCC calculation
     eta = nothing,  # eta parameter for ramsey discounting representing the elasticity of marginal utility. If nothing is provided, the value of parameter :emuc_utiliyconvexity in the MimiPAGE2009 model is unchanged, which has a default value of 1.1666666667.
     prtp = nothing  # pure rate of time preference parameter used for discounting. If nothing is provided, the value of parameter :ptp_timepreference in the MimiPAGE2009 model is unchanged, which has a default value of 1.0333333333%.
@@ -87,6 +88,12 @@ result.mm   # returns the Mimi MarginalModel
 
 marginal_temp = result.mm[:ClimateTemperature, :rt_realizedtemperature]  # marginal results from the marginal model can be accessed like this
 ```
+
+### Pulse Size Details
+
+By default, MimiPAGE2009 will calculate the SCC using a marginal emissions pulse of 100_000 metric tonnes of CO2 spread over the years in the period following `year`.  Regardless of this pulse size, the SC will be returned in units of dollars per ton.  This choice of pulse size and duration is a decision made based on experiments with stability of results and moving from continuous to discretized equations, and can be found described further in the literature around PAGE.
+
+If you wish to alter this pulse size, it is an optional keyword argument to the  `compute_scc` function where `pulse_size` controls the size of the marginal emission pulse. For a deeper dive into the machinery of this function, see the forum conversation [here](https://forum.mimiframework.org/t/mimifund-emissions-pulse/153/9) and the docstrings in `compute_scc.jl`.
 
 ## References
 
