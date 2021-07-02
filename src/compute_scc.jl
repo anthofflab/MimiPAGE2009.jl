@@ -134,8 +134,8 @@ function compute_scc(
         # Run a Monte Carlo simulation
 
         simdef = getsim()   # get the default simulation, need to remove :emuc_utilityconvexity and :ptp_timepreference RVs if user specified values for these
-        eta !== nothing ? _remove_RV!(simdef, :emuc_utilityconvexity) : nothing
-        prtp !== nothing ? _remove_RV!(simdef, :ptp_timepreference) : nothing
+        eta !== nothing ? _remove_RV!(simdef, "EquityWeighting.emuc_utilityconvexity") : nothing
+        prtp !== nothing ? _remove_RV!(simdef, "EquityWeighting.ptp_timepreference") : nothing
        
         seed !== nothing ? Random.seed!(seed) : nothing
         Mimi.set_payload!(simdef, (Vector{Float64}(undef, n), year))  # pass the year and a vector for storing SCC values to the `run` function
