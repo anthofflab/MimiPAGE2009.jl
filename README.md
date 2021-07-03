@@ -67,7 +67,7 @@ scc = MimiPAGE2009.compute_scc(m, year=2020)    # compute the scc from the modif
 ```
 The first argument to the `compute_scc` function is a MimiPAGE2009 model, and it is an optional argument. If no model is provided, the default MimiPAGE2009 model will be used. 
 There are also other keyword arguments available to `compute_scc`. Note that the user must specify a `year` for the SCC calculation, but the rest of the keyword arguments have default values.
-Note that a pulse "in 2020" produces a gradual increase from 2015-2020 (or whatever the next period is), followed by a gradual decrease in emissions from 2020-2030 (or whatever that following period is). Emissions are linearly interpolated between the points given by the years.
+Note that a pulse "in 2020" produces a gradual increase from 2015-2020 (or whatever the preceeding period is), followed by a gradual decrease in emissions from 2020-2030 (or whatever that following period is). Emissions are linearly interpolated between the points given by the years.
 ```
 compute_scc(
     m = get_model(),  # if no model provided, will use the default MimiPAGE2009 model
