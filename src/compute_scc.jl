@@ -81,7 +81,9 @@ PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333
 The size of the marginal emission defaults to 100_000 metric megatonnes of CO2 (Mtonne CO2), and this 
 pulse can be modified with the `pulse_size` keyword argument, in metric megatonnes of CO2 (Mtonne CO2)
 (this does not change the units of the returned value, which is always normalized by the
-`pulse_size` used). The pulse size is spread over all years in the timestep following `year`.
+`pulse_size` used). A pulse in `year` is actually a gradual increase throughout the timestep preceeding `year`, 
+followed by a gradual decrease in emissions in the timestep superseeding `year`. Emissions are linearly interpolated 
+between the points given by the years.
 
 By default, `n = nothing`, and a single value for the "best guess" social cost of CO2 is returned. If a positive 
 value for keyword `n` is specified, then a Monte Carlo simulation with sample size `n` will run, sampling from 
@@ -180,13 +182,15 @@ end
 Returns a NamedTuple (scc=scc, mm=mm) of the social cost of carbon and the MarginalModel used to compute it.
 Computes the social cost of CO2 for an emissions pulse in `year` for the provided MimiPAGE2009 model. 
 This pulse defaults to 100_000 metric megatonnes of CO2 (Mtonne CO2), and is spread over all years within the 
-period following `year`. The SCC will be returned in dollars per ton regardless of
-pulse size, because it is normalized over the pulse size. If no model is provided, 
-the default model from MimiPAGE2009.get_model() is used. Discounting scheme can be 
-specified by the `eta` and `prtp` parameters, which will  update the values of 
-emuc_utilitiyconvexity and ptp_timepreference in the model.  If no values are provided, 
-the discount factors will be computed using the default PAGE values of emuc_utilitiyconvexity=1.1666666667 
-and ptp_timepreference=1.0333333333.    
+period following `year`. A pulse in `year` is actually a gradual increase throughout the timestep preceeding `year`, 
+followed by a gradual decrease in emissions in the timestep superseeding `year`. Emissions are linearly interpolated 
+between the points given by the years.
+
+The SCC will be returned in dollars per ton regardless of pulse size, because it is normalized over the pulse size. 
+If no model is provided, the default model from MimiPAGE2009.get_model() is used. Discounting scheme can be 
+specified by the `eta` and `prtp` parameters, which will  update the values of emuc_utilitiyconvexity and 
+ptp_timepreference in the model.  If no values are provided, the discount factors will be computed using the 
+default PAGE values of emuc_utilitiyconvexity=1.1666666667 and ptp_timepreference=1.0333333333.    
 """
 function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = nothing, eta::Union{Float64, Nothing} = nothing, prtp::Union{Float64, Nothing} = nothing, pulse_size = 100000.)
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
