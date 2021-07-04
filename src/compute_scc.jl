@@ -48,8 +48,7 @@ end
 
     function run_timestep(p, v, d, t)
         if gettime(t) == p.pulse_year
-            # pulse is spread evently across the years within this period, thus 
-            # division by getperiodlength(p.pulse_year)
+            # pulse is applied to the years around this year, as a triangular distribution
             v.e_globalCO2emissions_adjusted[t] = p.e_globalCO2emissions[t] + p.pulse_size / getperiodlength(p.pulse_year)
         else
             v.e_globalCO2emissions_adjusted[t] = p.e_globalCO2emissions[t]
