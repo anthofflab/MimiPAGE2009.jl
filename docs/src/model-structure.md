@@ -78,6 +78,7 @@ The components in this portion of Mimi-PAGE include:
 - Adaptation Costs (for each impact sector)
 - Total Abatement Costs
 - Total Adaptation Costs
+- Total Costs
 - Equity Weighting
 
 ### Functional Components of Mimi-PAGE
