@@ -1,6 +1,6 @@
 name = "MimiPAGE2009"
 uuid = "e25d4f70-4200-11e9-37f3-3b45f1cef54f"
-version = "4.0.3-DEV"
+version = "4.1.1-DEV"
 
 [deps]
 Query = "1a8c2f83-1ff3-5112-b086-8aa67b057ba1"
