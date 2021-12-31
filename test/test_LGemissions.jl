@@ -6,8 +6,8 @@ include("../src/components/LGemissions.jl")
 
 add_comp!(m, LGemissions)
 
-update_param!(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/e0_baselineLGemissions.csv"))
-update_param!(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/er_LGemissionsgrowth.csv"))
+update_param!(m, :LGemissions, :e0_baselineLGemissions, readpagedata(m,"data/shared_parameters/e0_baselineLGemissions.csv"))
+update_param!(m, :LGemissions, :er_LGemissionsgrowth, readpagedata(m, "data/shared_parameters/er_LGemissionsgrowth.csv"))
 
 # run Model
 run(m)

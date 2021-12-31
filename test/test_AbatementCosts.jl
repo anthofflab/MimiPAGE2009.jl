@@ -1,15 +1,25 @@
 
 using DataFrames
 using Test
+include("../src/components/AbatementCosts.jl")
 
 m = test_page_model()
 
+add_shared_param!(m, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"), dims=[:time])
+add_shared_param!(m, :y_year, Mimi.dim_keys(m.md, :time), dims=[:time])
+
+p = load_parameters(m)
+add_shared_param!(m, :emitf_uncertaintyinBAUemissfactor, p[:shared][:emitf_uncertaintyinBAUemissfactor], dims=[:region])
+add_shared_param!(m, :q0f_negativecostpercentagefactor, p[:shared][:q0f_negativecostpercentagefactor], dims=[:region])
+add_shared_param!(m, :cmaxf_maxcostfactor, p[:shared][:cmaxf_maxcostfactor], dims=[:region])
+
 for gas in [:CO2, :CH4, :N2O, :Lin]
-    MimiPAGE2009.addabatementcostparameters(m, gas)
-    MimiPAGE2009.addabatementcosts(m, gas)
 
     comp_name1 = Symbol("AbatementCostParameters$gas")
     comp_name2 = Symbol("AbatementCosts$gas")
+
+    MimiPAGE2009.addabatementcostparameters(m, gas)
+    add_comp!(m, AbatementCosts, comp_name2)
 
     connect_param!(m, comp_name1 => :cbe_absoluteemissionreductions, comp_name2 => :cbe_absoluteemissionreductions)
         
@@ -20,14 +30,35 @@ for gas in [:CO2, :CH4, :N2O, :Lin]
     connect_param!(m, comp_name2 => :bhi, comp_name1 => :bhi)
     connect_param!(m, comp_name2 => :ahi, comp_name1 => :ahi)
 
+    connect_param!(m, comp_name1, :yagg, :yagg)
+    connect_param!(m, comp_name1, :y_year, :y_year)
+    connect_param!(m, comp_name1, :emitf_uncertaintyinBAUemissfactor, :emitf_uncertaintyinBAUemissfactor)
+    connect_param!(m, comp_name1, :q0f_negativecostpercentagefactor, :q0f_negativecostpercentagefactor)
+    connect_param!(m, comp_name1, :cmaxf_maxcostfactor, :cmaxf_maxcostfactor)
+
 end
 
-update_param!(m, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
 
-p = load_parameters(m)
-p["y_year_0"] = 2008.
-p["y_year"] = Mimi.dim_keys(m.md, :time)
-set_leftover_params!(m, p)
+add_shared_param!(m, :e0_baselineCO2emissions, p[:shared][:e0_baselineCO2emissions], dims=[:region])
+connect_param!(m, :AbatementCostParametersCO2, :e0_baselineemissions, :e0_baselineCO2emissions)
+connect_param!(m, :AbatementCostsCO2, :e0_baselineemissions, :e0_baselineCO2emissions)
+
+add_shared_param!(m, :e0_baselineCH4emissions, p[:shared][:e0_baselineCH4emissions], dims=[:region])
+connect_param!(m, :AbatementCostParametersCH4, :e0_baselineemissions, :e0_baselineCH4emissions)
+connect_param!(m, :AbatementCostsCH4, :e0_baselineemissions, :e0_baselineCH4emissions)
+
+add_shared_param!(m, :e0_baselineN2Oemissions, p[:shared][:e0_baselineN2Oemissions], dims=[:region])
+connect_param!(m, :AbatementCostParametersN2O, :e0_baselineemissions, :e0_baselineN2Oemissions)
+connect_param!(m, :AbatementCostsN2O, :e0_baselineemissions, :e0_baselineN2Oemissions)
+
+add_shared_param!(m, :e0_baselineLGemissions, p[:shared][:e0_baselineLGemissions], dims=[:region])
+connect_param!(m, :AbatementCostParametersLin, :e0_baselineemissions, :e0_baselineLGemissions)
+connect_param!(m, :AbatementCostsLin, :e0_baselineemissions, :e0_baselineLGemissions)
+
+update_param!(m, :AbatementCostsCO2, :er_emissionsgrowth, p[:shared][:er_CO2emissionsgrowth])
+update_param!(m, :AbatementCostsCH4, :er_emissionsgrowth, p[:shared][:er_CH4emissionsgrowth])
+update_param!(m, :AbatementCostsN2O, :er_emissionsgrowth, p[:shared][:er_N2Oemissionsgrowth])
+update_param!(m, :AbatementCostsLin, :er_emissionsgrowth, p[:shared][:er_LGemissionsgrowth])
 
 run(m)
 

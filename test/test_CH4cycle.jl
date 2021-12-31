@@ -11,8 +11,11 @@ update_param!(m, :ch4cycle, :rtl_g_landtemperature, readpagedata(m,"test/validat
 update_param!(m, :ch4cycle,:y_year_0,2008.)
 
 p = load_parameters(m)
-p["y_year"] = Mimi.dim_keys(m.md, :time)
-set_leftover_params!(m, p)
+
+update_param!(m, :ch4cycle, :y_year, Mimi.dim_keys(m.md, :time))
+update_param!(m, :ch4cycle, :y_year_0, 2008.)
+
+update_leftover_params!(m, p[:unshared])
 
 #running Model
 run(m)

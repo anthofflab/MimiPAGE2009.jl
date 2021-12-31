@@ -295,9 +295,9 @@ function _init_page_scalar_shared_params!(m::Model)
         connect_param!(m, :AbatementCostParametersLin, paramname, paramname)
     end
 
-    # AdaptiveCostParameters components
+    # AdaptiveCost components
     add_shared_param!(m, :automult_autonomouschange, 0.65)
-    for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsSeaLevel, :AdaptiveCostsNonEconomic]
+    for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
         connect_param!(m, compname, :automult_autonomouschange, :automult_autonomouschange)
     end
 
@@ -308,7 +308,8 @@ function _init_page_scalar_shared_params!(m::Model)
                         :AbatementCostParametersCO2, :AbatementCostParametersCH4, 
                         :AbatementCostParametersN2O, :AbatementCostParametersLin,
                         :AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic,
-                        :SLRDamages, :Discontinuity, :EquityWeighting]
+                        :SLRDamages, :MarketDamages, :NonMarketDamages,
+                        :Discontinuity, :EquityWeighting]
         connect_param!(m, compname, :y_year, :y_year)
     end
 
@@ -399,6 +400,7 @@ function _init_page_nonscalar_shared_params!(m::Model, p::Dict)
     connect_param!(m, :AdaptiveCostsNonEconomic, :impmax_maximumadaptivecapacity, :impmax_noneconomic)
     connect_param!(m, :NonMarketDamages, :impmax_maxtempriseforadaptpolicyNM, :impmax_noneconomic, ignoreunits=true) # ignore units because AdaptiveCostsSeaLevel has generic unit "driver"
 
+    # population and gdp
     add_shared_param!(m, :popgrw_populationgrowth, p[:popgrw_populationgrowth], dims=[:time, :region])
     connect_param!(m, :Population, :popgrw_populationgrowth, :popgrw_populationgrowth)
     connect_param!(m, :EquityWeighting, :popgrw_populationgrowth, :popgrw_populationgrowth)

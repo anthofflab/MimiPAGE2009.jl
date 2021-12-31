@@ -1,6 +1,5 @@
 using Mimi
-
-include("utils/load_parameters.jl")
+using MimiPAGE2009
 
 include("components/CO2emissions.jl")
 include("components/CO2cycle.jl")

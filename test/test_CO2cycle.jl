@@ -11,9 +11,6 @@ update_param!(m, :co2cycle, :y_year,[2009.,2010.,2020.,2030.,2040.,2050.,2075.,2
 update_param!(m, :co2cycle, :y_year_0,2008.)#real value
 update_param!(m, :co2cycle, :rt_g_globaltemperature, readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv"))
 
-p=load_parameters(m)
-set_leftover_params!(m,p) 
-
 run(m)
 
 pop=m[:co2cycle,  :c_CO2concentration]

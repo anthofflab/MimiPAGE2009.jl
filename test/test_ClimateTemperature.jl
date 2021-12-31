@@ -13,7 +13,9 @@ climatetemperature[:ft_totalforcing] = readpagedata(m, "test/validationdata/ft_t
 climatetemperature[:fs_sulfateforcing] = readpagedata(m, "test/validationdata/fs_sulfateforcing.csv")
 
 p = load_parameters(m)
-set_leftover_params!(m, p)
+
+update_param!(m, :ClimateTemperature, :area, p[:shared][:area])
+update_leftover_params!(m, p[:unshared])
 
 ##running Model
 run(m)

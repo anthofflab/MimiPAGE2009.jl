@@ -4,13 +4,14 @@ using Test
 m = test_page_model()
 include("../src/components/Population.jl")
 
-add_comp!(m, Population)
+population = add_comp!(m, Population)
 population[:y_year_0] = 2008.
 population[:y_year] = Mimi.dim_keys(m.md, :time)
 
 p = load_parameters(m)
 
-set_leftover_params!(m, p)
+update_param!(m, :Population, :popgrw_populationgrowth, p[:shared][:popgrw_populationgrowth])
+update_param!(m, :Population, :pop0_initpopulation, p[:shared][:pop0_initpopulation])
 
 run(m)
 

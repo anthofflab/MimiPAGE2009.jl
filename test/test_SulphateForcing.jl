@@ -7,9 +7,9 @@ include("../src/components/SulphateForcing.jl")
 add_comp!(m, SulphateForcing)
 
 p = load_parameters(m)
-p["y_year_0"] = 2008.
-p["y_year"] = Mimi.dim_keys(m.md, :time)
-set_leftover_params!(m, p)
+
+update_param!(m, :SulphateForcing, :area, p[:shared][:area])
+update_leftover_params!(m, p[:unshared])
 
 run(m)
 

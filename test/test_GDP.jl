@@ -6,13 +6,15 @@ include("../src/components/GDP.jl")
 
 gdp = add_comp!(m, GDP)
 
-gdp[:pop0_initpopulation] = readpagedata(m, "data/pop0_initpopulation.csv")
+gdp[:pop0_initpopulation] = readpagedata(m, "data/shared_parameters/pop0_initpopulation.csv")
 gdp[:pop_population] = readpagedata(m, "test/validationdata/pop_population.csv")
 gdp[:y_year] = Mimi.dim_keys(m.md, :time)
 gdp[:y_year_0] = 2008.
 
 p=load_parameters(m)
-set_leftover_params!(m,p)
+
+update_param!(m, :GDP, :grw_gdpgrowthrate, p[:shared][:grw_gdpgrowthrate])
+update_param!(m, :GDP, :gdp_0, p[:unshared][(:GDP, :gdp_0)])
 
 # run model
 run(m)

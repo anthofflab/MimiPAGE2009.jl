@@ -6,8 +6,8 @@ include("../src/components/N2Oemissions.jl")
 
 add_comp!(m, n2oemissions)
 
-update_param!(m, :n2oemissions, :e0_baselineN2Oemissions, readpagedata(m,"data/e0_baselineN2Oemissions.csv"))
-update_param!(m, :n2oemissions, :er_N2Oemissionsgrowth, readpagedata(m, "data/er_N2Oemissionsgrowth.csv"))
+update_param!(m, :n2oemissions, :e0_baselineN2Oemissions, readpagedata(m,"data/shared_parameters/e0_baselineN2Oemissions.csv"))
+update_param!(m, :n2oemissions, :er_N2Oemissionsgrowth, readpagedata(m, "data/shared_parameters/er_N2Oemissionsgrowth.csv"))
 
 ##running Model
 run(m)

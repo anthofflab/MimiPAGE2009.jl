@@ -9,13 +9,34 @@ adaptationcosts_noneconomic = MimiPAGE2009.addadaptationcosts_noneconomic(m)
 adaptationcosts_economic = MimiPAGE2009.addadaptationcosts_economic(m)
 adaptationcosts_sealevel = MimiPAGE2009.addadaptationcosts_sealevel(m)
 
-update_param!(m, :y_year_0, 2008)
-update_param!(m, :y_year, Mimi.dim_keys(m.md, :time))
-update_param!(m, :gdp, readpagedata(m, "test/validationdata/gdp.csv"))
-update_param!(m, :automult_autonomouschange, 0.65)
+add_shared_param!(m, :y_year, Mimi.dim_keys(m.md, :time), dims=[:time])
+for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
+    connect_param!(m, compname, :y_year, :y_year)
+end
 
-p = load_parameters(m)
-set_leftover_params!(m, p)
+add_shared_param!(m, :y_year_0, 2008.)
+for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
+    connect_param!(m, compname, :y_year_0, :y_year_0)
+end
+
+add_shared_param!(m, :gdp, readpagedata(m, "test/validationdata/gdp.csv"), dims=[:time,:region])
+for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
+    connect_param!(m, compname, :gdp, :gdp)
+end
+
+add_shared_param!(m, :automult_autonomouschange, 0.65)
+for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
+    connect_param!(m, compname, :automult_autonomouschange, :automult_autonomouschange)
+end
+
+add_shared_param!(m, :cf_costregional, p[:shared][:cf_costregional], dims=[:region])
+for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
+    connect_param!(m, compname, :cf_costregional, :cf_costregional)
+end
+
+update_param!(m, :AdaptiveCostsSeaLevel, :impmax_maximumadaptivecapacity, p[:shared][:impmax_sealevel])
+update_param!(m, :AdaptiveCostsEconomic, :impmax_maximumadaptivecapacity, p[:shared][:impmax_economic])
+update_param!(m, :AdaptiveCostsNonEconomic, :impmax_maximumadaptivecapacity, p[:shared][:impmax_noneconomic])
 
 run(m)
 
