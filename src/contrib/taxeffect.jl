@@ -59,13 +59,13 @@ function addtaxdrivengrowth(model::Model, class::Symbol)
     add_comp!(model, TaxDrivenGrowth, componentname, after=Symbol("AbatementCostParameters$class"))
 
     if class == :CO2
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCO2emissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCO2emissions.csv"))
     elseif class == :CH4
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCH4emissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCH4emissions.csv"))
     elseif class == :N2O
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
     elseif class == :Lin
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,"data/e0_baselineLGemissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model,"data/e0_baselineLGemissions.csv"))
     else
         error("Unknown class of abatement costs.")
     end
@@ -99,7 +99,7 @@ function getuniformtaxmodel()
     buildpage(m)
 
     add_comp!(m, UniformTaxDrivenGrowth, after=:GDP) # before all abatement costs parameters
-    set_param!(m, :UniformTaxDrivenGrowth, :uniformtax, zeros(10))
+    update_param!(m, :UniformTaxDrivenGrowth, :uniformtax, zeros(10))
 
     for class in [:CO2, :CH4, :N2O, :Lin]
         addtaxdrivengrowth(m, class)

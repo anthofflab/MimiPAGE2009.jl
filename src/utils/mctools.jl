@@ -1,15 +1,6 @@
 using Query
 
 """
-Create a parameter `component`_`name` with the given value,
-and connect parameter `name` within `component` to this distinct global parameter.
-"""
-function setdistinctparameter(m::Model, component::Symbol, name::Symbol, value)
-    globalname = Symbol(string(component, '_', name))
-    set_param!(m, component, name, globalname, value)
-end
-
-"""
 Load raw RV output into reformat_RV_outputs 
 """
 function load_RV(filename::String, RVname::String; 

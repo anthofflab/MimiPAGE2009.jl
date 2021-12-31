@@ -6,7 +6,7 @@ include("../src/components/LGforcing.jl")
 
 add_comp!(m, LGforcing)
 
-set_param!(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
+update_param!(m, :LGforcing, :c_LGconcentration, readpagedata(m,"test/validationdata/c_LGconcentration.csv"))
 
 # run Model
 run(m)

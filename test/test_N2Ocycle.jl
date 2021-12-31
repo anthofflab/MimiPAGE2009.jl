@@ -6,10 +6,10 @@ include("../src/components/N2Ocycle.jl")
 
 add_comp!(m, n2ocycle)
 
-set_param!(m, :n2ocycle, :e_globalN2Oemissions, readpagedata(m,"test/validationdata/e_globalN2Oemissions.csv"))
-set_param!(m, :n2ocycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]) #real value
-set_param!(m, :n2ocycle, :y_year_0, 2008.) #real value
-set_param!(m, :n2ocycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
+update_param!(m, :n2ocycle, :e_globalN2Oemissions, readpagedata(m,"test/validationdata/e_globalN2Oemissions.csv"))
+update_param!(m, :n2ocycle, :y_year, [2009.,2010.,2020.,2030.,2040.,2050.,2075.,2100.,2150.,2200.]) #real value
+update_param!(m, :n2ocycle, :y_year_0, 2008.) #real value
+update_param!(m, :n2ocycle, :rtl_g_landtemperature, readpagedata(m,"test/validationdata/rtl_g_landtemperature.csv"))
 
 ##running Model
 run(m)

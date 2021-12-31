@@ -22,7 +22,7 @@ for gas in [:CO2, :CH4, :N2O, :Lin]
 
 end
 
-set_param!(m, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
+update_param!(m, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.csv"))
 
 p = load_parameters(m)
 p["y_year_0"] = 2008.
