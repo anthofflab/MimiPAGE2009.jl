@@ -16,7 +16,7 @@ update_param!(m, :MarketDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 
 update_param!(m, :MarketDamages, :y_year, Mimi.dim_keys(m, :time))
 
-p = load_parameters(m, policy=policy)
+p = load_parameters(m)
 update_param!(m, :MarketDamages, :wincf_weightsfactor, p[:shared][:wincf_weightsfactor])
 update_param!(m, :MarketDamages, :impmax_maxtempriseforadaptpolicyM, p[:shared][:impmax_economic])
 

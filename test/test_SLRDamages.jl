@@ -18,7 +18,7 @@ update_param!(m, :SLRDamages, :act_percap_adaptationcosts, readpagedata(m, "test
 update_param!(m, :SLRDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 update_param!(m, :SLRDamages, :wincf_weightsfactor, readpagedata(m, "data/shared_parameters/wincf_weightsfactor.csv"))
 
-p = load_parameters(m, policy=policy)
+p = load_parameters(m)
 update_param!(m, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, p[:shared][:impmax_sealevel])
 
 ##running Model
