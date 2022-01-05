@@ -113,9 +113,8 @@
     end
 end
 
-function addabatementcostparameters(model::Model, class::Symbol)
+function update_params_abatementcostparameters!(model::Model, class::Symbol)
     componentname = Symbol("AbatementCostParameters$class")
-    abatementcostscomp = add_comp!(model, AbatementCostParameters, componentname)
 
     if class == :CO2
         update_param!(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 8.333333333333334)
@@ -152,6 +151,4 @@ function addabatementcostparameters(model::Model, class::Symbol)
     else
         error("Unknown class of abatement costs.")
     end
-
-    return abatementcostscomp
 end

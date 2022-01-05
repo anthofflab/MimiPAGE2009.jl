@@ -73,8 +73,7 @@
     end
 end
 
-function addadaptationcosts_sealevel(model::Model)
-    adaptationcosts = add_comp!(model, AdaptationCosts, :AdaptiveCostsSeaLevel)
+function update_params_adaptationcosts_sealevel!(model::Model)
 
     # Sea Level-specific parameters
     update_param!(model, :AdaptiveCostsSeaLevel, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "data/other_adaptation_parameters/sealevel_plateau.csv"))
@@ -86,11 +85,9 @@ function addadaptationcosts_sealevel(model::Model)
     update_param!(model, :AdaptiveCostsSeaLevel, :cp_costplateau_eu, 0.0233333333333333)
     update_param!(model, :AdaptiveCostsSeaLevel, :ci_costimpact_eu, 0.00116666666666667)
 
-    return adaptationcosts
 end
 
-function addadaptationcosts_economic(model::Model)
-    adaptationcosts = add_comp!(model, AdaptationCosts, :AdaptiveCostsEconomic)
+function update_params_adaptationcosts_economic!(model::Model)
 
     # Economic-specific parameters
     update_param!(model, :AdaptiveCostsEconomic, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "data/other_adaptation_parameters/plateau_increaseintolerableplateaufromadaptationM.csv"))
@@ -102,11 +99,9 @@ function addadaptationcosts_economic(model::Model)
     update_param!(model, :AdaptiveCostsEconomic, :cp_costplateau_eu, 0.0116666666666667)
     update_param!(model, :AdaptiveCostsEconomic, :ci_costimpact_eu, 0.0040000000)
 
-    return adaptationcosts
 end
 
-function addadaptationcosts_noneconomic(model::Model)
-    adaptationcosts = add_comp!(model, AdaptationCosts, :AdaptiveCostsNonEconomic)
+function update_params_adaptationcosts_noneconomic!(model::Model)
 
     # Non-economic-specific parameters
     update_param!(model, :AdaptiveCostsNonEconomic, :plateau_increaseintolerableplateaufromadaptation, readpagedata(model, "data/other_adaptation_parameters/plateau_increaseintolerableplateaufromadaptationNM.csv"))
@@ -118,5 +113,4 @@ function addadaptationcosts_noneconomic(model::Model)
     update_param!(model, :AdaptiveCostsNonEconomic, :cp_costplateau_eu, 0.0233333333333333)
     update_param!(model, :AdaptiveCostsNonEconomic, :ci_costimpact_eu, 0.00566666666666667)
 
-    return adaptationcosts
 end

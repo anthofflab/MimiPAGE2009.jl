@@ -7,19 +7,19 @@ include("../src/components/SLRDamages.jl")
 
 slrdamages =  add_comp!(m, SLRDamages)
 
+update_param!(m, :SLRDamages, :y_year_0, 2008.)
 update_param!(m, :SLRDamages, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
 update_param!(m, :SLRDamages, :atl_adjustedtolerablelevelofsealevelrise, readpagedata(m, "test/validationdata/atl_adjustedtolerablelevelofsealevelrise.csv"))
 update_param!(m, :SLRDamages, :imp_actualreductionSLR, readpagedata(m, "test/validationdata/imp_actualreductionSLR.csv"))
-update_param!(m, :SLRDamages, :y_year_0, 2008.)
 update_param!(m, :SLRDamages, :s_sealevel, readpagedata(m, "test/validationdata/s_sealevelrise.csv"))
 update_param!(m, :SLRDamages, :cons_percap_consumption, readpagedata(m, "test/validationdata/cons_percap_consumption.csv"))
 update_param!(m, :SLRDamages, :tct_per_cap_totalcostspercap, readpagedata(m, "test/validationdata/tct_per_cap_totalcostspercap.csv"))
 update_param!(m, :SLRDamages, :act_percap_adaptationcosts, readpagedata(m, "test/validationdata/act_percap_adaptationcosts.csv"))
 update_param!(m, :SLRDamages, :isatg_impactfxnsaturation, 28.333333333333336)
-update_param!(m, :SLRDamages, :wincf_weightsfactor, readpagedata(m, "data/shared_parameters/wincf_weightsfactor.csv"))
 
 p = load_parameters(m)
 update_param!(m, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, p[:shared][:impmax_sealevel])
+update_param!(m, :SLRDamages, :wincf_weightsfactor,  p[:shared][:wincf_weightsfactor])
 
 ##running Model
 run(m)

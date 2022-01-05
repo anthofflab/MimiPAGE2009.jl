@@ -5,8 +5,9 @@ include("../src/components/CH4emissions.jl")
 
 add_comp!(m, ch4emissions)
 
-update_param!(m, :ch4emissions, :e0_baselineCH4emissions, readpagedata(m, "data/shared_parameters/e0_baselineCH4emissions.csv")) #PAGE 2009 documentation pp38
-update_param!(m, :ch4emissions, :er_CH4emissionsgrowth, readpagedata(m, "data/shared_parameters/er_CH4emissionsgrowth.csv"))
+p = load_parameters(m)
+update_param!(m, :ch4emissions, :e0_baselineCH4emissions, p[:shared][:e0_baselineCH4emissions]) #PAGE 2009 documentation pp38
+update_param!(m, :ch4emissions, :er_CH4emissionsgrowth, p[:shared][:er_CH4emissionsgrowth])
 
 ##running Model
 run(m)

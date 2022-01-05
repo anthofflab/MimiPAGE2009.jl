@@ -44,12 +44,11 @@ include("components/TotalCosts.jl")
 include("components/EquityWeighting.jl")
 
 """
-    buildpage(m::Model, policy::String="policy-a")
+    buildpage(m::Model)
 
-Build the PAGE 2009 model structure. Note that the buildpage function does not 
-currently use the policy argument even if it is given
+Build the PAGE 2009 model structure.
 """
-function buildpage(m::Model, policy::String="policy-a")
+function buildpage(m::Model)
 
     #add all the components
     add_comp!(m, co2emissions)
@@ -73,22 +72,17 @@ function buildpage(m::Model, policy::String="policy-a")
     add_comp!(m, Population)
     add_comp!(m, GDP)
 
-    #Abatement Costs - these functions add comp and also update some unshared parameters
-    addabatementcostparameters(m, :CO2)
-    addabatementcostparameters(m, :CH4)
-    addabatementcostparameters(m, :N2O)
-    addabatementcostparameters(m, :Lin)
-
-    add_comp!(m, AbatementCosts, :AbatementCostsCO2)
-    add_comp!(m, AbatementCosts, :AbatementCostsCH4)
-    add_comp!(m, AbatementCosts, :AbatementCostsN2O)
-    add_comp!(m, AbatementCosts, :AbatementCostsLin)
+    #Abatement Costs
+    for gas in [:CO2, :CH4, :N2O, :Lin]
+        add_comp!(m, AbatementCostParameters, Symbol("AbatementCostParameters$gas"))
+        add_comp!(m, AbatementCosts, Symbol("AbatementCosts$gas"))
+    end
     add_comp!(m, TotalAbatementCosts)
 
-    #Adaptation Costs - these functions add comp and also update some unshared parameters
-    addadaptationcosts_sealevel(m)
-    addadaptationcosts_economic(m)
-    addadaptationcosts_noneconomic(m)
+    #Adaptation Costs
+    add_comp!(m, AdaptationCosts, :AdaptiveCostsSeaLevel)
+    add_comp!(m, AdaptationCosts, :AdaptiveCostsEconomic)
+    add_comp!(m, AdaptationCosts, :AdaptiveCostsNonEconomic)
     add_comp!(m, TotalAdaptationCosts)
 
     # Impacts
@@ -233,40 +227,50 @@ Initialize the PAGE 2009 model by updating all parameter values.
 """
 function initpage(m::Model, policy::String="policy-a")
 
-    # STEP 1. Set scalar shared parameters that are not loaded from file such that 
-    # these will now be linked to the same shared parameter 
+    # STEP 1. Set the Adaptation Costs parameters using functions defined in 
+    # AdaptationCosts.jl
+    update_params_adaptationcosts_sealevel!(m)
+    update_params_adaptationcosts_economic!(m)
+    update_params_adaptationcosts_noneconomic!(m)
 
+    # Step 2. Set the Abatement Cost Parameters parameters using function defined
+    # in AbatementCostParameters.jl
+    for class in [:CO2, :CH4, :N2O, :Lin]
+        update_params_abatementcostparameters!(m, class)
+    end
+
+    # STEP 3. Set scalar shared parameters that are not loaded from file such that 
+    # these will now be linked to the same shared parameter 
     # * for convenience later, name model parameter same as the component parameters,
     # but this is not required could give a unique name *
-    _init_page_scalar_shared_params!(m)
+    update_params_page_scalar_shared!(m)
 
-    # STEP 2. Load Non-Scalar Parameter values from files
+    # STEP 4. Load Non-Scalar Parameter values from files
     # * :shared => (parameter_name => default_value) for parameters shared in the model
     # * :unshared => ((component_name, parameter_name) => default_value) for component specific parameters that are not shared
 
     p = load_parameters(m, policy=policy)
 
-    # STEP 3. Set non-scalar shared parameters that are loaded from file such that 
+    # STEP 5. Set non-scalar shared parameters that are loaded from file such that 
     # these will now be linked to the same shared parameter 
-
     # * for convenience later, name shared model parameter same as the component 
     # parameters, but this is not required could give a unique name *
-    _init_page_nonscalar_shared_params!(m, p[:shared])
+    update_params_page_nonscalar_shared!(m, p[:shared])
 
-    # Step 4. Set unshared parameters
+    # Step 4. Set the rest of the unshared parameters
     update_leftover_params!(m, p[:unshared])
 
 end
 
 """
-    _init_page_scalar_shared_params!(m::Model)
+    update_params_page_scalar_shared!(m::Model)
 
 Set some shared parameters that are not loaded from file such that 
 these will now be linked to the same shared parameter - for convenience later,
 name model parameter same as the component parameters, but this is not required 
 could give a unique name
 """
-function _init_page_scalar_shared_params!(m::Model)
+function update_params_page_scalar_shared!(m::Model)
 
     # AbatementCostParameters components
     add_shared_param!(m, :q0propmult_cutbacksatnegativecostinfinalyear, .733333333333333334)
@@ -336,14 +340,14 @@ function _init_page_scalar_shared_params!(m::Model)
 end
 
 """
-    _init_page_nonscalar_shared_params!(m::Model, p::Dict)
+    update_params_page_nonscalar_shared!(m::Model, p::Dict)
 
 Set some shared parameters that are loaded from file into Dictionary p such that 
 these will now be linked to the same shared parameter - for convenience later,
 name model parameter same as the component parameters, but this is not required 
 could give a unique name
 """
-function _init_page_nonscalar_shared_params!(m::Model, p::Dict)
+function update_params_page_nonscalar_shared!(m::Model, p::Dict)
 
     add_shared_param!(m, :area, p[:area], dims=[:region])
     connect_param!(m, :ClimateTemperature, :area, :area)
@@ -448,7 +452,7 @@ function get_model(policy::String="policy-a")
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-    buildpage(m, policy)
+    buildpage(m)
 
     initpage(m, policy)
 

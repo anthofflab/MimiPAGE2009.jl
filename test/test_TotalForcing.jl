@@ -6,11 +6,14 @@ include("../src/components/TotalForcing.jl")
 
 totalforcing = add_comp!(m, TotalForcing)
 
-totalforcing[:f_CO2forcing] = readpagedata(m,"test/validationdata/f_co2forcing.csv")
-totalforcing[:f_CH4forcing] = readpagedata(m,"test/validationdata/f_ch4forcing.csv")
-totalforcing[:f_N2Oforcing] = readpagedata(m,"test/validationdata/f_n2oforcing.csv")
-totalforcing[:f_lineargasforcing] = readpagedata(m,"test/validationdata/f_LGforcing.csv")
-totalforcing[:exf_excessforcing] = readpagedata(m,"data/unshared_parameters/TotalForcing-exf_excessforcing.csv")
+update_param!(m, :TotalForcing, :f_CO2forcing, readpagedata(m,"test/validationdata/f_co2forcing.csv"))
+update_param!(m, :TotalForcing, :f_CH4forcing, readpagedata(m,"test/validationdata/f_ch4forcing.csv"))
+update_param!(m, :TotalForcing, :f_N2Oforcing, readpagedata(m,"test/validationdata/f_n2oforcing.csv"))
+update_param!(m, :TotalForcing, :f_lineargasforcing, readpagedata(m,"test/validationdata/f_LGforcing.csv"))
+
+p = load_parameters(m)
+
+update_param!(m, :TotalForcing, :exf_excessforcing, p[:unshared][(:TotalForcing, :exf_excessforcing)])
 
 run(m)
 

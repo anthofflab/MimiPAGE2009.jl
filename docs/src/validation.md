@@ -48,8 +48,8 @@ add_comp!(m, co2emissions)
 
 Then we set the component inputs (baseline emissions and CO2 emissions growth) using exogenous values from PAGE 2009, which are saved in the data folder.
 ```
-update_param!(m, :co2emissions, :e0_baselineCO2emissions, readpagedata(m, "data/e0_baselineCO2emissions.csv"))
-update_param!(m, :co2emissions, :er_CO2emissionsgrowth, readpagedata(m, "data/er_CO2emissionsgrowth.csv"))
+update_param!(m, :co2emissions, :e0_baselineCO2emissions, readpagedata(m, "data/shared_parameters/e0_baselineCO2emissions.csv"))
+update_param!(m, :co2emissions, :er_CO2emissionsgrowth, readpagedata(m, "data/shared_parameters/er_CO2emissionsgrowth.csv"))
 ```
 
 Then we run our model, save the output to the `emissions` variable. We

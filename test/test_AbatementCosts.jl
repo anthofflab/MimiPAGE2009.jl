@@ -1,6 +1,7 @@
 
 using DataFrames
 using Test
+include("../src/components/AbatementCostParameters.jl")
 include("../src/components/AbatementCosts.jl")
 
 m = test_page_model()
@@ -18,11 +19,13 @@ for gas in [:CO2, :CH4, :N2O, :Lin]
     comp_name1 = Symbol("AbatementCostParameters$gas")
     comp_name2 = Symbol("AbatementCosts$gas")
 
-    MimiPAGE2009.addabatementcostparameters(m, gas)
+    add_comp!(m, AbatementCostParameters, comp_name1)
     add_comp!(m, AbatementCosts, comp_name2)
 
+    MimiPAGE2009.update_params_abatementcostparameters!(m, gas)
+
+    # connect the components together
     connect_param!(m, comp_name1 => :cbe_absoluteemissionreductions, comp_name2 => :cbe_absoluteemissionreductions)
-        
     connect_param!(m, comp_name2 => :zc_zerocostemissions, comp_name1 => :zc_zerocostemissions)
     connect_param!(m, comp_name2 => :q0_absolutecutbacksatnegativecost, comp_name1 => :q0_absolutecutbacksatnegativecost)
     connect_param!(m, comp_name2 => :blo, comp_name1 => :blo)
@@ -30,6 +33,7 @@ for gas in [:CO2, :CH4, :N2O, :Lin]
     connect_param!(m, comp_name2 => :bhi, comp_name1 => :bhi)
     connect_param!(m, comp_name2 => :ahi, comp_name1 => :ahi)
 
+    # connect to shared model parameters common across gases
     connect_param!(m, comp_name1, :yagg, :yagg)
     connect_param!(m, comp_name1, :y_year, :y_year)
     connect_param!(m, comp_name1, :emitf_uncertaintyinBAUemissfactor, :emitf_uncertaintyinBAUemissfactor)
@@ -38,7 +42,7 @@ for gas in [:CO2, :CH4, :N2O, :Lin]
 
 end
 
-
+# connect to shared model parameters specific to each gas
 add_shared_param!(m, :e0_baselineCO2emissions, p[:shared][:e0_baselineCO2emissions], dims=[:region])
 connect_param!(m, :AbatementCostParametersCO2, :e0_baselineemissions, :e0_baselineCO2emissions)
 connect_param!(m, :AbatementCostsCO2, :e0_baselineemissions, :e0_baselineCO2emissions)
@@ -55,6 +59,7 @@ add_shared_param!(m, :e0_baselineLGemissions, p[:shared][:e0_baselineLGemissions
 connect_param!(m, :AbatementCostParametersLin, :e0_baselineemissions, :e0_baselineLGemissions)
 connect_param!(m, :AbatementCostsLin, :e0_baselineemissions, :e0_baselineLGemissions)
 
+# update more parameters 
 update_param!(m, :AbatementCostsCO2, :er_emissionsgrowth, p[:shared][:er_CO2emissionsgrowth])
 update_param!(m, :AbatementCostsCH4, :er_emissionsgrowth, p[:shared][:er_CH4emissionsgrowth])
 update_param!(m, :AbatementCostsN2O, :er_emissionsgrowth, p[:shared][:er_N2Oemissionsgrowth])
@@ -77,7 +82,6 @@ zc_compare_co2=readpagedata(m, "test/validationdata/zc_zerocostemissionsCO2.csv"
 zc_compare_ch4=readpagedata(m, "test/validationdata/zc_zerocostemissionsCH4.csv")
 zc_compare_n2o=readpagedata(m, "test/validationdata/zc_zerocostemissionsN2O.csv")
 zc_compare_lin=readpagedata(m, "test/validationdata/zc_zerocostemissionsLG.csv")
-
 
 @test m[:AbatementCostsCO2, :tc_totalcost] ≈ tc_compare_co2 rtol=1e-2
 @test m[:AbatementCostsCH4, :tc_totalcost] ≈ tc_compare_ch4 rtol=1e-2

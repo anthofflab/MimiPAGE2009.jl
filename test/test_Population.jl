@@ -5,8 +5,9 @@ m = test_page_model()
 include("../src/components/Population.jl")
 
 population = add_comp!(m, Population)
-population[:y_year_0] = 2008.
-population[:y_year] = Mimi.dim_keys(m.md, :time)
+
+update_param!(m, :Population, :y_year_0, 2008.)
+update_param!(m, :Population, :y_year,  Mimi.dim_keys(m.md, :time))
 
 p = load_parameters(m)
 

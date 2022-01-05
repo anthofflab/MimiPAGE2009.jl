@@ -14,7 +14,6 @@ update_param!(m, :SeaLevelRise, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 20
 
 run(m)
 
-
 es_equilibriumSL = m[:SeaLevelRise, :es_equilibriumSL]
 es_equilibriumSL_compare = readpagedata(m, "test/validationdata/es_equilibriumSL.csv")
 @test ones(10) ≈ es_equilibriumSL ./ es_equilibriumSL rtol=.01
