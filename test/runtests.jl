@@ -51,5 +51,6 @@ include("test_mcs.jl")
 include("contrib/test_taxeffect.jl")
 
 include("test_standard_api.jl")
+include("test_scc.jl")
 
 end
