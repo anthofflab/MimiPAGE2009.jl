@@ -57,8 +57,6 @@ for yr in specs[:year]
     end
 end
 
-validation_results = load(validation_results_path) |> DataFrame
 # Test several validation configurations against the pre-saved values
-# diffs = sort(results[!, :SCC] - validation_results[!, :SCC], rev = true)
-# println(diffs)
+validation_results = load(validation_results_path) |> DataFrame
 @test all(isapprox.(curr_results[!, :SCC], validation_results[!, :SCC], atol=atol))

@@ -111,6 +111,7 @@ update_param!(m, :n2oemissions, :e0_baselineN2Oemissions, p[:shared][:e0_baselin
 update_param!(m, :ch4emissions, :e0_baselineCH4emissions, p[:shared][:e0_baselineCH4emissions])
 update_param!(m, :LGemissions, :e0_baselineLGemissions, p[:shared][:e0_baselineLGemissions])
 
+# this will set any parameters that are not set (1) explicitly or (2) by default
 update_leftover_params!(m, p[:unshared])
 
 run(m)

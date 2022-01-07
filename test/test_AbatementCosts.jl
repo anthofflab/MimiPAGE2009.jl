@@ -1,6 +1,7 @@
 
 using DataFrames
 using Test
+
 include("../src/components/AbatementCostParameters.jl")
 include("../src/components/AbatementCosts.jl")
 
@@ -10,6 +11,7 @@ add_shared_param!(m, :yagg, readpagedata(m,"test/validationdata/yagg_periodspan.
 add_shared_param!(m, :y_year, Mimi.dim_keys(m.md, :time), dims=[:time])
 
 p = load_parameters(m)
+
 add_shared_param!(m, :emitf_uncertaintyinBAUemissfactor, p[:shared][:emitf_uncertaintyinBAUemissfactor], dims=[:region])
 add_shared_param!(m, :q0f_negativecostpercentagefactor, p[:shared][:q0f_negativecostpercentagefactor], dims=[:region])
 add_shared_param!(m, :cmaxf_maxcostfactor, p[:shared][:cmaxf_maxcostfactor], dims=[:region])

@@ -5,7 +5,7 @@ using Test
 m = test_page_model()
 include("../src/components/MarketDamages.jl")
 
-marketdamages = add_comp!(m, MarketDamages)
+add_comp!(m, MarketDamages)
 
 update_param!(m, :MarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
 update_param!(m, :MarketDamages, :rcons_per_cap_SLRRemainConsumption, readpagedata(m,"test/validationdata/rcons_per_cap_SLRRemainConsumption.csv"))

@@ -257,7 +257,8 @@ function initpage(m::Model, policy::String="policy-a")
     # parameters, but this is not required could give a unique name *
     update_params_page_nonscalar_shared!(m, p[:shared])
 
-    # Step 4. Set the rest of the unshared parameters
+    # Step 4. Set the rest of the unshared parameters - this will set any parameters
+    # that are not set (1) explicitly or (2) by default
     update_leftover_params!(m, p[:unshared])
 
 end
