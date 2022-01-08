@@ -100,7 +100,8 @@ connect_param!(m, :SulphateForcing, :area, :area)
 # Set unshared parameters - in p[:unshared] the name is a Tuple{Symbol, Symbol} 
 # of (component_name, param_name)
 
-# these are shared in the main model but can be unshared in our climate model
+# these are shared in the main model but can be unshared in our climate model since
+# the other components that use them do not exist in this model
 update_param!(m, :co2emissions, :er_CO2emissionsgrowth, p[:shared][:er_CO2emissionsgrowth])
 update_param!(m, :n2oemissions, :er_N2Oemissionsgrowth, p[:shared][:er_N2Oemissionsgrowth])
 update_param!(m, :ch4emissions, :er_CH4emissionsgrowth, p[:shared][:er_CH4emissionsgrowth])

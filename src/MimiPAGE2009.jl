@@ -257,8 +257,8 @@ function initpage(m::Model, policy::String="policy-a")
     # parameters, but this is not required could give a unique name *
     update_params_page_nonscalar_shared!(m, p[:shared])
 
-    # Step 4. Set the rest of the unshared parameters - this will set any parameters
-    # that are not set (1) explicitly or (2) by default
+    # Step 4. Set the leftover ie. unset unshared parameters - this will set any 
+    # parameters that are not set (1) explicitly or (2) by default
     update_leftover_params!(m, p[:unshared])
 
 end
@@ -343,105 +343,105 @@ end
 """
     update_params_page_nonscalar_shared!(m::Model, p::Dict)
 
-Set some shared parameters that are loaded from file into Dictionary p such that 
+Set some shared parameters that are loaded from file into Dictionary p_shared such that 
 these will now be linked to the same shared parameter - for convenience later,
 name model parameter same as the component parameters, but this is not required 
 could give a unique name
 """
-function update_params_page_nonscalar_shared!(m::Model, p::Dict)
+function update_params_page_nonscalar_shared!(m::Model, p_shared::Dict)
 
-    add_shared_param!(m, :area, p[:area], dims=[:region])
+    add_shared_param!(m, :area, p_shared[:area], dims=[:region])
     connect_param!(m, :ClimateTemperature, :area, :area)
     connect_param!(m, :SulphateForcing, :area, :area)
 
     # e0 parameters - baseline emissions
-    add_shared_param!(m, :e0_baselineCO2emissions, p[:e0_baselineCO2emissions], dims=[:region])
+    add_shared_param!(m, :e0_baselineCO2emissions, p_shared[:e0_baselineCO2emissions], dims=[:region])
     connect_param!(m, :co2emissions, :e0_baselineCO2emissions, :e0_baselineCO2emissions)
     connect_param!(m, :AbatementCostParametersCO2, :e0_baselineemissions, :e0_baselineCO2emissions)
     connect_param!(m, :AbatementCostsCO2, :e0_baselineemissions, :e0_baselineCO2emissions)
 
-    add_shared_param!(m, :e0_baselineCH4emissions, p[:e0_baselineCH4emissions], dims=[:region])
+    add_shared_param!(m, :e0_baselineCH4emissions, p_shared[:e0_baselineCH4emissions], dims=[:region])
     connect_param!(m, :ch4emissions, :e0_baselineCH4emissions, :e0_baselineCH4emissions)
     connect_param!(m, :AbatementCostParametersCH4, :e0_baselineemissions, :e0_baselineCH4emissions)
     connect_param!(m, :AbatementCostsCH4, :e0_baselineemissions, :e0_baselineCH4emissions)
 
-    add_shared_param!(m, :e0_baselineN2Oemissions, p[:e0_baselineN2Oemissions], dims=[:region])
+    add_shared_param!(m, :e0_baselineN2Oemissions, p_shared[:e0_baselineN2Oemissions], dims=[:region])
     connect_param!(m, :n2oemissions, :e0_baselineN2Oemissions, :e0_baselineN2Oemissions)
     connect_param!(m, :AbatementCostParametersN2O, :e0_baselineemissions, :e0_baselineN2Oemissions)
     connect_param!(m, :AbatementCostsN2O, :e0_baselineemissions, :e0_baselineN2Oemissions)
 
-    add_shared_param!(m, :e0_baselineLGemissions, p[:e0_baselineLGemissions], dims=[:region])
+    add_shared_param!(m, :e0_baselineLGemissions, p_shared[:e0_baselineLGemissions], dims=[:region])
     connect_param!(m, :LGemissions, :e0_baselineLGemissions, :e0_baselineLGemissions)
     connect_param!(m, :AbatementCostParametersLin, :e0_baselineemissions, :e0_baselineLGemissions)
     connect_param!(m, :AbatementCostsLin, :e0_baselineemissions, :e0_baselineLGemissions)
 
     # er parameters - emissions growth
-    add_shared_param!(m, :er_CO2emissionsgrowth, p[:er_CO2emissionsgrowth], dims=[:time, :region])
+    add_shared_param!(m, :er_CO2emissionsgrowth, p_shared[:er_CO2emissionsgrowth], dims=[:time, :region])
     connect_param!(m, :AbatementCostsCO2, :er_emissionsgrowth, :er_CO2emissionsgrowth)
     connect_param!(m, :co2emissions, :er_CO2emissionsgrowth, :er_CO2emissionsgrowth)
 
-    add_shared_param!(m, :er_CH4emissionsgrowth, p[:er_CH4emissionsgrowth], dims=[:time, :region])
+    add_shared_param!(m, :er_CH4emissionsgrowth, p_shared[:er_CH4emissionsgrowth], dims=[:time, :region])
     connect_param!(m, :AbatementCostsCH4, :er_emissionsgrowth, :er_CH4emissionsgrowth)
     connect_param!(m, :ch4emissions, :er_CH4emissionsgrowth, :er_CH4emissionsgrowth)
 
-    add_shared_param!(m, :er_N2Oemissionsgrowth, p[:er_N2Oemissionsgrowth], dims=[:time, :region])
+    add_shared_param!(m, :er_N2Oemissionsgrowth, p_shared[:er_N2Oemissionsgrowth], dims=[:time, :region])
     connect_param!(m, :AbatementCostsN2O, :er_emissionsgrowth, :er_N2Oemissionsgrowth)
     connect_param!(m, :n2oemissions, :er_N2Oemissionsgrowth, :er_N2Oemissionsgrowth)
 
-    add_shared_param!(m, :er_LGemissionsgrowth, p[:er_LGemissionsgrowth], dims=[:time, :region])
+    add_shared_param!(m, :er_LGemissionsgrowth, p_shared[:er_LGemissionsgrowth], dims=[:time, :region])
     connect_param!(m, :AbatementCostsLin, :er_emissionsgrowth, :er_LGemissionsgrowth)
     connect_param!(m, :LGemissions, :er_LGemissionsgrowth, :er_LGemissionsgrowth)
 
     #impmax parameters - maximum impact
-    add_shared_param!(m, :impmax_sealevel, p[:impmax_sealevel], dims=[:region])
+    add_shared_param!(m, :impmax_sealevel, p_shared[:impmax_sealevel], dims=[:region])
     connect_param!(m, :AdaptiveCostsSeaLevel, :impmax_maximumadaptivecapacity, :impmax_sealevel)
     connect_param!(m, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, :impmax_sealevel, ignoreunits=true) # ignore units because AdaptiveCostsSeaLevel has generic unit "driver"
 
-    add_shared_param!(m, :impmax_economic, p[:impmax_economic], dims=[:region])
+    add_shared_param!(m, :impmax_economic, p_shared[:impmax_economic], dims=[:region])
     connect_param!(m, :AdaptiveCostsEconomic, :impmax_maximumadaptivecapacity, :impmax_economic)
     connect_param!(m, :MarketDamages, :impmax_maxtempriseforadaptpolicyM, :impmax_economic, ignoreunits=true) # ignore units because AdaptiveCostsSeaLevel has generic unit "driver"
 
-    add_shared_param!(m, :impmax_noneconomic, p[:impmax_noneconomic], dims=[:region])
+    add_shared_param!(m, :impmax_noneconomic, p_shared[:impmax_noneconomic], dims=[:region])
     connect_param!(m, :AdaptiveCostsNonEconomic, :impmax_maximumadaptivecapacity, :impmax_noneconomic)
     connect_param!(m, :NonMarketDamages, :impmax_maxtempriseforadaptpolicyNM, :impmax_noneconomic, ignoreunits=true) # ignore units because AdaptiveCostsSeaLevel has generic unit "driver"
 
     # population and gdp
-    add_shared_param!(m, :popgrw_populationgrowth, p[:popgrw_populationgrowth], dims=[:time, :region])
+    add_shared_param!(m, :popgrw_populationgrowth, p_shared[:popgrw_populationgrowth], dims=[:time, :region])
     connect_param!(m, :Population, :popgrw_populationgrowth, :popgrw_populationgrowth)
     connect_param!(m, :EquityWeighting, :popgrw_populationgrowth, :popgrw_populationgrowth)
 
-    add_shared_param!(m, :pop0_initpopulation, p[:pop0_initpopulation], dims=[:region])
+    add_shared_param!(m, :pop0_initpopulation, p_shared[:pop0_initpopulation], dims=[:region])
     connect_param!(m, :Population, :pop0_initpopulation, :pop0_initpopulation)
     connect_param!(m, :GDP, :pop0_initpopulation, :pop0_initpopulation)
 
-    add_shared_param!(m, :grw_gdpgrowthrate, p[:grw_gdpgrowthrate], dims=[:time, :region])
+    add_shared_param!(m, :grw_gdpgrowthrate, p_shared[:grw_gdpgrowthrate], dims=[:time, :region])
     connect_param!(m, :GDP, :grw_gdpgrowthrate, :grw_gdpgrowthrate)
     connect_param!(m, :EquityWeighting, :grw_gdpgrowthrate, :grw_gdpgrowthrate)
 
     # AbatementCostParameters
-    add_shared_param!(m, :emitf_uncertaintyinBAUemissfactor, p[:emitf_uncertaintyinBAUemissfactor], dims=[:region])
+    add_shared_param!(m, :emitf_uncertaintyinBAUemissfactor, p_shared[:emitf_uncertaintyinBAUemissfactor], dims=[:region])
     for compname in [:AbatementCostParametersCO2, :AbatementCostParametersCH4, :AbatementCostParametersN2O, :AbatementCostParametersLin]
         connect_param!(m, compname, :emitf_uncertaintyinBAUemissfactor, :emitf_uncertaintyinBAUemissfactor)
     end
 
-    add_shared_param!(m, :q0f_negativecostpercentagefactor, p[:q0f_negativecostpercentagefactor], dims=[:region])
+    add_shared_param!(m, :q0f_negativecostpercentagefactor, p_shared[:q0f_negativecostpercentagefactor], dims=[:region])
     for compname in [:AbatementCostParametersCO2, :AbatementCostParametersCH4, :AbatementCostParametersN2O, :AbatementCostParametersLin]
         connect_param!(m, compname, :q0f_negativecostpercentagefactor, :q0f_negativecostpercentagefactor)
     end
 
-    add_shared_param!(m, :cmaxf_maxcostfactor, p[:cmaxf_maxcostfactor], dims=[:region])
+    add_shared_param!(m, :cmaxf_maxcostfactor, p_shared[:cmaxf_maxcostfactor], dims=[:region])
     for compname in [:AbatementCostParametersCO2, :AbatementCostParametersCH4, :AbatementCostParametersN2O, :AbatementCostParametersLin]
         connect_param!(m, compname, :cmaxf_maxcostfactor, :cmaxf_maxcostfactor)
     end
     
     # Adaptation Costs
-    add_shared_param!(m, :cf_costregional, p[:cf_costregional], dims=[:region])
+    add_shared_param!(m, :cf_costregional, p_shared[:cf_costregional], dims=[:region])
     for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
         connect_param!(m, compname, :cf_costregional, :cf_costregional)
     end
 
     # Damages
-    add_shared_param!(m, :wincf_weightsfactor, p[:wincf_weightsfactor], dims=[:region])
+    add_shared_param!(m, :wincf_weightsfactor, p_shared[:wincf_weightsfactor], dims=[:region])
     for compname in [:Discontinuity, :MarketDamages, :NonMarketDamages, :SLRDamages]
         connect_param!(m, compname, :wincf_weightsfactor, :wincf_weightsfactor)
     end
