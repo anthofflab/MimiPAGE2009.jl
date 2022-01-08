@@ -72,6 +72,7 @@ function buildpage(m::Model, policy::String="policy-a")
     addpopulation(m)
     add_comp!(m, GDP)
 
+    
     #Abatement Costs
     addabatementcostparameters(m, :CO2, policy)
     addabatementcostparameters(m, :CH4, policy)
