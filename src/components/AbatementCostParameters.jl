@@ -113,8 +113,9 @@
     end
 end
 
-function update_params_abatementcostparameters!(model::Model, class::Symbol)
+function addabatementcostparameters(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCostParameters$class")
+    abatementcostscomp = add_comp!(model, AbatementCostParameters, componentname)
 
     if class == :CO2
         update_param!(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 8.333333333333334)
@@ -123,6 +124,7 @@ function update_params_abatementcostparameters!(model::Model, class::Symbol)
         update_param!(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
         update_param!(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 400.)
         update_param!(model, componentname, :ies_InitialExperienceStockofCutbacks, 150000.)
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineCO2emissions.csv"))
         update_param!(model, componentname, :bau_businessasusualemissions, readpagedata(model, "data/other_abatement_parameters/bau_co2emissions.csv"))
     elseif class == :CH4
         update_param!(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 25.)
@@ -131,6 +133,7 @@ function update_params_abatementcostparameters!(model::Model, class::Symbol)
         update_param!(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
         update_param!(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 6333.33333333333)
         update_param!(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineCH4emissions.csv"))
         update_param!(model, componentname, :bau_businessasusualemissions, readpagedata(model, "data/other_abatement_parameters/bau_ch4emissions.csv"))
     elseif class == :N2O
         update_param!(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 0.)
@@ -139,6 +142,7 @@ function update_params_abatementcostparameters!(model::Model, class::Symbol)
         update_param!(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 51.66666666666666664)
         update_param!(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 27333.3333333333)
         update_param!(model, componentname, :ies_InitialExperienceStockofCutbacks, 53.3333333333333)
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineN2Oemissions.csv"))
         update_param!(model, componentname, :bau_businessasusualemissions, readpagedata(model, "data/other_abatement_parameters/bau_n2oemissions.csv"))
     elseif class == :Lin
         update_param!(model, componentname, :emit_UncertaintyinBAUEmissFactorinFocusRegioninFinalYear, 0.)
@@ -147,8 +151,11 @@ function update_params_abatementcostparameters!(model::Model, class::Symbol)
         update_param!(model, componentname, :qmaxminusq0propinit_MaxCutbackCostatPositiveCostinBaseYear, 70.)
         update_param!(model, componentname, :cmaxinit_MaximumCutbackCostinFocusRegioninBaseYear, 333.333333333333)
         update_param!(model, componentname, :ies_InitialExperienceStockofCutbacks, 2000.)
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model,"data/shared_parameters/e0_baselineLGemissions.csv"))
         update_param!(model, componentname, :bau_businessasusualemissions, readpagedata(model,"data/other_abatement_parameters/bau_linemissions.csv"))
     else
         error("Unknown class of abatement costs.")
     end
+
+    return abatementcostscomp
 end

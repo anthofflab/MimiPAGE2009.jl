@@ -48,3 +48,43 @@
         end 
     end       
 end
+
+
+function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a")
+    componentname = Symbol("AbatementCosts$class")
+    abatementcostscomp = add_comp!(model, AbatementCosts, componentname)
+
+    if class == :CO2
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineCO2emissions.csv"))
+        if policy == "policy-a"
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_CO2emissionsgrowth.csv"))
+        else
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_CO2emissionsgrowth.csv"))
+        end
+    elseif class == :CH4
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineCH4emissions.csv"))
+        if policy == "policy-a"
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_CH4emissionsgrowth.csv"))
+        else
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_CH4emissionsgrowth.csv"))
+        end
+    elseif class == :N2O
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "datashared_parameters//e0_baselineN2Oemissions.csv"))
+        if policy == "policy-a"
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_N2Oemissionsgrowth.csv"))
+        else
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_N2Oemissionsgrowth.csv"))
+        end
+    elseif class == :Lin
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model,"data/shared_parameters/e0_baselineLGemissions.csv"))
+        if policy == "policy-a"
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/shared_parameters/er_LGemissionsgrowth.csv"))
+        else
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/shared_parameters/$policy/er_LGemissionsgrowth.csv"))
+        end
+    else
+        error("Unknown class of abatement costs.")
+    end
+    
+    return abatementcostscomp
+end

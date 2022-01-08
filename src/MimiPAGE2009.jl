@@ -44,11 +44,11 @@ include("components/TotalCosts.jl")
 include("components/EquityWeighting.jl")
 
 """
-    buildpage(m::Model)
+    buildpage(m::Mode,; policy::String="policy-a")
 
 Build the PAGE 2009 model structure.
 """
-function buildpage(m::Model)
+function buildpage(m::Model, policy::String="policy-a")
 
     #add all the components
     add_comp!(m, co2emissions)
@@ -73,16 +73,22 @@ function buildpage(m::Model)
     add_comp!(m, GDP)
 
     #Abatement Costs
-    for gas in [:CO2, :CH4, :N2O, :Lin]
-        add_comp!(m, AbatementCostParameters, Symbol("AbatementCostParameters$gas"))
-        add_comp!(m, AbatementCosts, Symbol("AbatementCosts$gas"))
-    end
+    addabatementcostparameters(m, :CO2, policy)
+    addabatementcostparameters(m, :CH4, policy)
+    addabatementcostparameters(m, :N2O, policy)
+    addabatementcostparameters(m, :Lin, policy)
+
+    addabatementcosts(m, :CO2, policy)
+    addabatementcosts(m, :CH4, policy)
+    addabatementcosts(m, :N2O, policy)
+    addabatementcosts(m, :Lin, policy)
+
     add_comp!(m, TotalAbatementCosts)
 
     #Adaptation Costs
-    add_comp!(m, AdaptationCosts, :AdaptiveCostsSeaLevel)
-    add_comp!(m, AdaptationCosts, :AdaptiveCostsEconomic)
-    add_comp!(m, AdaptationCosts, :AdaptiveCostsNonEconomic)
+    addadaptationcosts_sealevel(m)
+    addadaptationcosts_economic(m)
+    addadaptationcosts_noneconomic(m)
     add_comp!(m, TotalAdaptationCosts)
 
     # Impacts
@@ -223,39 +229,23 @@ end
 """
     initpage(m::Model, policy::String="policy-a")
 
-Initialize the PAGE 2009 model by updating all parameter values.
+Initialize the PAGE 2009 model by: 
+* Adding shared parameters and connecting component parameters to link params in different components to the same value.
+* Updating all parameter values that are not set.
 """
 function initpage(m::Model, policy::String="policy-a")
 
-    # STEP 1. Set the Adaptation Costs parameters using functions defined in 
-    # AdaptationCosts.jl
-    update_params_adaptationcosts_sealevel!(m)
-    update_params_adaptationcosts_economic!(m)
-    update_params_adaptationcosts_noneconomic!(m)
-
-    # Step 2. Set the Abatement Cost Parameters parameters using function defined
-    # in AbatementCostParameters.jl
-    for class in [:CO2, :CH4, :N2O, :Lin]
-        update_params_abatementcostparameters!(m, class)
-    end
-
-    # STEP 3. Set scalar shared parameters that are not loaded from file such that 
-    # these will now be linked to the same shared parameter 
-    # * for convenience later, name model parameter same as the component parameters,
-    # but this is not required could give a unique name *
-    update_params_page_scalar_shared!(m)
-
-    # STEP 4. Load Non-Scalar Parameter values from files
+    # STEP 1. Load Non-Scalar Parameter values from files
     # * :shared => (parameter_name => default_value) for parameters shared in the model
     # * :unshared => ((component_name, parameter_name) => default_value) for component specific parameters that are not shared
-
     p = load_parameters(m, policy=policy)
 
-    # STEP 5. Set non-scalar shared parameters that are loaded from file such that 
-    # these will now be linked to the same shared parameter 
+    # STEP 3. Set scalar and non-scalar shared parameters such that these will 
+    # now be linked to the same shared parameter. The non-scalar shared parameters 
+    # are loaded from files and placed in p[:shared] during load_parameters.
     # * for convenience later, name shared model parameter same as the component 
     # parameters, but this is not required could give a unique name *
-    update_params_page_nonscalar_shared!(m, p[:shared])
+    add_shared_page_params!(m, p[:shared])
 
     # Step 4. Set the leftover ie. unset unshared parameters - this will set any 
     # parameters that are not set (1) explicitly or (2) by default
@@ -264,14 +254,18 @@ function initpage(m::Model, policy::String="policy-a")
 end
 
 """
-    update_params_page_scalar_shared!(m::Model)
+    add_shared_page_params!(m::Model, p_shared::Dict)
 
-Set some shared parameters that are not loaded from file such that 
-these will now be linked to the same shared parameter - for convenience later,
-name model parameter same as the component parameters, but this is not required 
-could give a unique name
+Add shared parameters, some hardcoded (scalars) and sone loaded from file into 
+Dictionary p_shared (nonscalar) such that these will now be linked to the same 
+shared parameter - for convenience later, name model parameter same as the component 
+parameters, but this is not required and could give a unique name.
 """
-function update_params_page_scalar_shared!(m::Model)
+function add_shared_page_params!(m::Model, p_shared::Dict)
+
+    ##
+    ## SCALAR parameters not loaded from files but instead hard coded here 
+    ##
 
     # AbatementCostParameters components
     add_shared_param!(m, :q0propmult_cutbacksatnegativecostinfinalyear, .733333333333333334)
@@ -338,17 +332,9 @@ function update_params_page_scalar_shared!(m::Model)
     connect_param!(m, :MarketDamages, :tcal_CalibrationTemp, :tcal_CalibrationTemp)
     connect_param!(m, :NonMarketDamages, :tcal_CalibrationTemp, :tcal_CalibrationTemp)
 
-end
-
-"""
-    update_params_page_nonscalar_shared!(m::Model, p::Dict)
-
-Set some shared parameters that are loaded from file into Dictionary p_shared such that 
-these will now be linked to the same shared parameter - for convenience later,
-name model parameter same as the component parameters, but this is not required 
-could give a unique name
-"""
-function update_params_page_nonscalar_shared!(m::Model, p_shared::Dict)
+    ## 
+    ## NON-SCALAR parameters loaded from file
+    ##
 
     add_shared_param!(m, :area, p_shared[:area], dims=[:region])
     connect_param!(m, :ClimateTemperature, :area, :area)
@@ -453,7 +439,7 @@ function get_model(policy::String="policy-a")
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-    buildpage(m)
+    buildpage(m, policy)
 
     initpage(m, policy)
 
