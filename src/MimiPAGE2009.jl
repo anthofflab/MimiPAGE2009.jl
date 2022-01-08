@@ -69,7 +69,7 @@ function buildpage(m::Model, policy::String="policy-a")
     add_comp!(m, SeaLevelRise)
 
     #Socio-Economics
-    add_comp!(m, Population)
+    addpopulation(m)
     add_comp!(m, GDP)
 
     #Abatement Costs
@@ -92,9 +92,9 @@ function buildpage(m::Model, policy::String="policy-a")
     add_comp!(m, TotalAdaptationCosts)
 
     # Impacts
-    add_comp!(m, SLRDamages)
-    add_comp!(m, MarketDamages)
-    add_comp!(m, NonMarketDamages)
+    addslrdamages(m)
+    addmarketdamages(m)
+    addnonmarketdamages(m)
     add_comp!(m, Discontinuity)
 
     # Total costs component 

@@ -80,3 +80,10 @@
         end
     end
 end
+
+function addnonmarketdamages(model::Model)
+    nonmarketdamagescomp = add_comp!(model, NonMarketDamages)
+    update_param!(model, :NonMarketDamages, :impmax_maxtempriseforadaptpolicyNM, readpagedata(model, "data/shared_parameters/impmax_noneconomic.csv"))
+
+    return nonmarketdamagescomp
+end

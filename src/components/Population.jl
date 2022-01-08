@@ -24,3 +24,12 @@
         end
     end
 end
+
+function addpopulation(model::Model)
+    populationcomp = add_comp!(model, Population)
+
+    update_param!(model, :Population, :popgrw_populationgrowth, readpagedata(model, "data/shared_parameters/popgrw_populationgrowth.csv"))
+    update_param!(model, :Population, :pop0_initpopulation, readpagedata(model, "data/shared_parameters/pop0_initpopulation.csv"))
+    
+    return populationcomp
+end

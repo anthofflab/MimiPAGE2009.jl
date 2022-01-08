@@ -2,10 +2,10 @@
 using DataFrames
 using Test
 
-m = test_page_model()
 include("../src/components/NonMarketDamages.jl")
 
-add_comp!(m, NonMarketDamages)
+m = test_page_model()
+nonmarketdamages = addnonmarketdamages(m)
 
 update_param!(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
 update_param!(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,"test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
@@ -18,7 +18,6 @@ update_param!(m, :NonMarketDamages, :y_year, Mimi.dim_keys(m, :time))
 
 p = load_parameters(m)
 update_param!(m, :NonMarketDamages, :wincf_weightsfactor, p[:shared][:wincf_weightsfactor])
-update_param!(m, :NonMarketDamages, :impmax_maxtempriseforadaptpolicyNM, p[:shared][:impmax_noneconomic])
 
 run(m)
 

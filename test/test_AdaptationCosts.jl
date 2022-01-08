@@ -5,13 +5,9 @@ using Test
 m = test_page_model()
 include("../src/components/AdaptationCosts.jl")
 
-add_comp!(m, AdaptationCosts, :AdaptiveCostsSeaLevel)
-add_comp!(m, AdaptationCosts, :AdaptiveCostsEconomic)
-add_comp!(m, AdaptationCosts, :AdaptiveCostsNonEconomic)
-
-MimiPAGE2009.update_params_adaptationcosts_noneconomic!(m)
-MimiPAGE2009.update_params_adaptationcosts_economic!(m)
-MimiPAGE2009.update_params_adaptationcosts_sealevel!(m)
+adaptationcosts_noneconomic = MimiPAGE2009.addadaptationcosts_noneconomic(m)
+adaptationcosts_economic = MimiPAGE2009.addadaptationcosts_economic(m)
+adaptationcosts_sealevel = MimiPAGE2009.addadaptationcosts_sealevel(m)
 
 add_shared_param!(m, :y_year, Mimi.dim_keys(m.md, :time), dims=[:time])
 for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]

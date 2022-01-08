@@ -18,13 +18,11 @@ add_shared_param!(m, :cmaxf_maxcostfactor, p[:shared][:cmaxf_maxcostfactor], dim
 
 for gas in [:CO2, :CH4, :N2O, :Lin]
 
+    MimiPAGE2009.addabatementcostparameters(m, gas)
+    MimiPAGE2009.addabatementcosts(m, gas)
+
     comp_name1 = Symbol("AbatementCostParameters$gas")
     comp_name2 = Symbol("AbatementCosts$gas")
-
-    add_comp!(m, AbatementCostParameters, comp_name1)
-    add_comp!(m, AbatementCosts, comp_name2)
-
-    MimiPAGE2009.update_params_abatementcostparameters!(m, gas)
 
     # connect the components together
     connect_param!(m, comp_name1 => :cbe_absoluteemissionreductions, comp_name2 => :cbe_absoluteemissionreductions)

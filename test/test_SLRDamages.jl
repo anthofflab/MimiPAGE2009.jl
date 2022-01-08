@@ -5,7 +5,7 @@ using Test
 m = test_page_model()
 include("../src/components/SLRDamages.jl")
 
-slrdamages =  add_comp!(m, SLRDamages)
+slrdamages = addslrdamages(m)
 
 update_param!(m, :SLRDamages, :y_year_0, 2008.)
 update_param!(m, :SLRDamages, :y_year, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
@@ -18,7 +18,6 @@ update_param!(m, :SLRDamages, :act_percap_adaptationcosts, readpagedata(m, "test
 update_param!(m, :SLRDamages, :isatg_impactfxnsaturation, 28.333333333333336)
 
 p = load_parameters(m)
-update_param!(m, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, p[:shared][:impmax_sealevel])
 update_param!(m, :SLRDamages, :wincf_weightsfactor,  p[:shared][:wincf_weightsfactor])
 
 ##running Model

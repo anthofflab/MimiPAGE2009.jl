@@ -13,7 +13,7 @@ function test_page_model()
     return m
  end
 
-@testset "MimiPAGE2009.jl" begin
+# @testset "MimiPAGE2009.jl" begin
 
 include("test_climatemodel.jl")
 include("test_AbatementCosts.jl") 
@@ -53,4 +53,4 @@ include("contrib/test_taxeffect.jl")
 include("test_standard_api.jl")
 include("test_scc.jl")
 
-end
+# end

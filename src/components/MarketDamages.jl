@@ -76,3 +76,10 @@
 
     end
 end
+
+function addmarketdamages(model::Model)
+    marketdamagescomp = add_comp!(model, MarketDamages)
+    update_param!(model, :MarketDamages, :impmax_maxtempriseforadaptpolicyM, readpagedata(model, "data/shared_parameters/impmax_economic.csv"))
+    
+    return marketdamagescomp
+end

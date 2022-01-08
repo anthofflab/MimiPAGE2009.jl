@@ -85,3 +85,10 @@
 
     end
 end
+
+function addslrdamages(model::Model)
+    SLRDamagescomp  = add_comp!(model, SLRDamages)
+
+    update_param!(model, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, readpagedata(model, "data/shared_parameters/impmax_sealevel.csv"))
+    return SLRDamagescomp
+end

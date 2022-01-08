@@ -4,7 +4,7 @@ using Test
 m = test_page_model()
 include("../src/components/Population.jl")
 
-add_comp!(m, Population)
+population = addpopulation(m)
 
 update_param!(m, :Population, :y_year_0, 2008.)
 update_param!(m, :Population, :y_year,  Mimi.dim_keys(m.md, :time))

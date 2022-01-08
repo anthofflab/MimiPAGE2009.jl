@@ -69,7 +69,7 @@ function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a
             update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_CH4emissionsgrowth.csv"))
         end
     elseif class == :N2O
-        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "datashared_parameters//e0_baselineN2Oemissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineN2Oemissions.csv"))
         if policy == "policy-a"
             update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_N2Oemissionsgrowth.csv"))
         else

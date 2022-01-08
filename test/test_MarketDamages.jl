@@ -5,7 +5,7 @@ using Test
 m = test_page_model()
 include("../src/components/MarketDamages.jl")
 
-add_comp!(m, MarketDamages)
+marketdamages = addmarketdamages(m)
 
 update_param!(m, :MarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
 update_param!(m, :MarketDamages, :rcons_per_cap_SLRRemainConsumption, readpagedata(m,"test/validationdata/rcons_per_cap_SLRRemainConsumption.csv"))
@@ -18,7 +18,6 @@ update_param!(m, :MarketDamages, :y_year, Mimi.dim_keys(m, :time))
 
 p = load_parameters(m)
 update_param!(m, :MarketDamages, :wincf_weightsfactor, p[:shared][:wincf_weightsfactor])
-update_param!(m, :MarketDamages, :impmax_maxtempriseforadaptpolicyM, p[:shared][:impmax_economic])
 
 run(m)
 
