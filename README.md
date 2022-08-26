@@ -11,7 +11,7 @@ This is an implementation of the PAGE09 model in the Julia programming language.
 The documentation for MimiPAGE2009.jl can be accessed [here](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/stable/).
 
 ## Software Requirements
-You need to install [julia 1.1](https://julialang.org) or newer to run this model.
+You need to install [julia 1.6](https://julialang.org) or newer to run this model.
 
 ## Preparing the Software Environment
 You first need to connect your julia installation with the central
