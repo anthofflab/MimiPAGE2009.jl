@@ -3,7 +3,7 @@
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/stable/)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/latest/)
-![](https://github.com/anthofflab/MimiPAGE2009.jl/workflows/Run%20tests/badge.svg)
+![](https://github.com/anthofflab/MimiPAGE2009.jl/actions/workflows/jlpkgbutler-ci-master-workflow.yml/badge.svg)
 [![codecov](https://codecov.io/gh/anthofflab/MimiPAGE2009.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/anthofflab/MimiPAGE2009.jl)
 
 This is an implementation of the PAGE09 model in the Julia programming language. It was created from the equations in Hope (2011), and then compared against the original Excel version of PAGE09. Additional background information about the PAGE model can be found in Hope (2006).
@@ -11,7 +11,7 @@ This is an implementation of the PAGE09 model in the Julia programming language.
 The documentation for MimiPAGE2009.jl can be accessed [here](http://anthofflab.berkeley.edu/MimiPAGE2009.jl/stable/).
 
 ## Software Requirements
-You need to install [julia 1.1](https://julialang.org) or newer to run this model.
+You need to install [julia 1.6](https://julialang.org) or newer to run this model.
 
 ## Preparing the Software Environment
 You first need to connect your julia installation with the central
