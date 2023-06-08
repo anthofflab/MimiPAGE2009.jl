@@ -19,7 +19,9 @@ equityweighting[:y_year_0] = 2008.
 equityweighting[:y_year] = Mimi.dim_keys(m.md, :time)
 
 p = load_parameters(m)
-set_leftover_params!(m, p)
+
+update_param!(m, :EquityWeighting, :grw_gdpgrowthrate, p[:shared][:grw_gdpgrowthrate])
+update_param!(m, :EquityWeighting, :popgrw_populationgrowth, p[:shared][:popgrw_populationgrowth])
 
 run(m)
 

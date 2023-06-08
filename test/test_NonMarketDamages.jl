@@ -2,26 +2,22 @@
 using DataFrames
 using Test
 
-m = test_page_model()
 include("../src/components/NonMarketDamages.jl")
 
+m = test_page_model()
 nonmarketdamages = addnonmarketdamages(m)
 
-set_param!(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
-set_param!(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,
-"test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
-set_param!(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, readpagedata(m,
-"test/validationdata/rgdp_per_cap_MarketRemainGDP.csv"))
-set_param!(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, readpagedata(m,
-"test/validationdata/atl_adjustedtolerableleveloftemprise_nonmarket.csv"))
-set_param!(m, :NonMarketDamages, :imp_actualreduction, readpagedata(m,
-"test/validationdata/imp_actualreduction_nonmarket.csv"))
-set_param!(m, :NonMarketDamages, :isatg_impactfxnsaturation, 28.333333333333336)
+update_param!(m, :NonMarketDamages, :rtl_realizedtemperature, readpagedata(m, "test/validationdata/rtl_realizedtemperature.csv"))
+update_param!(m, :NonMarketDamages, :rcons_per_cap_MarketRemainConsumption, readpagedata(m,"test/validationdata/rcons_per_cap_MarketRemainConsumption.csv"))
+update_param!(m, :NonMarketDamages, :rgdp_per_cap_MarketRemainGDP, readpagedata(m,"test/validationdata/rgdp_per_cap_MarketRemainGDP.csv"))
+update_param!(m, :NonMarketDamages, :atl_adjustedtolerableleveloftemprise, readpagedata(m,"test/validationdata/atl_adjustedtolerableleveloftemprise_nonmarket.csv"))
+update_param!(m, :NonMarketDamages, :imp_actualreduction, readpagedata(m,"test/validationdata/imp_actualreduction_nonmarket.csv"))
+update_param!(m, :NonMarketDamages, :isatg_impactfxnsaturation, 28.333333333333336)
+
+update_param!(m, :NonMarketDamages, :y_year, Mimi.dim_keys(m, :time))
 
 p = load_parameters(m)
-p["y_year_0"] = 2008.
-p["y_year"] = Mimi.dim_keys(m.md, :time)
-set_leftover_params!(m, p)
+update_param!(m, :NonMarketDamages, :wincf_weightsfactor, p[:shared][:wincf_weightsfactor])
 
 run(m)
 

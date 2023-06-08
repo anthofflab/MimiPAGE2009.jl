@@ -86,13 +86,9 @@
     end
 end
 
-
-# Still need this function in order to set the parameters than depend on 
-# readpagedata, which takes model as an input. These cannot be set using 
-# the default keyword arg for now.
 function addslrdamages(model::Model)
     SLRDamagescomp  = add_comp!(model, SLRDamages)
 
-    set_param!(model, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, readpagedata(model, "data/impmax_sealevel.csv"))
+    update_param!(model, :SLRDamages, :impmax_maxSLRforadaptpolicySLR, readpagedata(model, "data/shared_parameters/impmax_sealevel.csv"))
     return SLRDamagescomp
 end

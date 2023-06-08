@@ -62,7 +62,7 @@ scc = MimiPAGE2009.compute_scc(year = 2020)
 
 # You can also compute the SCC from a modified version of a MimiPAGE2009 model:
 m = MimiPAGE2009.get_model()    # Get the default version of the MimiPAGE2009 model
-set_param!(m, :tcr_transientresponse, 3)    # Try a higher transient climate response value
+update_param!(m, :ClimateTemperature, :tcr_transientresponse, 3)    # Try a higher transient climate response value
 scc = MimiPAGE2009.compute_scc(m, year=2020)    # compute the scc from the modified model by passing it as the first argument to compute_scc
 ```
 The first argument to the `compute_scc` function is a MimiPAGE2009 model, and it is an optional argument. If no model is provided, the default MimiPAGE2009 model will be used. 

@@ -49,37 +49,38 @@
     end       
 end
 
+
 function addabatementcosts(model::Model, class::Symbol, policy::String="policy-a")
     componentname = Symbol("AbatementCosts$class")
     abatementcostscomp = add_comp!(model, AbatementCosts, componentname)
 
     if class == :CO2
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCO2emissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineCO2emissions.csv"))
         if policy == "policy-a"
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/er_CO2emissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_CO2emissionsgrowth.csv"))
         else
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/$policy/er_CO2emissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_CO2emissionsgrowth.csv"))
         end
     elseif class == :CH4
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCH4emissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineCH4emissions.csv"))
         if policy == "policy-a"
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/er_CH4emissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_CH4emissionsgrowth.csv"))
         else
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/$policy/er_CH4emissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_CH4emissionsgrowth.csv"))
         end
     elseif class == :N2O
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model, "data/shared_parameters/e0_baselineN2Oemissions.csv"))
         if policy == "policy-a"
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/er_N2Oemissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/er_N2Oemissionsgrowth.csv"))
         else
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/$policy/er_N2Oemissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model, "data/shared_parameters/$policy/er_N2Oemissionsgrowth.csv"))
         end
     elseif class == :Lin
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,"data/e0_baselineLGemissions.csv"))
+        update_param!(model, componentname, :e0_baselineemissions, readpagedata(model,"data/shared_parameters/e0_baselineLGemissions.csv"))
         if policy == "policy-a"
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/er_LGemissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/shared_parameters/er_LGemissionsgrowth.csv"))
         else
-            setdistinctparameter(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/$policy/er_LGemissionsgrowth.csv"))
+            update_param!(model, componentname, :er_emissionsgrowth, readpagedata(model,"data/shared_parameters/$policy/er_LGemissionsgrowth.csv"))
         end
     else
         error("Unknown class of abatement costs.")
