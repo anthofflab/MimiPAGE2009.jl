@@ -77,13 +77,9 @@
     end
 end
 
-# Still need this function in order to set the parameters than depend on 
-# readpagedata, which takes model as an input. These cannot be set using 
-# the default keyword arg for now.
-
 function addmarketdamages(model::Model)
     marketdamagescomp = add_comp!(model, MarketDamages)
-    marketdamagescomp[:impmax_maxtempriseforadaptpolicyM] = readpagedata(model, "data/impmax_economic.csv")
+    update_param!(model, :MarketDamages, :impmax_maxtempriseforadaptpolicyM, readpagedata(model, "data/shared_parameters/impmax_economic.csv"))
     
     return marketdamagescomp
 end

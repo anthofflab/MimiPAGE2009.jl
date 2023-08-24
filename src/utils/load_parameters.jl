@@ -62,20 +62,41 @@ function readpagedata(model::Model, filepath::AbstractString)
     end
 end
 
-function load_parameters(model::Model, policy::String="policy-a")
-    parameters = Dict{Any, Any}()
 
-    parameter_directory = joinpath(dirname(@__FILE__), "..", "..", "data")
+"""
+Reads parameter csvs from data directory into a dictionary with two keys:
+* :shared => (parameter_name => default_value) for parameters shared in the model
+* :unshared => ((component_name, parameter_name) => default_value) for component specific parameters that are not shared
+""" 
+function load_parameters(model::Model; policy::String="policy-a")
+
+    unshared_parameters = Dict{Tuple{Symbol, Symbol}, Any}()
+    shared_parameters = Dict{Symbol, Any}()
+
+    # Load unshared parameters
+    parameter_directory = joinpath(dirname(@__FILE__), "..", "..", "data", "unshared_parameters")
     for file in filter(q->splitext(q)[2]==".csv", readdir(parameter_directory))
-        parametername = splitext(file)[1]
-
         if policy != "policy-a" && isfile(joinpath(parameter_directory, policy, file))
             filepath = joinpath(parameter_directory, policy, file)
         else
             filepath = joinpath(parameter_directory, file)
         end
 
-        parameters[parametername] = readpagedata(model, filepath)
+        param_info = Symbol.(split(splitext(file)[1], "-"))
+        unshared_parameters[(param_info[1], param_info[2])] = readpagedata(model, filepath)
     end
-    return parameters
+
+    # Load shared parameters
+    parameter_directory = joinpath(dirname(@__FILE__), "..", "..", "data", "shared_parameters")
+    for file in filter(q->splitext(q)[2]==".csv", readdir(parameter_directory))
+        if policy != "policy-a" && isfile(joinpath(parameter_directory, policy, file))
+            filepath = joinpath(parameter_directory, policy, file)
+        else
+            filepath = joinpath(parameter_directory, file)
+        end
+        paramname = Symbol.(splitext(file)[1])
+        shared_parameters[paramname] = readpagedata(model, filepath)
+    end
+
+    return Dict(:shared => shared_parameters, :unshared => unshared_parameters)
 end

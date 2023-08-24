@@ -6,8 +6,9 @@ include("../src/components/CO2emissions.jl")
 
 add_comp!(m, co2emissions)
 
-set_param!(m, :co2emissions, :e0_baselineCO2emissions, readpagedata(m,"data/e0_baselineCO2emissions.csv"))
-set_param!(m, :co2emissions, :er_CO2emissionsgrowth, readpagedata(m, "data/er_CO2emissionsgrowth.csv"))
+p = load_parameters(m)
+update_param!(m, :co2emissions, :e0_baselineCO2emissions, p[:shared][:e0_baselineCO2emissions])
+update_param!(m, :co2emissions, :er_CO2emissionsgrowth, p[:shared][:er_CO2emissionsgrowth])
 
 ##running Model
 run(m)

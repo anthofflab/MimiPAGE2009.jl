@@ -58,14 +58,15 @@ function addtaxdrivengrowth(model::Model, class::Symbol)
     componentname = Symbol("TaxDrivenGrowth$class")
     add_comp!(model, TaxDrivenGrowth, componentname, after=Symbol("AbatementCostParameters$class"))
 
+    # connect the 
     if class == :CO2
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCO2emissions.csv"))
+        connect_param!(model, componentname, :e0_baselineemissions, :e0_baselineCO2emissions)
     elseif class == :CH4
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineCH4emissions.csv"))
+        connect_param!(model, componentname, :e0_baselineemissions, :e0_baselineCH4emissions)
     elseif class == :N2O
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model, "data/e0_baselineN2Oemissions.csv"))
+        connect_param!(model, componentname, :e0_baselineemissions, :e0_baselineN2Oemissions)
     elseif class == :Lin
-        setdistinctparameter(model, componentname, :e0_baselineemissions, readpagedata(model,"data/e0_baselineLGemissions.csv"))
+        connect_param!(model, componentname, :e0_baselineemissions, :e0_baselineLGemissions)
     else
         error("Unknown class of abatement costs.")
     end
@@ -91,17 +92,19 @@ end
 end
 
 """Construct a model with a uniform (global and all gases, but time-varying) tax."""
-function getuniformtaxmodel()
+function getuniformtaxmodel(;policy::String="policy-a")
     m = Model()
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
     set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
 
-    buildpage(m)
+    buildpage(m, policy)
+    initpage(m, policy) # initialize here so we can connect to the shared parameters
 
     add_comp!(m, UniformTaxDrivenGrowth, after=:GDP) # before all abatement costs parameters
-    set_param!(m, :UniformTaxDrivenGrowth, :uniformtax, zeros(10))
+    update_param!(m, :UniformTaxDrivenGrowth, :uniformtax, zeros(10))
 
     for class in [:CO2, :CH4, :N2O, :Lin]
+
         addtaxdrivengrowth(m, class)
         taxgrowth = Symbol("TaxDrivenGrowth$class")
         abateparams = Symbol("AbatementCostParameters$class")
@@ -114,8 +117,6 @@ function getuniformtaxmodel()
         connect_param!(m, taxgrowth => :taxrate, :UniformTaxDrivenGrowth => Symbol("taxrate_$class"))
         connect_param!(m, Symbol("AbatementCosts$class"), :er_emissionsgrowth, taxgrowth, :er_emissionsgrowth)
     end
-
-    initpage(m)
 
     return m
 end

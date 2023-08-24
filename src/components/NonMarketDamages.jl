@@ -81,13 +81,9 @@
     end
 end
 
-
-# Still need this function in order to set the parameters than depend on 
-# readpagedata, which takes model as an input. These cannot be set using 
-# the default keyword arg for now.
 function addnonmarketdamages(model::Model)
     nonmarketdamagescomp = add_comp!(model, NonMarketDamages)
-    nonmarketdamagescomp[:impmax_maxtempriseforadaptpolicyNM] = readpagedata(model, "data/impmax_noneconomic.csv")
+    update_param!(model, :NonMarketDamages, :impmax_maxtempriseforadaptpolicyNM, readpagedata(model, "data/shared_parameters/impmax_noneconomic.csv"))
 
     return nonmarketdamagescomp
 end

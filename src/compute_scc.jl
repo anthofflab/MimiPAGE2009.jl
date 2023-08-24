@@ -106,29 +106,9 @@ function compute_scc(
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    if eta !== nothing
-        try
-            set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
-        catch e
-            update_param!(m, :emuc_utilityconvexity, eta)   # or update_param! if it has been set
-        end
-    end
-
-    if prtp !== nothing
-        try
-            set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
-        catch e
-            update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
-        end
-    end
-
-    if !equity_weighting
-        try
-            set_param!(m, :equity_proportion, 0)
-        catch e
-            update_param!(m, :equity_proportion, 0)
-        end
-    end
+    eta !== nothing ? update_param!(m, :EquityWeighting, :emuc_utilityconvexity, eta) : nothing
+    prtp !== nothing ? update_param!(m, :EquityWeighting, :ptp_timepreference, prtp * 100) : nothing
+    !equity_weighting ? update_param!(m, :EquityWeighting, :equity_proportion, 0) : nothing
     
     # note here that we use `pulse_size` as the `delta` keyword argument for
     # the marginal model so we can normalize to $ per ton
@@ -195,21 +175,8 @@ function compute_scc_mm(m::Model = get_model(); year::Union{Int, Nothing} = noth
     year === nothing ? error("Must specify an emission year. Try `compute_scc(m, year=2020)`.") : nothing
     !(year in page_years) ? error("Cannot compute the scc for year $year, year must be within the model's time index $page_years.") : nothing 
 
-    if eta != nothing
-        try
-            set_param!(m, :emuc_utilityconvexity, eta)      # since eta is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
-        catch e
-            update_param!(m, :emuc_utilityconvexity, eta)   # or update_param! if it has been set
-        end
-    end
-
-    if prtp != nothing
-        try
-            set_param!(m, :ptp_timepreference, prtp * 100)      # since prtp is a default parameter in PAGE, we need to use `set_param!` if it hasn't been set yet
-        catch e
-            update_param!(m, :ptp_timepreference, prtp * 100)   # or update_param! if it has been set
-        end
-    end
+    eta !== nothing ? update_param!(m, :EquityWeighting, :emuc_utilityconvexity, eta) : nothing
+    prtp !== nothing ? update_param!(m, :EquityWeighting, :ptp_timepreference, prtp * 100) : nothing
     
     # note here that we use `pulse_size` as the `delta` keyword argument for
     # the marginal model so we can normalize to $ per ton
@@ -239,8 +206,8 @@ function get_marginal_model(m::Model = get_model(); year::Union{Int, Nothing} = 
 
     add_comp!(mm.modified, ExtraEmissions, :extra_emissions; after=:co2emissions)
     connect_param!(mm.modified, :extra_emissions => :e_globalCO2emissions, :co2emissions => :e_globalCO2emissions)
-    set_param!(mm.modified, :extra_emissions, :pulse_size, pulse_size)
-    set_param!(mm.modified, :extra_emissions, :pulse_year, year)
+    update_param!(mm.modified, :extra_emissions, :pulse_size, pulse_size)
+    update_param!(mm.modified, :extra_emissions, :pulse_year, year)
 
     connect_param!(mm.modified, :co2cycle => :e_globalCO2emissions, :extra_emissions => :e_globalCO2emissions_adjusted)
     run(mm)

@@ -6,7 +6,7 @@ include("../src/components/CO2forcing.jl")
 
 add_comp!(m, co2forcing)
 
-set_param!(m, :co2forcing, :c_CO2concentration, readpagedata(m,"test/validationdata/c_co2concentration.csv"))
+update_param!(m, :co2forcing, :c_CO2concentration, readpagedata(m,"test/validationdata/c_co2concentration.csv"))
 
 ##running Model
 run(m)
