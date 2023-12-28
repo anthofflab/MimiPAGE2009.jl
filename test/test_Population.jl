@@ -7,7 +7,7 @@ include("../src/components/Population.jl")
 population = addpopulation(m)
 
 update_param!(m, :Population, :y_year_0, 2008.)
-update_param!(m, :Population, :y_year,  Mimi.dim_keys(m.md, :time))
+update_param!(m, :Population, :y_year, Mimi.dim_keys(m.md, :time))
 
 p = load_parameters(m)
 
@@ -22,4 +22,4 @@ pop = m[:Population, :pop_population]
 # Recorded data
 pop_compare = readpagedata(m, "test/validationdata/pop_population.csv")
 
-@test pop ≈ pop_compare rtol=1e-3
+@test pop ≈ pop_compare rtol = 1e-3

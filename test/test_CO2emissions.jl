@@ -13,9 +13,9 @@ update_param!(m, :co2emissions, :er_CO2emissionsgrowth, p[:shared][:er_CO2emissi
 ##running Model
 run(m)
 
-emissions= m[:co2emissions,  :e_regionalCO2emissions]
+emissions = m[:co2emissions, :e_regionalCO2emissions]
 
 # Recorded data
-emissions_compare=readpagedata(m, "test/validationdata/e_regionalCO2emissions.csv")
+emissions_compare = readpagedata(m, "test/validationdata/e_regionalCO2emissions.csv")
 
-@test emissions ≈ emissions_compare rtol=1e-3
+@test emissions ≈ emissions_compare rtol = 1e-3

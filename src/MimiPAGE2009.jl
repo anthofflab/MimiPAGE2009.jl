@@ -107,47 +107,47 @@ function buildpage(m::Model, policy::String="policy-a")
     connect_param!(m, :co2cycle => :e_globalCO2emissions, :co2emissions => :e_globalCO2emissions)
     connect_param!(m, :co2cycle => :rt_g0_baseglobaltemp, :ClimateTemperature => :rt_g0_baseglobaltemp)
     connect_param!(m, :co2cycle => :rt_g_globaltemperature, :ClimateTemperature => :rt_g_globaltemperature)
-    
-    connect_param!(m, :co2forcing => :c_CO2concentration, :co2cycle => :c_CO2concentration)    
+
+    connect_param!(m, :co2forcing => :c_CO2concentration, :co2cycle => :c_CO2concentration)
 
     connect_param!(m, :ch4cycle => :e_globalCH4emissions, :ch4emissions => :e_globalCH4emissions)
     connect_param!(m, :ch4cycle => :rtl_g0_baselandtemp, :ClimateTemperature => :rtl_g0_baselandtemp)
     connect_param!(m, :ch4cycle => :rtl_g_landtemperature, :ClimateTemperature => :rtl_g_landtemperature)
-    
+
     connect_param!(m, :ch4forcing => :c_CH4concentration, :ch4cycle => :c_CH4concentration)
-    connect_param!(m, :ch4forcing => :c_N2Oconcentration, :n2ocycle => :c_N2Oconcentration)    
+    connect_param!(m, :ch4forcing => :c_N2Oconcentration, :n2ocycle => :c_N2Oconcentration)
 
     connect_param!(m, :n2ocycle => :e_globalN2Oemissions, :n2oemissions => :e_globalN2Oemissions)
     connect_param!(m, :n2ocycle => :rtl_g0_baselandtemp, :ClimateTemperature => :rtl_g0_baselandtemp)
     connect_param!(m, :n2ocycle => :rtl_g_landtemperature, :ClimateTemperature => :rtl_g_landtemperature)
-    
+
     connect_param!(m, :n2oforcing => :c_CH4concentration, :ch4cycle => :c_CH4concentration)
-    connect_param!(m, :n2oforcing => :c_N2Oconcentration, :n2ocycle => :c_N2Oconcentration)    
+    connect_param!(m, :n2oforcing => :c_N2Oconcentration, :n2ocycle => :c_N2Oconcentration)
 
     connect_param!(m, :LGcycle => :e_globalLGemissions, :LGemissions => :e_globalLGemissions)
     connect_param!(m, :LGcycle => :rtl_g0_baselandtemp, :ClimateTemperature => :rtl_g0_baselandtemp)
     connect_param!(m, :LGcycle => :rtl_g_landtemperature, :ClimateTemperature => :rtl_g_landtemperature)
-    
+
     connect_param!(m, :LGforcing => :c_LGconcentration, :LGcycle => :c_LGconcentration)
-    
+
     connect_param!(m, :TotalForcing => :f_CO2forcing, :co2forcing => :f_CO2forcing)
     connect_param!(m, :TotalForcing => :f_CH4forcing, :ch4forcing => :f_CH4forcing)
     connect_param!(m, :TotalForcing => :f_N2Oforcing, :n2oforcing => :f_N2Oforcing)
     connect_param!(m, :TotalForcing => :f_lineargasforcing, :LGforcing => :f_LGforcing)
-    
+
     connect_param!(m, :ClimateTemperature => :ft_totalforcing, :TotalForcing => :ft_totalforcing)
     connect_param!(m, :ClimateTemperature => :fs_sulfateforcing, :SulphateForcing => :fs_sulphateforcing)
-    
+
     connect_param!(m, :SeaLevelRise => :rt_g_globaltemperature, :ClimateTemperature => :rt_g_globaltemperature)
 
     connect_param!(m, :GDP => :pop_population, :Population => :pop_population)
 
     for (abatementcostparameters, abatementcosts) in [
-            (:AbatementCostParametersCO2, :AbatementCostsCO2),
-            (:AbatementCostParametersCH4, :AbatementCostsCH4),
-            (:AbatementCostParametersN2O, :AbatementCostsN2O),
-            (:AbatementCostParametersLin, :AbatementCostsLin)
-        ]
+        (:AbatementCostParametersCO2, :AbatementCostsCO2),
+        (:AbatementCostParametersCH4, :AbatementCostsCH4),
+        (:AbatementCostParametersN2O, :AbatementCostsN2O),
+        (:AbatementCostParametersLin, :AbatementCostsLin)
+    ]
 
         connect_param!(m, abatementcostparameters => :yagg, :GDP => :yagg_periodspan)
         connect_param!(m, abatementcostparameters => :cbe_absoluteemissionreductions, abatementcosts => :cbe_absoluteemissionreductions)
@@ -178,7 +178,7 @@ function buildpage(m::Model, policy::String="policy-a")
 
     connect_param!(m, :SLRDamages => :s_sealevel, :SeaLevelRise => :s_sealevel)
     connect_param!(m, :SLRDamages => :cons_percap_consumption, :GDP => :cons_percap_consumption)
-    connect_param!(m, :SLRDamages => :tct_per_cap_totalcostspercap, :TotalAbatementCosts => :tct_per_cap_totalcostspercap) 
+    connect_param!(m, :SLRDamages => :tct_per_cap_totalcostspercap, :TotalAbatementCosts => :tct_per_cap_totalcostspercap)
     connect_param!(m, :SLRDamages => :act_percap_adaptationcosts, :TotalAdaptationCosts => :act_percap_adaptationcosts)
     connect_param!(m, :SLRDamages => :atl_adjustedtolerablelevelofsealevelrise, :AdaptiveCostsSeaLevel => :atl_adjustedtolerablelevel, ignoreunits=true)
     connect_param!(m, :SLRDamages => :imp_actualreductionSLR, :AdaptiveCostsSeaLevel => :imp_adaptedimpacts)
@@ -194,7 +194,7 @@ function buildpage(m::Model, policy::String="policy-a")
     connect_param!(m, :NonMarketDamages => :rtl_realizedtemperature, :ClimateTemperature => :rtl_realizedtemperature)
     connect_param!(m, :NonMarketDamages => :rgdp_per_cap_MarketRemainGDP, :MarketDamages => :rgdp_per_cap_MarketRemainGDP)
     connect_param!(m, :NonMarketDamages => :rcons_per_cap_MarketRemainConsumption, :MarketDamages => :rcons_per_cap_MarketRemainConsumption)
-    connect_param!(m, :NonMarketDamages =>:atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic =>:atl_adjustedtolerablelevel, ignoreunits=true)
+    connect_param!(m, :NonMarketDamages => :atl_adjustedtolerableleveloftemprise, :AdaptiveCostsNonEconomic => :atl_adjustedtolerablelevel, ignoreunits=true)
     connect_param!(m, :NonMarketDamages => :imp_actualreduction, :AdaptiveCostsNonEconomic => :imp_adaptedimpacts)
     connect_param!(m, :NonMarketDamages => :isatg_impactfxnsaturation, :GDP => :isatg_impactfxnsaturation)
 
@@ -206,7 +206,7 @@ function buildpage(m::Model, policy::String="policy-a")
 
     connect_param!(m, :TotalCosts => :population, :Population => :pop_population)
     connect_param!(m, :TotalCosts => :period_length, :GDP => :yagg_periodspan)
-    connect_param!(m, :TotalCosts => :abatement_costs_percap_peryear, :TotalAbatementCosts => :tct_per_cap_totalcostspercap) 
+    connect_param!(m, :TotalCosts => :abatement_costs_percap_peryear, :TotalAbatementCosts => :tct_per_cap_totalcostspercap)
     connect_param!(m, :TotalCosts => :adaptation_costs_percap_peryear, :TotalAdaptationCosts => :act_percap_adaptationcosts)
     connect_param!(m, :TotalCosts => :slr_damages_percap_peryear, :SLRDamages => :isat_per_cap_SLRImpactperCapinclSaturationandAdaptation)
     connect_param!(m, :TotalCosts => :market_damages_percap_peryear, :MarketDamages => :isat_per_cap_ImpactperCapinclSaturationandAdaptation)
@@ -268,25 +268,25 @@ function add_shared_page_params!(m::Model, p_shared::Dict)
     ##
 
     # AbatementCostParameters components
-    add_shared_param!(m, :q0propmult_cutbacksatnegativecostinfinalyear, .733333333333333334)
+    add_shared_param!(m, :q0propmult_cutbacksatnegativecostinfinalyear, 0.733333333333333334)
     add_shared_param!(m, :qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear, 1.2666666666666666)
-    add_shared_param!(m, :c0mult_mostnegativecostinfinalyear, .8333333333333334)
-    add_shared_param!(m, :curve_below_curvatureofMACcurvebelowzerocost, .5)
-    add_shared_param!(m, :curve_above_curvatureofMACcurveabovezerocost, .4)
-    add_shared_param!(m, :cross_experiencecrossoverratio, .2)
-    add_shared_param!(m, :learn_learningrate, .2)
-    add_shared_param!(m, :automult_autonomoustechchange, .65)
+    add_shared_param!(m, :c0mult_mostnegativecostinfinalyear, 0.8333333333333334)
+    add_shared_param!(m, :curve_below_curvatureofMACcurvebelowzerocost, 0.5)
+    add_shared_param!(m, :curve_above_curvatureofMACcurveabovezerocost, 0.4)
+    add_shared_param!(m, :cross_experiencecrossoverratio, 0.2)
+    add_shared_param!(m, :learn_learningrate, 0.2)
+    add_shared_param!(m, :automult_autonomoustechchange, 0.65)
     add_shared_param!(m, :equity_prop_equityweightsproportion, 1.)
 
     for paramname in [:q0propmult_cutbacksatnegativecostinfinalyear,
-                        :qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear,
-                        :c0mult_mostnegativecostinfinalyear,
-                        :curve_below_curvatureofMACcurvebelowzerocost,
-                        :curve_above_curvatureofMACcurveabovezerocost,
-                        :cross_experiencecrossoverratio,
-                        :learn_learningrate,
-                        :automult_autonomoustechchange,
-                        :equity_prop_equityweightsproportion]
+        :qmax_minus_q0propmult_maxcutbacksatpositivecostinfinalyear,
+        :c0mult_mostnegativecostinfinalyear,
+        :curve_below_curvatureofMACcurvebelowzerocost,
+        :curve_above_curvatureofMACcurveabovezerocost,
+        :cross_experiencecrossoverratio,
+        :learn_learningrate,
+        :automult_autonomoustechchange,
+        :equity_prop_equityweightsproportion]
 
         connect_param!(m, :AbatementCostParametersCO2, paramname, paramname)
         connect_param!(m, :AbatementCostParametersCH4, paramname, paramname)
@@ -302,23 +302,23 @@ function add_shared_page_params!(m::Model, p_shared::Dict)
 
     # Years
     add_shared_param!(m, :y_year, Mimi.dim_keys(m.md, :time), dims=[:time])
-    for compname in [:ch4cycle, :ClimateTemperature, :co2cycle, :n2ocycle, :LGcycle, 
-                        :SeaLevelRise, :Population, :GDP, 
-                        :AbatementCostParametersCO2, :AbatementCostParametersCH4, 
-                        :AbatementCostParametersN2O, :AbatementCostParametersLin,
-                        :AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic,
-                        :SLRDamages, :MarketDamages, :NonMarketDamages,
-                        :Discontinuity, :EquityWeighting]
+    for compname in [:ch4cycle, :ClimateTemperature, :co2cycle, :n2ocycle, :LGcycle,
+        :SeaLevelRise, :Population, :GDP,
+        :AbatementCostParametersCO2, :AbatementCostParametersCH4,
+        :AbatementCostParametersN2O, :AbatementCostParametersLin,
+        :AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic,
+        :SLRDamages, :MarketDamages, :NonMarketDamages,
+        :Discontinuity, :EquityWeighting]
         connect_param!(m, compname, :y_year, :y_year)
     end
 
     add_shared_param!(m, :y_year_0, 2008.)
-    for compname in [:ch4cycle, :ClimateTemperature, :co2cycle, :n2ocycle, :LGcycle, 
-                        :SeaLevelRise, :Population, :GDP, 
-                        :AbatementCostParametersCO2, :AbatementCostParametersCH4, 
-                        :AbatementCostParametersN2O, :AbatementCostParametersLin,
-                        :AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic,
-                        :SLRDamages, :Discontinuity, :EquityWeighting]
+    for compname in [:ch4cycle, :ClimateTemperature, :co2cycle, :n2ocycle, :LGcycle,
+        :SeaLevelRise, :Population, :GDP,
+        :AbatementCostParametersCO2, :AbatementCostParametersCH4,
+        :AbatementCostParametersN2O, :AbatementCostParametersLin,
+        :AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic,
+        :SLRDamages, :Discontinuity, :EquityWeighting]
         connect_param!(m, compname, :y_year_0, :y_year_0)
     end
 
@@ -419,7 +419,7 @@ function add_shared_page_params!(m::Model, p_shared::Dict)
     for compname in [:AbatementCostParametersCO2, :AbatementCostParametersCH4, :AbatementCostParametersN2O, :AbatementCostParametersLin]
         connect_param!(m, compname, :cmaxf_maxcostfactor, :cmaxf_maxcostfactor)
     end
-    
+
     # Adaptation Costs
     add_shared_param!(m, :cf_costregional, p_shared[:cf_costregional], dims=[:region])
     for compname in [:AdaptiveCostsSeaLevel, :AdaptiveCostsEconomic, :AdaptiveCostsNonEconomic]
@@ -437,7 +437,7 @@ end
 function get_model(policy::String="policy-a")
     m = Model()
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-    set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+    set_dimension!(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
 
     buildpage(m, policy)
 

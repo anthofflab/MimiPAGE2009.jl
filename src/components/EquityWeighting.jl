@@ -57,7 +57,7 @@
     rcons_percap_dis = Parameter(index=[time, region], unit="\$/person")
 
     wit_partiallyweighted = Variable(index=[time, region], unit="\$million")
-    widt_partiallyweighted_discounted  = Variable(index=[time, region], unit="\$million")
+    widt_partiallyweighted_discounted = Variable(index=[time, region], unit="\$million")
 
     yagg_periodspan = Parameter(index=[time], unit="year")
 
@@ -115,7 +115,7 @@
             if is_first(tt)
                 v.dfc_consumptiondiscountrate[TimestepIndex(1), rr] = (1 + v.dr_discountrate[TimestepIndex(1), rr] / 100)^(-v.yp_yearsperiod[TimestepIndex(1)])
             else
-                v.dfc_consumptiondiscountrate[tt, rr] = v.dfc_consumptiondiscountrate[tt - 1, rr] * (1 + v.dr_discountrate[tt, rr] / 100)^(-v.yp_yearsperiod[tt])
+                v.dfc_consumptiondiscountrate[tt, rr] = v.dfc_consumptiondiscountrate[tt-1, rr] * (1 + v.dr_discountrate[tt, rr] / 100)^(-v.yp_yearsperiod[tt])
             end
 
             # Discounted costs

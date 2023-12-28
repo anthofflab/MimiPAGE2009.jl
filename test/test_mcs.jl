@@ -29,7 +29,7 @@ if regenerate
     MimiPAGE2009.do_monte_carlo_runs(100_000)
     df = DataFrame(load(joinpath(@__DIR__, "../output/mimipagemontecarlooutput.csv")))
 
-     for ii in 1:nrow(compare)
+    for ii in 1:nrow(compare)
         name = Symbol(compare[ii, :Variable_Name])
         if kurtosis(df[name]) > 2.9 # exponential distribution
             if name == :tpc # negative across all quantiles
@@ -43,7 +43,7 @@ if regenerate
         if ii != nrow(compare)
             println(",")
         end
-    end 
+    end
 else
     println("Performing MC sample")
     # Perform a small MC run
@@ -56,13 +56,13 @@ for ii in 1:nrow(compare)
     name = Symbol(compare[ii, :Variable_Name])
     transform = information[name][:transform]
     distribution = Normal(information[name][:mu], information[name][:sigma])
-    for qval in [.05, .10, .25, .50, .75, .90, .95]
+    for qval in [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95]
         estimated = transform(quantile(collect(Missings.skipmissing(df[!, name])), qval)) # perform transform *after* quantile, so captures effect of all values
         stderr = sqrt(qval * (1 - qval) / (samplesize * pdf(distribution, estimated)^2))
 
         expected = transform(compare[ii, Symbol("perc_$(trunc(Int, qval * 100))")])
 
         #println("$name x $qval: $estimated ≈ $expected rtol=$(ceil(confidence * stderr, -trunc(Int, log10(stderr))))")
-        @test estimated ≈ expected rtol=ceil(confidence * stderr; digits = -trunc(Int, log10(stderr)))
+        @test estimated ≈ expected rtol = ceil(confidence * stderr; digits=-trunc(Int, log10(stderr)))
     end
 end

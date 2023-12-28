@@ -21,4 +21,4 @@ run(m)
 rt_g = m[:ClimateTemperature, :rt_g_globaltemperature]
 rt_g_compare = readpagedata(m, "test/validationdata/rt_g_globaltemperature.csv")
 
-@test rt_g ≈ rt_g_compare rtol=1e-5
+@test rt_g ≈ rt_g_compare rtol = 1e-5
