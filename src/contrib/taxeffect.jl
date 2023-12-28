@@ -8,18 +8,18 @@
     taxrate = Parameter(index=[time], unit="\$/tonne")
 
     # From external files
-    e0_baselineemissions = Parameter(index=[region], unit= "Mtonne/year")
+    e0_baselineemissions = Parameter(index=[region], unit="Mtonne/year")
 
     # From the AbatementCostParameters
-    zc_zerocostemissions = Parameter(index=[time, region], unit= "%")
-    q0_absolutecutbacksatnegativecost = Parameter(index=[time, region], unit= "Mtonne")
-    blo = Parameter(index=[time, region], unit = "per Mtonne")
-    alo = Parameter(index=[time, region], unit = "\$/tonne")
-    bhi = Parameter(index=[time, region], unit = "per Mtonne")
-    ahi = Parameter(index=[time, region], unit = "\$/tonne")
+    zc_zerocostemissions = Parameter(index=[time, region], unit="%")
+    q0_absolutecutbacksatnegativecost = Parameter(index=[time, region], unit="Mtonne")
+    blo = Parameter(index=[time, region], unit="per Mtonne")
+    alo = Parameter(index=[time, region], unit="\$/tonne")
+    bhi = Parameter(index=[time, region], unit="per Mtonne")
+    ahi = Parameter(index=[time, region], unit="\$/tonne")
 
     # Outputs to AbatementCosts
-    er_emissionsgrowth = Variable(index=[time,region],unit="%")
+    er_emissionsgrowth = Variable(index=[time, region], unit="%")
 
     function run_timestep(p, v, d, t)
 
@@ -29,16 +29,16 @@
 
             # If cbe_absoluteemissionreductions < q0_absolutecutbacksatnegativecost
             if p.alo[t, rr] + 1 > 0
-                er_lowside = p.zc_zerocostemissions[t, rr] - (log(p.taxrate[t] / p.alo[t, rr] + 1) / p.blo[t, rr] + p.q0_absolutecutbacksatnegativecost[t, rr]) / (p.e0_baselineemissions[rr]/100)
-                cbe_lowside = (p.zc_zerocostemissions[t, rr] - er_lowside) * p.e0_baselineemissions[rr]/100
+                er_lowside = p.zc_zerocostemissions[t, rr] - (log(p.taxrate[t] / p.alo[t, rr] + 1) / p.blo[t, rr] + p.q0_absolutecutbacksatnegativecost[t, rr]) / (p.e0_baselineemissions[rr] / 100)
+                cbe_lowside = (p.zc_zerocostemissions[t, rr] - er_lowside) * p.e0_baselineemissions[rr] / 100
             else
                 cbe_lowside = Inf
             end
 
             # Else
             if p.ahi[t, rr] + 1 > 0
-                er_highside = p.zc_zerocostemissions[t, rr] - (log(p.taxrate[t] / p.ahi[t, rr] + 1) / p.bhi[t, rr] + p.q0_absolutecutbacksatnegativecost[t, rr]) / (p.e0_baselineemissions[rr]/100)
-                cbe_highside = (p.zc_zerocostemissions[t, rr] - er_highside) * p.e0_baselineemissions[rr]/100
+                er_highside = p.zc_zerocostemissions[t, rr] - (log(p.taxrate[t] / p.ahi[t, rr] + 1) / p.bhi[t, rr] + p.q0_absolutecutbacksatnegativecost[t, rr]) / (p.e0_baselineemissions[rr] / 100)
+                cbe_highside = (p.zc_zerocostemissions[t, rr] - er_highside) * p.e0_baselineemissions[rr] / 100
             else
                 cbe_highside = -Inf
             end
@@ -73,7 +73,7 @@ function addtaxdrivengrowth(model::Model, class::Symbol)
 end
 
 @defcomp UniformTaxDrivenGrowth begin
-    region=Index()
+    region = Index()
 
     uniformtax = Parameter(index=[time], unit="\$/tonne")
 
@@ -92,10 +92,10 @@ end
 end
 
 """Construct a model with a uniform (global and all gases, but time-varying) tax."""
-function getuniformtaxmodel(;policy::String="policy-a")
+function getuniformtaxmodel(; policy::String="policy-a")
     m = Model()
     set_dimension!(m, :time, [2009, 2010, 2020, 2030, 2040, 2050, 2075, 2100, 2150, 2200])
-    set_dimension!(m, :region, ["EU", "USA", "OECD","USSR","China","SEAsia","Africa","LatAmerica"])
+    set_dimension!(m, :region, ["EU", "USA", "OECD", "USSR", "China", "SEAsia", "Africa", "LatAmerica"])
 
     buildpage(m, policy)
     initpage(m, policy) # initialize here so we can connect to the shared parameters
@@ -109,7 +109,7 @@ function getuniformtaxmodel(;policy::String="policy-a")
         taxgrowth = Symbol("TaxDrivenGrowth$class")
         abateparams = Symbol("AbatementCostParameters$class")
         connect_param!(m, taxgrowth => :zc_zerocostemissions, abateparams => :zc_zerocostemissions)
-        connect_param!(m, taxgrowth => :q0_absolutecutbacksatnegativecost, abateparams =>:q0_absolutecutbacksatnegativecost)
+        connect_param!(m, taxgrowth => :q0_absolutecutbacksatnegativecost, abateparams => :q0_absolutecutbacksatnegativecost)
         connect_param!(m, taxgrowth => :blo, abateparams => :blo)
         connect_param!(m, taxgrowth => :alo, abateparams => :alo)
         connect_param!(m, taxgrowth => :bhi, abateparams => :bhi)

@@ -23,5 +23,5 @@ abate_cost_per_cap = m[:TotalAbatementCosts, :tct_per_cap_totalcostspercap]
 cost_compare = readpagedata(m, "test/validationdata/tct_totalcosts.csv")
 cost_cap_compare = readpagedata(m, "test/validationdata/tct_per_cap_totalcostspercap.csv")
 
-@test abate_cost ≈ cost_compare rtol=1e-4
-@test abate_cost_per_cap ≈ cost_cap_compare rtol=1e-7
+@test abate_cost ≈ cost_compare rtol = 1e-4
+@test abate_cost_per_cap ≈ cost_cap_compare rtol = 1e-7

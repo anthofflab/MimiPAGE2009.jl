@@ -57,20 +57,19 @@ addt_compare = readpagedata(m, "test/validationdata/addt_equityweightedimpact_di
 addt_gt_compare = 204132238.85242900
 te_compare = 213208136.69903600
 
-@test df ≈ df_compare rtol=1e-8
-@test wtct_percap ≈ wtct_percap_compare rtol=1e-7
-@test pct_percap ≈ pct_percap_compare rtol=1e-7
-@test dr ≈ dr_compare rtol=1e-5
-@test dfc ≈ dfc_compare rtol=1e-7
-@test pct ≈ pct_compare rtol=1e-3
-@test pcdt ≈ pcdt_compare rtol=1e-3
-@test wacdt ≈ wacdt_compare rtol=1e-4
+@test df ≈ df_compare rtol = 1e-8
+@test wtct_percap ≈ wtct_percap_compare rtol = 1e-7
+@test pct_percap ≈ pct_percap_compare rtol = 1e-7
+@test dr ≈ dr_compare rtol = 1e-5
+@test dfc ≈ dfc_compare rtol = 1e-7
+@test pct ≈ pct_compare rtol = 1e-3
+@test pcdt ≈ pcdt_compare rtol = 1e-3
+@test wacdt ≈ wacdt_compare rtol = 1e-4
 
-@test aact ≈ aact_compare rtol=1e-3
+@test aact ≈ aact_compare rtol = 1e-3
 
-@test wit ≈ wit_compare rtol=1e-3
-@test addt ≈ addt_compare rtol=1e-2
-@test addt_gt ≈ addt_gt_compare rtol=1e-2
+@test wit ≈ wit_compare rtol = 1e-3
+@test addt ≈ addt_compare rtol = 1e-2
+@test addt_gt ≈ addt_gt_compare rtol = 1e-2
 
-@test te ≈ te_compare rtol=1e-2
-
+@test te ≈ te_compare rtol = 1e-2

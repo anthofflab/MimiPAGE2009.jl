@@ -14,9 +14,9 @@
     plateau_increaseintolerableplateaufromadaptation = Parameter(index=[region], unit="driver")
     pstart_startdateofadaptpolicy = Parameter(index=[region], unit="year")
     pyears_yearstilfulleffect = Parameter(index=[region], unit="year")
-    impred_eventualpercentreduction = Parameter(index=[region], unit= "%")
-    istart_startdate = Parameter(index=[region], unit = "year")
-    iyears_yearstilfulleffect = Parameter(index=[region], unit= "year")
+    impred_eventualpercentreduction = Parameter(index=[region], unit="%")
+    istart_startdate = Parameter(index=[region], unit="year")
+    iyears_yearstilfulleffect = Parameter(index=[region], unit="year")
 
     cp_costplateau_eu = Parameter(unit="%GDP/driver")
     ci_costimpact_eu = Parameter(unit="%GDP/%driver")
@@ -34,29 +34,29 @@
     function run_timestep(p, v, d, tt)
 
         # Hope (2009), p. 21, equation -5
-        auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1/(p.y_year[end] - p.y_year_0)))*100 # % per year
-        v.autofac_autonomouschangefraction[tt] = (1 - auto_autonomouschangepercent/100)^(p.y_year[tt] - p.y_year_0) # Varies by year
+        auto_autonomouschangepercent = (1 - p.automult_autonomouschange^(1 / (p.y_year[end] - p.y_year_0))) * 100 # % per year
+        v.autofac_autonomouschangefraction[tt] = (1 - auto_autonomouschangepercent / 100)^(p.y_year[tt] - p.y_year_0) # Varies by year
 
         for rr in d.region
             #calculate adjusted tolerable level and max impact based on adaptation policy
             if (p.y_year[tt] - p.pstart_startdateofadaptpolicy[rr]) < 0
-                v.atl_adjustedtolerablelevel[tt,rr]= 0
-            elseif ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr])<1.
-                v.atl_adjustedtolerablelevel[tt,rr]=
-                    ((p.y_year[tt]-p.pstart_startdateofadaptpolicy[rr])/p.pyears_yearstilfulleffect[rr]) *
+                v.atl_adjustedtolerablelevel[tt, rr] = 0
+            elseif ((p.y_year[tt] - p.pstart_startdateofadaptpolicy[rr]) / p.pyears_yearstilfulleffect[rr]) < 1.
+                v.atl_adjustedtolerablelevel[tt, rr] =
+                    ((p.y_year[tt] - p.pstart_startdateofadaptpolicy[rr]) / p.pyears_yearstilfulleffect[rr]) *
                     p.plateau_increaseintolerableplateaufromadaptation[rr]
             else
-                v.atl_adjustedtolerablelevel[tt,rr] = p.plateau_increaseintolerableplateaufromadaptation[rr]
+                v.atl_adjustedtolerablelevel[tt, rr] = p.plateau_increaseintolerableplateaufromadaptation[rr]
             end
 
-            if (p.y_year[tt]- p.istart_startdate[rr]) < 0
-                v.imp_adaptedimpacts[tt,rr] = 0
-            elseif ((p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]) < 1
-                v.imp_adaptedimpacts[tt,rr] =
-                    (p.y_year[tt]-p.istart_startdate[rr])/p.iyears_yearstilfulleffect[rr]*
+            if (p.y_year[tt] - p.istart_startdate[rr]) < 0
+                v.imp_adaptedimpacts[tt, rr] = 0
+            elseif ((p.y_year[tt] - p.istart_startdate[rr]) / p.iyears_yearstilfulleffect[rr]) < 1
+                v.imp_adaptedimpacts[tt, rr] =
+                    (p.y_year[tt] - p.istart_startdate[rr]) / p.iyears_yearstilfulleffect[rr] *
                     p.impred_eventualpercentreduction[rr]
             else
-                v.imp_adaptedimpacts[tt,rr] = p.impred_eventualpercentreduction[rr]
+                v.imp_adaptedimpacts[tt, rr] = p.impred_eventualpercentreduction[rr]
             end
 
             # Hope (2009), p. 25, equations 1-2
